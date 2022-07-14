@@ -1,0 +1,21 @@
+body {
+    font-size: 1.15rem;
+}
+
+@media screen and (min-width: 768px) {
+    .sidebar {
+        height: 100vh;
+    }
+}
+
+li {
+    list-style: none;
+}
+
+.navbar {
+    background: rgb(172, 228, 234);
+}
+
+/* .navbar a {
+    color: rgb(17, 156, 255);
+} */
