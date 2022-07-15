@@ -10,10 +10,6 @@ li {
     margin: 0;
 }
 
-.header {
-    height: 50px;
-}
-
 .navbar {
     background: rgb(179, 237, 244);
 }
@@ -38,6 +34,16 @@ td {
     height: 30px;
 }
 
-.table th, .table td {
+.table th,
+.table td {
     vertical-align: middle;
+}
+
+@media (min-width: 768px) {
+    .header {
+        height: 50px;
+    }
+    /* .table th {
+        min-width: 200px;
+    } */
 }

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="text-center">アポイント一覧</h1>
+    <h1 class="text-center">営業予定表</h1>
     <div class="row justify-content-around mx-2">
         <table class="table table-hover col-md-5 text-center">
             <thead>
@@ -29,8 +29,12 @@
                         </td>
                         @foreach ($time_zone as $time)
                             <td>
-                                <a
-                                    href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time]) }}">click</a>
+                                @if (array_key_exists(date_format($start_day, 'Y-m-d'), $hasAppointments) && $hasAppointments[date_format($start_day, 'Y-m-d')] === $time)
+                                    <span>×</span>
+                                @else
+                                    <a
+                                        href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time]) }}">○</a>
+                                @endif
                             </td>
                         @endforeach
                     </tr>
@@ -63,8 +67,12 @@
                         </td>
                         @foreach ($time_zone as $time)
                             <td>
-                                <a
-                                    href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time]) }}">click</a>
+                                @if (array_key_exists(date_format($middle_day, 'Y-m-d'), $hasAppointments) && $hasAppointments[date_format($middle_day, 'Y-m-d')] === $time)
+                                    <span>×</span>
+                                @else
+                                    <a
+                                        href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time]) }}">○</a>
+                                @endif
                             </td>
                         @endforeach
                     </tr>

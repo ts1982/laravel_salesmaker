@@ -3,7 +3,7 @@
 @section('content')
     <h1 class="text-center">アポイント詳細</h1>
     <div class="row justify-content-center mt-5">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <table class="table">
                 <tbody>
                     <tr>
@@ -13,6 +13,14 @@
                     <tr>
                         <th scope="row">顧客名</th>
                         <td>{{ $appointment->customer->name }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">住所</th>
+                        <td>{{ $appointment->customer->address }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">電話番号</th>
+                        <td>{{ $appointment->customer->tel }}</td>
                     </tr>
                     <tr>
                         <th scope="row">ヒアリング内容</th>

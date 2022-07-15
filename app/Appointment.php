@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Appointment extends Model
 {
@@ -16,5 +17,34 @@ class Appointment extends Model
     public function customer()
     {
         return $this->belongsTo('App\Customer');
+    }
+
+    public static function makeCalendar($day)
+    {
+        Carbon::setLocale('ja');
+        $time_zone = Appointment::$time_zone;
+
+        if ($day) {
+            $start_day = Carbon::parse($day)->startOfMonth();
+            $middle_day = Carbon::parse($day)->startOfMonth()->addDays(15);
+            $end_day = Carbon::parse($day)->endOfMonth();
+        } else {
+            $start_day = Carbon::now()->startOfMonth();
+            $middle_day = Carbon::now()->startOfMonth()->addDays(15);
+            $end_day = Carbon::now()->endOfMonth();
+        }
+
+        return [$time_zone, $start_day, $middle_day, $end_day];
+    }
+
+    public static function getMonthlySellerAppointments($user, $day)
+    {
+        if (!$day) {
+            $day = Carbon::now();
+        }
+        $day = date('Y-m', strtotime($day));
+        $appointments = Appointment::where('day', 'like', "{$day}%")->where('seller_id', $user->id)->get();
+
+        return $appointments;
     }
 }
