@@ -20,6 +20,6 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/appointments', 'AppointmentController@index')->name('appointments.index');
-Route::get('/appointments/{appointment}', 'AppointmentController@show')->name('appointments.show');
 Route::get('/appointments/new', 'AppointmentController@create')->name('appointments.create');
 Route::post('/appointments/store', 'AppointmentController@store')->name('appointments.store');
+Route::get('/appointments/{appointment}', 'AppointmentController@show')->name('appointments.show');
