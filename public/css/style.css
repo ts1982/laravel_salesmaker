@@ -2,20 +2,38 @@ body {
     font-size: 1.15rem;
 }
 
-@media screen and (min-width: 768px) {
-    .sidebar {
-        height: 100vh;
-    }
-}
-
 li {
     list-style: none;
 }
 
+.row {
+    margin: 0;
+}
+
+.header {
+    height: 50px;
+}
+
 .navbar {
-    background: rgb(172, 228, 234);
+    background: rgb(179, 237, 244);
 }
 
 /* .navbar a {
     color: rgb(17, 156, 255);
 } */
+
+td {
+    padding: 2px !important;
+}
+
+.saturday {
+    color: blue;
+}
+
+.sunday {
+    color: red;
+}
+
+.footer {
+    height: 30px;
+}

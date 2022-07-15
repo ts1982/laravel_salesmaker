@@ -28,15 +28,22 @@
         @component('components.header')
         @endcomponent
 
-        <main class="py-4 row">
+        <main class="row">
             <div class="sidebar col-md-2 shadow-sm">
-                @component('components.sidebar')
-                @endcomponent
+                <div class="mt-5 py-5">
+                    @component('components.sidebar')
+                    @endcomponent
+                </div>
             </div>
-            <div class="col-md-8">
-                @yield('content')
+            <div class="col-md-9">
+                <div class="mt-5 py-5">
+                    @yield('content')
+                </div>
             </div>
         </main>
+
+        @component('components.footer')
+        @endcomponent
     </div>
 </body>
 
