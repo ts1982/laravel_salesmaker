@@ -27,22 +27,12 @@
                                 {{ mb_substr($start_day->dayName, 0, 1) }}
                             @endif
                         </td>
-                        <td>
-                            <a
-                                href="{{ route('appointments.index', ['day' => $start_day->toDateString(), 'hour' => 10]) }}">click</a>
-                        </td>
-                        <td>
-                            <a
-                                href="{{ route('appointments.index', ['day' => $start_day->toDateString(), 'hour' => 13]) }}">click</a>
-                        </td>
-                        <td>
-                            <a
-                                href="{{ route('appointments.index', ['day' => $start_day->toDateString(), 'hour' => 16]) }}">click</a>
-                        </td>
-                        <td>
-                            <a
-                                href="{{ route('appointments.index', ['day' => $start_day->toDateString(), 'hour' => 19]) }}">click</a>
-                        </td>
+                        @foreach ($time_zone as $time)
+                            <td>
+                                <a
+                                    href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time]) }}">click</a>
+                            </td>
+                        @endforeach
                     </tr>
                 @endfor
             </tbody>
@@ -71,22 +61,12 @@
                                 {{ mb_substr($middle_day->dayName, 0, 1) }}
                             @endif
                         </td>
-                        <td>
-                            <a
-                                href="{{ route('appointments.index', ['day' => $middle_day->toDateString(), 'hour' => 10]) }}">click</a>
-                        </td>
-                        <td>
-                            <a
-                                href="{{ route('appointments.index', ['day' => $middle_day->toDateString(), 'hour' => 13]) }}">click</a>
-                        </td>
-                        <td>
-                            <a
-                                href="{{ route('appointments.index', ['day' => $middle_day->toDateString(), 'hour' => 16]) }}">click</a>
-                        </td>
-                        <td>
-                            <a
-                                href="{{ route('appointments.index', ['day' => $middle_day->toDateString(), 'hour' => 19]) }}">click</a>
-                        </td>
+                        @foreach ($time_zone as $time)
+                            <td>
+                                <a
+                                    href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time]) }}">click</a>
+                            </td>
+                        @endforeach
                     </tr>
                 @endfor
             </tbody>

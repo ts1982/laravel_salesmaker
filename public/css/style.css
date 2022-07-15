@@ -37,3 +37,7 @@ td {
 .footer {
     height: 30px;
 }
+
+.table th, .table td {
+    vertical-align: middle;
+}
