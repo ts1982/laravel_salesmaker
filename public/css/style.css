@@ -1,5 +1,6 @@
 body {
     font-size: 1.15rem;
+    color: #333;
 }
 
 li {
@@ -13,10 +14,6 @@ li {
 .navbar {
     background: rgb(179, 237, 244);
 }
-
-/* .navbar a {
-    color: rgb(17, 156, 255);
-} */
 
 td {
     padding: 2px !important;
@@ -39,11 +36,13 @@ td {
     vertical-align: middle;
 }
 
+.link-disabled {
+    pointer-events: none;
+    color: #aaa;
+}
+
 @media (min-width: 768px) {
     .header {
         height: 50px;
     }
-    /* .table th {
-        min-width: 200px;
-    } */
 }

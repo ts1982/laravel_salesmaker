@@ -15,7 +15,27 @@ class AppointmentController extends Controller
     {
         list($time_zone, $start_day, $middle_day, $end_day) = Appointment::makeCalendar($request->day);
 
-        return view('appointments.index', compact('time_zone', 'start_day', 'middle_day', 'end_day'));
+        $total_seller = User::where('role', 'seller')->count();
+
+        $appointments_prev = [];
+        $day = $start_day->copy();
+        for ($day; $day < $middle_day; $day->addDay()) {
+            foreach ($time_zone as $time) {
+                $count = Appointment::where('day', $day)->where('hour', $time)->count();
+                $appointments_prev[$day->format('Y-m-d')][$time] = $total_seller - $count;
+            }
+        }
+
+        $appointments_later = [];
+        $day = $middle_day->copy();
+        for ($day; $day < $end_day; $day->addDay()) {
+            foreach ($time_zone as $time) {
+                $count = Appointment::where('day', $day)->where('hour', $time)->count();
+                $appointments_later[$day->format('Y-m-d')][$time] = $total_seller - $count;
+            }
+        }
+
+        return view('appointments.index', compact('time_zone', 'start_day', 'middle_day', 'end_day', 'appointments_prev', 'appointments_later'));
     }
 
     public function create(Request $request)
@@ -28,6 +48,21 @@ class AppointmentController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate(
+            [
+                'name' => 'required',
+                'address' => 'required',
+                'tel' => 'required',
+                'content' => 'required',
+            ],
+            [
+                'name.required' => '氏名を入力してください。',
+                'address.required' => '住所を入力してください。',
+                'tel.required' => '電話番号を入力してください。',
+                'content.required' => 'ヒアリング内容を入力してください。',
+            ]
+        );
+
         try {
             DB::beginTransaction();
 
@@ -42,8 +77,10 @@ class AppointmentController extends Controller
             $appointment = new Appointment();
 
             if ($user->role === 'appointer') {
-                $sellers_id = User::where('role', 'seller')->pluck('id')->toArray();
-                $selected_id = $sellers_id[array_rand($sellers_id, 1)];
+                $all_seller_id = User::where('role', 'seller')->pluck('id')->toArray();
+                $disabled_seller_id = Appointment::where('day', $request->day)->where('hour', $request->hour)->pluck('seller_id')->toArray();
+                $selected_id = array_diff($all_seller_id, $disabled_seller_id);
+                $selected_id = $selected_id[array_rand($selected_id, 1)];
                 $appointment->seller_id = $selected_id;
             } else if ($user->role === 'seller') {
                 $appointment->seller_id = $user->id;

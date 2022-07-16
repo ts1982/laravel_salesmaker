@@ -3,7 +3,7 @@
 @section('content')
     <h1 class="text-center">アポイント一覧</h1>
     <div class="row justify-content-around mx-2">
-        <table class="table table-hover col-md-5 text-center">
+        <table class="table @if(App\User::roleIs('appointer')) table-hover @endif col-md-5 text-center">
             <thead>
                 <tr>
                     <th>日付</th>
@@ -29,15 +29,23 @@
                         </td>
                         @foreach ($time_zone as $time)
                             <td>
-                                <a
-                                    href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time]) }}">click</a>
+                                @if (App\User::roleIs('seller'))
+                                    <span>{{ $appointments_prev[$start_day->format('Y-m-d')][$time] }}</span>
+                                @elseif ($appointments_prev[$start_day->format('Y-m-d')][$time] === 0)
+                                    <span class="link-disabled">0</span>
+                                @else
+                                    <a
+                                        href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time]) }}">
+                                        {{ $appointments_prev[$start_day->format('Y-m-d')][$time] }}
+                                    </a>
+                                @endif
                             </td>
                         @endforeach
                     </tr>
                 @endfor
             </tbody>
         </table>
-        <table class="table table-hover col-md-5 text-center">
+        <table class="table @if(App\User::roleIs('appointer')) table-hover @endif col-md-5 text-center">
             <thead>
                 <tr>
                     <th>日付</th>
@@ -63,8 +71,16 @@
                         </td>
                         @foreach ($time_zone as $time)
                             <td>
-                                <a
-                                    href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time]) }}">click</a>
+                                @if (App\User::roleIs('seller'))
+                                    <span>{{ $appointments_later[$middle_day->format('Y-m-d')][$time] }}</span>
+                                @elseif ($appointments_later[$middle_day->format('Y-m-d')][$time] === 0)
+                                    <span class="link-disabled">0</span>
+                                @else
+                                    <a
+                                        href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time]) }}">
+                                        {{ $appointments_later[$middle_day->format('Y-m-d')][$time] }}
+                                    </a>
+                                @endif
                             </td>
                         @endforeach
                     </tr>

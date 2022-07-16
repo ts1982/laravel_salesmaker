@@ -28,19 +28,27 @@
         @component('components.header')
         @endcomponent
 
-        <main class="row">
-            <div class="sidebar col-md-2 shadow-sm">
-                <div class="mt-5 py-5">
-                    @component('components.sidebar')
-                    @endcomponent
+        @auth
+            <main class="row">
+                <div class="sidebar col-md-2 shadow-sm">
+                    <div class="mt-5 py-5">
+                        @component('components.sidebar')
+                        @endcomponent
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-9">
-                <div class="mt-5 py-5">
-                    @yield('content')
+                <div class="col-md-9">
+                    <div class="mt-5 py-5">
+                        @yield('content')
+                    </div>
                 </div>
+            </main>
+        @endauth
+
+        @guest
+            <div class="mt-5 py-5">
+                @yield('auth.content')
             </div>
-        </main>
+        @endguest
 
         @component('components.footer')
         @endcomponent

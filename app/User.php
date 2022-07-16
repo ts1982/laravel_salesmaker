@@ -43,11 +43,14 @@ class User extends Authenticatable
         return $this->hasMany('App\Appointment');
     }
 
-    public static function roleIs()
+    public static function roleIs($role)
     {
         $user = Auth::user();
-        $roll = $user->roll;
 
-        return $roll;
+        if ($role === $user->role) {
+            return true;
+        }
+
+        return false;
     }
 }

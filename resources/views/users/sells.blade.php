@@ -29,7 +29,7 @@
                         </td>
                         @foreach ($time_zone as $time)
                             <td>
-                                @if (array_key_exists(date_format($start_day, 'Y-m-d'), $hasAppointments) && $hasAppointments[date_format($start_day, 'Y-m-d')] === $time)
+                                @if (array_key_exists($start_day->format('Y-m-d'), $hasAppointments) && $hasAppointments[$start_day->format('Y-m-d')] === $time)
                                     <span>×</span>
                                 @else
                                     <a
