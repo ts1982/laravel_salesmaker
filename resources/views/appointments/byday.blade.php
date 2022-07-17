@@ -10,8 +10,6 @@
                     <tr>
                         <th>日時</th>
                         <th>顧客名</th>
-                        <th>住所</th>
-                        <th>電話番号</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -20,8 +18,6 @@
                         <tr>
                             <td>{{ $appointment->hour }}時</td>
                             <td>{{ $appointment->customer->name }}</td>
-                            <td>{{ $appointment->customer->address }}</td>
-                            <td>{{ $appointment->customer->tel }}</td>
                             <td>
                                 <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
                             </td>
