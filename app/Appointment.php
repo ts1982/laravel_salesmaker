@@ -37,7 +37,18 @@ class Appointment extends Model
         return [$time_zone, $start_day, $middle_day, $end_day];
     }
 
-    public static function getMonthlySellerAppointments($user, $day)
+    public static function getMonthlyAppointersAppointments($user, $day)
+    {
+        if (!$day) {
+            $day = Carbon::now();
+        }
+        $day = date('Y-m', strtotime($day));
+        $appointments = Appointment::where('day', 'like', "{$day}%")->where('user_id', $user->id)->get();
+
+        return $appointments;
+    }
+
+    public static function getMonthlySellersAppointments($user, $day)
     {
         if (!$day) {
             $day = Carbon::now();

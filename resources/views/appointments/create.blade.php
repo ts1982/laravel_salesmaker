@@ -44,7 +44,6 @@
                     <button type="submit" class="btn btn-success" type="button">登録</button>
                 </div>
             </form>
-            <a href="/appointments">アポイント一覧に戻る</a>
         </div>
     </div>
 @endsection

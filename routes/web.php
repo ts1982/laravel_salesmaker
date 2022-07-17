@@ -19,9 +19,13 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('users/sells', 'UserController@sells')->name('users.sells');
+Route::get('/users/calendar', 'UserController@calendar')->name('users.calendar');
+
+Route::get('/customers', 'CustomerController@index')->name('customers.index');
+Route::get('/customers/{customer}', 'CustomerController@show')->name('customers.show');
 
 Route::get('/appointments', 'AppointmentController@index')->name('appointments.index');
 Route::get('/appointments/new', 'AppointmentController@create')->name('appointments.create');
 Route::post('/appointments/store', 'AppointmentController@store')->name('appointments.store');
+Route::get('/appointments/byday', 'AppointmentController@byday')->name('appointments.byday');
 Route::get('/appointments/{appointment}', 'AppointmentController@show')->name('appointments.show');

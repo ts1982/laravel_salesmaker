@@ -8,6 +8,7 @@ use App\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AppointmentController extends Controller
 {
@@ -110,5 +111,18 @@ class AppointmentController extends Controller
         $seller = User::find($appointment->seller_id);
 
         return view('appointments.show', compact('appointment', 'appointer', 'seller'));
+    }
+
+    public function byday(Request $request)
+    {
+        $user = Auth::user();
+        $day = new Carbon($request->day);
+        if ($user->role === 'seller') {
+            $appointments = Appointment::where('day', $day->format('Y-m-d'))->where('seller_id', $user->id)->get();
+        } else if ($user->role === 'appointer') {
+            $appointments = Appointment::where('day', $day->format('Y-m-d'))->where('user_id', $user->id)->get();
+        }
+
+        return view('appointments.byday', compact('appointments', 'day'));
     }
 }

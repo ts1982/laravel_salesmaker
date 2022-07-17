@@ -1,9 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="text-center mb-4">アポイント一覧</h1>
+    @if (App\User::roleIs('seller'))
+        <h1 class="text-center mb-4">営業予定</h1>
+    @elseif (App\User::roleIs('appointer'))
+        <h1 class="text-center mb-4">取得アポイント一覧</h1>
+    @endif
     <div class="row justify-content-around mb-2">
-        <table class="table @if(App\User::roleIs('appointer')) table-hover @endif col-md-5 text-center">
+        <table class="table table-hover col-md-5 text-center">
             <thead>
                 <tr>
                     <th>日付</th>
@@ -17,7 +21,11 @@
             <tbody>
                 @for ($start_day; $start_day < $middle_day; $start_day->addDay())
                     <tr>
-                        <td>{{ $start_day->format('n/j') }}</td>
+                        <td>
+                            <a href="{{ route('appointments.byday', ['day' => $start_day->format('Y-m-d')]) }}">
+                                <span>{{ $start_day->format('n/j') }}</span>
+                            </a>
+                        </td>
                         <td>
                             @if ($start_day->isSaturday())
                                 <span class="saturday">{{ mb_substr($start_day->dayName, 0, 1) }}</span>
@@ -30,14 +38,18 @@
                         @foreach ($time_zone as $time)
                             <td>
                                 @if (App\User::roleIs('seller'))
-                                    <span>{{ $appointments_prev[$start_day->format('Y-m-d')][$time] }}</span>
-                                @elseif ($appointments_prev[$start_day->format('Y-m-d')][$time] === 0)
-                                    <span class="link-disabled">0</span>
-                                @else
-                                    <a
-                                        href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time]) }}">
-                                        {{ $appointments_prev[$start_day->format('Y-m-d')][$time] }}
-                                    </a>
+                                    @if (isset($hasAppointments[$start_day->format('Y-m-d')][$time]))
+                                        <span>×</span>
+                                    @else
+                                        <a
+                                            href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time]) }}">○</a>
+                                    @endif
+                                @elseif (App\User::roleIs('appointer'))
+                                    @if (isset($hasAppointments[$start_day->format('Y-m-d')][$time]))
+                                        <span>{{ $hasAppointments[$start_day->format('Y-m-d')][$time] }}</span>
+                                    @else
+                                        <span>0</span>
+                                    @endif
                                 @endif
                             </td>
                         @endforeach
@@ -45,7 +57,7 @@
                 @endfor
             </tbody>
         </table>
-        <table class="table @if(App\User::roleIs('appointer')) table-hover @endif col-md-5 text-center">
+        <table class="table table-hover col-md-5 text-center">
             <thead>
                 <tr>
                     <th>日付</th>
@@ -59,7 +71,11 @@
             <tbody>
                 @for ($middle_day; $middle_day <= $end_day; $middle_day->addDay())
                     <tr>
-                        <td>{{ $middle_day->format('n/j') }}</td>
+                        <td>
+                            <a href="{{ route('appointments.byday', ['day' => $middle_day->format('Y-m-d')]) }}">
+                                <span>{{ $middle_day->format('n/j') }}</span>
+                            </a>
+                        </td>
                         <td>
                             @if ($middle_day->isSaturday())
                                 <span class="saturday">{{ mb_substr($middle_day->dayName, 0, 1) }}</span>
@@ -72,14 +88,18 @@
                         @foreach ($time_zone as $time)
                             <td>
                                 @if (App\User::roleIs('seller'))
-                                    <span>{{ $appointments_later[$middle_day->format('Y-m-d')][$time] }}</span>
-                                @elseif ($appointments_later[$middle_day->format('Y-m-d')][$time] === 0)
-                                    <span class="link-disabled">0</span>
-                                @else
-                                    <a
-                                        href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time]) }}">
-                                        {{ $appointments_later[$middle_day->format('Y-m-d')][$time] }}
-                                    </a>
+                                    @if (isset($hasAppointments[$middle_day->format('Y-m-d')][$time]))
+                                        <span>×</span>
+                                    @else
+                                        <a
+                                            href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time]) }}">○</a>
+                                    @endif
+                                @elseif (App\User::roleIs('appointer'))
+                                    @if (isset($hasAppointments[$middle_day->format('Y-m-d')][$time]))
+                                        <span>{{ $hasAppointments[$middle_day->format('Y-m-d')][$time] }}</span>
+                                    @else
+                                        <span>0</span>
+                                    @endif
                                 @endif
                             </td>
                         @endforeach

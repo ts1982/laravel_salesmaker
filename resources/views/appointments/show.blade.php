@@ -4,39 +4,38 @@
     <h1 class="text-center">アポイント詳細</h1>
     <div class="row justify-content-center mt-5">
         <div class="col-md-10">
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <th scope="row">日時</th>
-                        <td>{{ date('Y年n月j日', strtotime($appointment->day)) }}&emsp;{{ $appointment->hour }}時</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">顧客名</th>
-                        <td>{{ $appointment->customer->name }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">住所</th>
-                        <td>{{ $appointment->customer->address }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">電話番号</th>
-                        <td>{{ $appointment->customer->tel }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">ヒアリング内容</th>
-                        <td>{{ $appointment->content }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">アポインター</th>
-                        <td>{{ $appointer->name }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">営業担当者</th>
-                        <td>{{ $seller->name }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <a href="/appointments">アポイント一覧に戻る</a>
+            <div class="row mb-3">
+                <strong class="col-md-3">日時</strong>
+                <div class="col-md-9">
+                    {{ date('Y年n月j日', strtotime($appointment->day)) }}&emsp;{{ $appointment->hour }}時</div>
+            </div>
+            <div class="row mb-3">
+                <strong class="col-md-3">顧客名</strong>
+                <div class="col-md-9">
+                    <a
+                        href="{{ route('customers.show', ['customer' => $appointment->customer]) }}">{{ $appointment->customer->name }}</a>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <strong class="col-md-3">住所</strong>
+                <div class="col-md-9">{{ $appointment->customer->address }}</div>
+            </div>
+            <div class="row mb-3">
+                <strong class="col-md-3">電話番号</strong>
+                <div class="col-md-9">{{ $appointment->customer->tel }}</div>
+            </div>
+            <div class="row mb-3">
+                <strong class="col-md-3">ヒアリング内容</strong>
+                <div class="col-md-9">{{ $appointment->content }}</div>
+            </div>
+            <div class="row mb-3">
+                <strong class="col-md-3">アポインター</strong>
+                <div class="col-md-9">{{ $appointer->name }}</div>
+            </div>
+            <div class="row mb-3">
+                <strong class="col-md-3">営業担当者</strong>
+                <div class="col-md-9">{{ $seller->name }}</div>
+            </div>
         </div>
     </div>
 @endsection

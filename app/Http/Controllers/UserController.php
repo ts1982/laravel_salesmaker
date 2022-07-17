@@ -85,17 +85,30 @@ class UserController extends Controller
         //
     }
 
-    public function sells(Request $request)
+    public function calendar(Request $request)
     {
         list($time_zone, $start_day, $middle_day, $end_day) = Appointment::makeCalendar($request->day);
 
         $user = Auth::user();
-        $appointments = Appointment::getMonthlySellerAppointments($user, $request->day);
         $hasAppointments = [];
-        foreach ($appointments as $appointment) {
-            $hasAppointments[$appointment->day] = $appointment->hour;
+
+        if (User::roleIs('seller')) {
+            $appointments = Appointment::getMonthlySellersAppointments($user, $request->day);
+            foreach ($appointments as $appointment) {
+                $hasAppointments[$appointment->day][$appointment->hour] = true;
+            }
         }
 
-        return view('users.sells', compact('time_zone', 'start_day', 'middle_day', 'end_day', 'hasAppointments'));
+        if (User::roleIs('appointer')) {
+            $appointments = Appointment::getMonthlyAppointersAppointments($user, $request->day);
+            foreach ($appointments as $appointment) {
+                if (!isset($hasAppointments[$appointment->day][$appointment->hour])) {
+                    $hasAppointments[$appointment->day][$appointment->hour] = 0;
+                }
+                $hasAppointments[$appointment->day][$appointment->hour] += 1;
+            }
+        }
+
+        return view('users.calendar', compact('time_zone', 'start_day', 'middle_day', 'end_day', 'hasAppointments'));
     }
 }

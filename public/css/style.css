@@ -3,8 +3,16 @@ body {
     color: #333;
 }
 
+ul {
+    padding: 0;
+}
+
 li {
     list-style: none;
+}
+
+.sidebar li {
+    margin-bottom: 5px;
 }
 
 .row {
