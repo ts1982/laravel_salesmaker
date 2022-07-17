@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    @if (App\User::roleIs('seller'))
-        <h1 class="text-center mb-4">営業予定</h1>
+    @if (App\User::roleIs('seller') || $seller_appointment)
+        <h1 class="text-center mb-4">{{ $user->name }}の営業予定</h1>
     @elseif (App\User::roleIs('appointer'))
-        <h1 class="text-center mb-4">取得アポイント一覧</h1>
+        <h1 class="text-center mb-4">マイアポイント</h1>
     @endif
     <div class="row justify-content-around mb-2">
         <table class="table table-hover col-md-5 text-center">
@@ -37,12 +37,17 @@
                         </td>
                         @foreach ($time_zone as $time)
                             <td>
-                                @if (App\User::roleIs('seller'))
+                                @if (App\User::roleIs('seller') || $seller_appointment)
                                     @if (isset($hasAppointments[$start_day->format('Y-m-d')][$time]))
                                         <span>×</span>
                                     @else
-                                        <a
-                                            href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time]) }}">○</a>
+                                        @if ($seller_appointment)
+                                            <a
+                                                href="{{ route('appointments.edit', ['day' => $start_day->toDateString(), 'hour' => $time, 'appointment' => $seller_appointment]) }}">○</a>
+                                        @else
+                                            <a
+                                                href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time]) }}">○</a>
+                                        @endif
                                     @endif
                                 @elseif (App\User::roleIs('appointer'))
                                     @if (isset($hasAppointments[$start_day->format('Y-m-d')][$time]))
@@ -87,12 +92,17 @@
                         </td>
                         @foreach ($time_zone as $time)
                             <td>
-                                @if (App\User::roleIs('seller'))
+                                @if (App\User::roleIs('seller') || $seller_appointment)
                                     @if (isset($hasAppointments[$middle_day->format('Y-m-d')][$time]))
                                         <span>×</span>
                                     @else
-                                        <a
-                                            href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time]) }}">○</a>
+                                        @if ($seller_appointment)
+                                            <a
+                                                href="{{ route('appointments.edit', ['day' => $middle_day->toDateString(), 'hour' => $time, 'appointment' => $seller_appointment]) }}">○</a>
+                                        @else
+                                            <a
+                                                href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time]) }}">○</a>
+                                        @endif
                                     @endif
                                 @elseif (App\User::roleIs('appointer'))
                                     @if (isset($hasAppointments[$middle_day->format('Y-m-d')][$time]))

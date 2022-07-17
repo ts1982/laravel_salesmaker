@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="text-center mb-4">アポイント一覧</h1>
+    <h1 class="text-center mb-4">アポイント登録</h1>
     <div class="row justify-content-around mb-2">
-        <table class="table @if(App\User::roleIs('appointer')) table-hover @endif col-md-5 text-center">
+        <table class="table @if (App\User::roleIs('appointer')) table-hover @endif col-md-5 text-center">
             <thead>
                 <tr>
                     <th>日付</th>
@@ -45,7 +45,7 @@
                 @endfor
             </tbody>
         </table>
-        <table class="table @if(App\User::roleIs('appointer')) table-hover @endif col-md-5 text-center">
+        <table class="table @if (App\User::roleIs('appointer')) table-hover @endif col-md-5 text-center">
             <thead>
                 <tr>
                     <th>日付</th>

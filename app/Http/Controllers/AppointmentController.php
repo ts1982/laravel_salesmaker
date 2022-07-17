@@ -36,7 +36,13 @@ class AppointmentController extends Controller
             }
         }
 
-        return view('appointments.index', compact('time_zone', 'start_day', 'middle_day', 'end_day', 'appointments_prev', 'appointments_later'));
+        if ($request->has('appointment')) {
+            $appointment = $request->appointment;
+        } else {
+            $appointment = '';
+        }
+
+        return view('appointments.index', compact('time_zone', 'start_day', 'middle_day', 'end_day', 'appointments_prev', 'appointments_later', 'appointment'));
     }
 
     public function create(Request $request)
@@ -113,16 +119,28 @@ class AppointmentController extends Controller
         return view('appointments.show', compact('appointment', 'appointer', 'seller'));
     }
 
-    public function edit(Appointment $appointment)
+    public function edit(Appointment $appointment, Request $request)
     {
         $appointer = $appointment->user;
         $seller = User::find($appointment->seller_id);
 
-        return view('appointments.edit', compact('appointment', 'appointer', 'seller'));
+        if ($request->has('day', 'hour')) {
+            $day = $request->day;
+            $hour = $request->hour;
+        } else {
+            $day = '';
+            $hour = '';
+        }
+
+        return view('appointments.edit', compact('appointment', 'appointer', 'seller', 'day', 'hour'));
     }
 
     public function update(Appointment $appointment, Request $request)
     {
+        if ($request->day && $request->hour) {
+            $appointment->day = $request->day;
+            $appointment->hour = $request->hour;
+        }
         $appointment->content = $request->content;
         $appointment->save();
 

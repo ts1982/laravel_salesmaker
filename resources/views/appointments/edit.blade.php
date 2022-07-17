@@ -6,15 +6,26 @@
         <div class="col-md-10">
             <div class="row mb-3">
                 <strong class="col-md-3">日時</strong>
-                <div class="col-md-9">
-                    {{ date('Y年n月j日', strtotime($appointment->day)) }}&emsp;{{ $appointment->hour }}時</div>
+                <div class="col-md-5">
+                    @if ($day && $hour)
+                        <span>{{ date('Y年n月j日', strtotime($day)) }}&emsp;{{ $hour }}時</span>
+                    @else
+                        <span>{{ date('Y年n月j日', strtotime($appointment->day)) }}&emsp;{{ $appointment->hour }}時</span>
+                    @endif
+                </div>
+                <div class="col-md-4">
+                    {{-- @if (App\User::roleIs('seller')) --}}
+                    <a href="{{ route('users.calendar', compact('appointment', 'seller')) }}"
+                        class="btn btn-outline-primary btn-sm">日時変更</a>
+                    {{-- @elseif (App\User::roleIs('appointer'))
+                        <a href="{{ route('appointments.index', compact('appointment')) }}"
+                            class="btn btn-outline-primary btn-sm">日時変更</a>
+                    @endif --}}
+                </div>
             </div>
             <div class="row mb-3">
                 <strong class="col-md-3">顧客名</strong>
-                <div class="col-md-9">
-                    <a
-                        href="{{ route('customers.show', ['customer' => $appointment->customer]) }}">{{ $appointment->customer->name }}</a>
-                </div>
+                <div class="col-md-9">{{ $appointment->customer->name }}</div>
             </div>
             <div class="row mb-3">
                 <strong class="col-md-3">住所</strong>
@@ -35,6 +46,8 @@
                     @enderror
                 </div>
                 <div class="d-flex justify-content-end">
+                    <input type="hidden" name="day" value="{{ $day }}">
+                    <input type="hidden" name="hour" value="{{ $hour }}">
                     <input type="submit" value="更新" class="btn btn-success">
                 </div>
             </form>
