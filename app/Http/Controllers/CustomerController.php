@@ -29,4 +29,19 @@ class CustomerController extends Controller
     {
         return view('customers.show', compact('customer'));
     }
+
+    public function edit(Customer $customer)
+    {
+        return view('customers.edit', compact('customer'));
+    }
+
+    public function update(Customer $customer, Request $request)
+    {
+        $customer->name = $request->name;
+        $customer->address = $request->address;
+        $customer->tel = $request->tel;
+        $customer->update();
+
+        return redirect()->route('customers.show', compact('customer'));
+    }
 }

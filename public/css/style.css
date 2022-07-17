@@ -11,6 +11,10 @@ li {
     list-style: none;
 }
 
+.sidebar {
+    height: 100vh;
+}
+
 .sidebar li {
     margin-bottom: 5px;
 }

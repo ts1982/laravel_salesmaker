@@ -28,6 +28,9 @@
                     <span>{{ $customer->tel }}</span>
                 </div>
             </div>
+            <div class="d-flex justify-content-end">
+                <a href="{{ route('customers.edit', compact('customer')) }}" class="btn btn-warning">編集</a>
+            </div>
         </div>
     </div>
     <h3 class="text-center mt-5">アポイント履歴</h3>
