@@ -31,3 +31,5 @@ Route::get('/appointments/new', 'AppointmentController@create')->name('appointme
 Route::post('/appointments/store', 'AppointmentController@store')->name('appointments.store');
 Route::get('/appointments/byday', 'AppointmentController@byday')->name('appointments.byday');
 Route::get('/appointments/{appointment}', 'AppointmentController@show')->name('appointments.show');
+Route::get('/appointments/{appointment}/edit', 'AppointmentController@edit')->name('appointments.edit');
+Route::put('/appointments/{appointment}/update', 'AppointmentController@update')->name('appointments.update');

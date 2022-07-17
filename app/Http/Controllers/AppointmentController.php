@@ -113,6 +113,22 @@ class AppointmentController extends Controller
         return view('appointments.show', compact('appointment', 'appointer', 'seller'));
     }
 
+    public function edit(Appointment $appointment)
+    {
+        $appointer = $appointment->user;
+        $seller = User::find($appointment->seller_id);
+
+        return view('appointments.edit', compact('appointment', 'appointer', 'seller'));
+    }
+
+    public function update(Appointment $appointment, Request $request)
+    {
+        $appointment->content = $request->content;
+        $appointment->save();
+
+        return redirect()->route('appointments.show', compact('appointment'));
+    }
+
     public function byday(Request $request)
     {
         $user = Auth::user();
