@@ -27,7 +27,9 @@ class CustomerController extends Controller
 
     public function show(Customer $customer)
     {
-        return view('customers.show', compact('customer'));
+        $appointments = Appointment::where('customer_id', $customer->id)->orderBy('day', 'desc')->orderBy('hour', 'desc')->get();
+
+        return view('customers.show', compact('customer', 'appointments'));
     }
 
     public function edit(Customer $customer)

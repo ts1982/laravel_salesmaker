@@ -33,7 +33,33 @@
             </div>
         </div>
     </div>
-    <h3 class="text-center mt-5">アポイント履歴</h3>
-    </div>
+    <h3 class="text-center mt-4">アポイント履歴</h3>
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>日時</th>
+                        <th>顧客名</th>
+                        <th>アポインター</th>
+                        <th>営業担当</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($appointments as $appointment)
+                        <tr>
+                            <td>{{ date('Y/m/d', strtotime($appointment->day)) }}&emsp;{{ $appointment->hour }}時</td>
+                            <td>{{ $appointment->customer->name }}</td>
+                            <td>{{ App\Appointment::getAppointer($appointment)->name }}</td>
+                            <td>{{ App\Appointment::getSeller($appointment)->name }}</td>
+                            <td>
+                                <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 @endsection

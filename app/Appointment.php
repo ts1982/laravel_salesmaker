@@ -58,4 +58,20 @@ class Appointment extends Model
 
         return $appointments;
     }
+
+    public static function getAppointer($appointment)
+    {
+        $user_id = $appointment->user_id;
+        $appointer = User::find($user_id);
+
+        return $appointer;
+    }
+
+    public static function getSeller($appointment)
+    {
+        $seller_id = $appointment->seller_id;
+        $seller = User::find($seller_id);
+
+        return $seller;
+    }
 }

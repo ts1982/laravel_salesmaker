@@ -15,13 +15,4 @@
             <a href="{{ route('customers.index') }}">顧客一覧</a>
         </li>
     </ul>
-    <h3>BBB</h3>
-    <ul>
-        <li>
-            <a href="#">ddd</a>
-        </li>
-        <li>
-            <a href="#">eee</a>
-        </li>
-    </ul>
 </div>
