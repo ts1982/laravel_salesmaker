@@ -6,6 +6,7 @@ use App\User;
 use App\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -89,24 +90,34 @@ class UserController extends Controller
     {
         if ($request->seller) {
             $user = User::find($request->seller);
-            $seller_appointment = $request->appointment;
+            $seller_appointment = $request->seller_appointment;
+            $seller = $request->seller;
         } else {
             $user = Auth::user();
             $seller_appointment = '';
+            $seller = '';
         }
 
-        list($time_zone, $start_day, $middle_day, $end_day) = Appointment::makeCalendar($request->day);
+        // 期間取得
+        if ($request->period) {
+            $period = $request->period;
+        } else {
+            $period = Carbon::now()->format('Y-m');
+        }
+
+        // カレンダー作成
+        list($time_zone, $start_day, $middle_day, $end_day) = Appointment::makeCalendar($period);
         $hasAppointments = [];
 
         if ($user->role === 'seller') {
-            $appointments = Appointment::getMonthlySellersAppointments($user, $request->day);
+            $appointments = Appointment::getMonthlySellersAppointments($user, $period);
             foreach ($appointments as $appointment) {
                 $hasAppointments[$appointment->day][$appointment->hour] = true;
             }
         }
 
         if ($user->role === 'appointer') {
-            $appointments = Appointment::getMonthlyAppointersAppointments($user, $request->day);
+            $appointments = Appointment::getMonthlyAppointersAppointments($user, $period);
             foreach ($appointments as $appointment) {
                 if (!isset($hasAppointments[$appointment->day][$appointment->hour])) {
                     $hasAppointments[$appointment->day][$appointment->hour] = 0;
@@ -121,6 +132,6 @@ class UserController extends Controller
             $customer = '';
         }
 
-        return view('users.calendar', compact('time_zone', 'start_day', 'middle_day', 'end_day', 'hasAppointments', 'user', 'seller_appointment', 'customer'));
+        return view('users.calendar', compact('period', 'time_zone', 'start_day', 'middle_day', 'end_day', 'hasAppointments', 'user', 'seller_appointment', 'seller', 'customer'));
     }
 }

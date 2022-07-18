@@ -14,7 +14,15 @@ class AppointmentController extends Controller
 {
     public function index(Request $request)
     {
-        list($time_zone, $start_day, $middle_day, $end_day) = Appointment::makeCalendar($request->day);
+        // 期間取得
+        if ($request->period) {
+            $period = $request->period;
+        } else {
+            $period = '';
+        }
+
+        // カレンダー作成
+        list($time_zone, $start_day, $middle_day, $end_day) = Appointment::makeCalendar($period);
 
         $total_seller = User::where('role', 'seller')->count();
 
@@ -36,6 +44,7 @@ class AppointmentController extends Controller
             }
         }
 
+        //
         if ($request->has('appointment')) {
             $appointment = $request->appointment;
         } else {
@@ -48,19 +57,27 @@ class AppointmentController extends Controller
             $customer = '';
         }
 
-        return view('appointments.index', compact('time_zone', 'start_day', 'middle_day', 'end_day', 'appointments_prev', 'appointments_later', 'appointment', 'customer'));
+        return view('appointments.index', compact('period', 'time_zone', 'start_day', 'middle_day', 'end_day', 'appointments_prev', 'appointments_later', 'appointment', 'customer'));
     }
 
     public function create(Request $request)
     {
-        if (!Appointment::isFuture($request->day, $request->hour)) {
+        $day = $request->day;
+        $hour = $request->hour;
+
+        // 登録日のチェック
+        if (!Appointment::isFuture($day, $hour)) {
             return back()->with('warning', '過去の指定はできません。');
         }
 
-        $day = $request->day;
-        $hour = $request->hour;
+        // 新規か既存か
         if ($request->has('customer')) {
             $customer = Customer::find($request->customer);
+
+            // 未訪問のアポイントチェック
+            if (!$customer->isLatestAppointment($day, $hour)) {
+                return back()->with('warning', '未訪問のアポイントがあります。');
+            }
         } else {
             $customer = '';
         }
@@ -77,7 +94,7 @@ class AppointmentController extends Controller
             $user = Auth::user();
             $appointment = new Appointment();
 
-            if ($request->has('customer')) {
+            if (!empty($customer)) {
 
                 $customer = $request->customer;
                 $appointment->customer_id = $customer;
@@ -153,6 +170,7 @@ class AppointmentController extends Controller
     {
         $appointer = $appointment->user;
         $seller = User::find($appointment->seller_id);
+        $seller_appointment = $appointment;
 
         if ($request->has('day', 'hour')) {
             $day = $request->day;
@@ -162,7 +180,7 @@ class AppointmentController extends Controller
             $hour = '';
         }
 
-        return view('appointments.edit', compact('appointment', 'appointer', 'seller', 'day', 'hour'));
+        return view('appointments.edit', compact('appointment', 'seller_appointment', 'appointer', 'seller', 'day', 'hour'));
     }
 
     public function update(Appointment $appointment, Request $request)

@@ -14,13 +14,8 @@
                     @endif
                 </div>
                 <div class="col-md-4">
-                    {{-- @if (App\User::roleIs('seller')) --}}
-                    <a href="{{ route('users.calendar', compact('appointment', 'seller')) }}"
+                    <a href="{{ route('users.calendar', compact('seller_appointment', 'seller')) }}"
                         class="btn btn-outline-primary btn-sm">日時変更</a>
-                    {{-- @elseif (App\User::roleIs('appointer'))
-                        <a href="{{ route('appointments.index', compact('appointment')) }}"
-                            class="btn btn-outline-primary btn-sm">日時変更</a>
-                    @endif --}}
                 </div>
             </div>
             <div class="row mb-3">

@@ -5,10 +5,23 @@
         <div class="alert alert-danger">{{ session('warning') }}</div>
     @endif
     @if (App\User::roleIs('seller'))
-        <h1 class="text-center mb-4">アポイント一覧</h1>
+        <h1 class="text-center">アポイント一覧</h1>
     @elseif (App\User::roleIs('appointer'))
-        <h1 class="text-center mb-4">アポイント登録</h1>
+        <h1 class="text-center">アポイント登録</h1>
     @endif
+    <div class="text-center">
+        @if ($customer)
+            <a
+                href="{{ url('/appointments/?period=' . App\Appointment::getPrevPeriod($period) . '&customer=' . $customer) }}">&lt;&lt;&nbsp;prev</a>
+            <span>{{ date('Y年n月', strtotime($period . '-01')) }}</span>
+            <a
+                href="{{ url('/appointments/?period=' . App\Appointment::getNextPeriod($period) . '&customer=' . $customer) }}">next&nbsp;&gt;&gt;</a>
+        @else
+            <a href="{{ url('/appointments/?period=' . App\Appointment::getPrevPeriod($period)) }}">&lt;&lt;&nbsp;prev</a>
+            <span>{{ date('Y年n月', strtotime($period . '-01')) }}</span>
+            <a href="{{ url('/appointments/?period=' . App\Appointment::getNextPeriod($period)) }}">next&nbsp;&gt;&gt;</a>
+        @endif
+    </div>
     <div class="row justify-content-around mb-2">
         <table class="table @if (App\User::roleIs('appointer')) table-hover @endif col-md-5 text-center">
             <thead>

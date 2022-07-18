@@ -56,8 +56,8 @@
                         <tr>
                             <td>{{ date('Y/m/d', strtotime($appointment->day)) }}&emsp;{{ $appointment->hour }}時</td>
                             <td>{{ $appointment->customer->name }}</td>
-                            <td>{{ App\Appointment::getAppointer($appointment)->name }}</td>
-                            <td>{{ App\Appointment::getSeller($appointment)->name }}</td>
+                            <td>{{ $appointment->thisAppointerHas()->name }}</td>
+                            <td>{{ $appointment->thisSellerHas()->name }}</td>
                             <td>
                                 <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
                             </td>

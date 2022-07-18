@@ -19,15 +19,15 @@ class Appointment extends Model
         return $this->belongsTo('App\Customer');
     }
 
-    public static function makeCalendar($day)
+    public static function makeCalendar($period)
     {
         Carbon::setLocale('ja');
-        $time_zone = Appointment::$time_zone;
+        $time_zone = self::$time_zone;
 
-        if ($day) {
-            $start_day = Carbon::parse($day)->startOfMonth();
-            $middle_day = Carbon::parse($day)->startOfMonth()->addDays(15);
-            $end_day = Carbon::parse($day)->endOfMonth();
+        if ($period) {
+            $start_day = Carbon::parse($period . '-01')->startOfMonth();
+            $middle_day = Carbon::parse($period . '-01')->startOfMonth()->addDays(15);
+            $end_day = Carbon::parse($period . '-01')->endOfMonth();
         } else {
             $start_day = Carbon::now()->startOfMonth();
             $middle_day = Carbon::now()->startOfMonth()->addDays(15);
@@ -37,39 +37,37 @@ class Appointment extends Model
         return [$time_zone, $start_day, $middle_day, $end_day];
     }
 
-    public static function getMonthlyAppointersAppointments($user, $day)
+    public static function getMonthlyAppointersAppointments($user, $period)
     {
-        if (!$day) {
-            $day = Carbon::now();
+        if (!$period) {
+            $period = Carbon::now();
         }
-        $day = date('Y-m', strtotime($day));
-        $appointments = Appointment::where('day', 'like', "{$day}%")->where('user_id', $user->id)->get();
+        $appointments = Appointment::where('day', 'like', "{$period}%")->where('user_id', $user->id)->get();
 
         return $appointments;
     }
 
-    public static function getMonthlySellersAppointments($user, $day)
+    public static function getMonthlySellersAppointments($user, $period)
     {
-        if (!$day) {
-            $day = Carbon::now();
+        if (!$period) {
+            $period = Carbon::now();
         }
-        $day = date('Y-m', strtotime($day));
-        $appointments = Appointment::where('day', 'like', "{$day}%")->where('seller_id', $user->id)->get();
+        $appointments = Appointment::where('day', 'like', "{$period}%")->where('seller_id', $user->id)->get();
 
         return $appointments;
     }
 
-    public static function getAppointer($appointment)
+    public function thisAppointerHas()
     {
-        $user_id = $appointment->user_id;
+        $user_id = $this->user_id;
         $appointer = User::find($user_id);
 
         return $appointer;
     }
 
-    public static function getSeller($appointment)
+    public function thisSellerHas()
     {
-        $seller_id = $appointment->seller_id;
+        $seller_id = $this->seller_id;
         $seller = User::find($seller_id);
 
         return $seller;
@@ -84,5 +82,33 @@ class Appointment extends Model
         } else {
             return false;
         }
+    }
+
+    public static function getNextPeriod($period) // ex) 2022-07
+    {
+        if ($period) {
+            $day = Carbon::parse($period . '-1');
+        } else {
+            $day = Carbon::now();
+        }
+
+        $day->addMonthsNoOverflow();
+        $period = $day->format('Y-m');
+
+        return $period; // ex) 2022-08
+    }
+
+    public static function getPrevPeriod($period) // ex) 2022-07
+    {
+        if ($period) {
+            $day = Carbon::parse($period . '-1');
+        } else {
+            $day = Carbon::now();
+        }
+
+        $day->subMonthsNoOverflow();
+        $period = $day->format('Y-m');
+
+        return $period; // ex) 2022-06
     }
 }
