@@ -23,7 +23,11 @@
                 <h4 class="mt-3">メニュー</h4>
                 <ul class="navbar-nav mr-auto">
                     <li>
-                        <a href="{{ route('appointments.index') }}">アポイント登録</a>
+                        @if (App\User::roleIs('seller'))
+                            <a href="{{ route('appointments.index') }}">アポイント一覧</a>
+                        @elseif (App\User::roleIs('appointer'))
+                            <a href="{{ route('appointments.index') }}">アポイント登録</a>
+                        @endif
                     </li>
                     <li>
                         @if (App\User::roleIs('seller'))

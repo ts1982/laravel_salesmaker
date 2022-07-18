@@ -1,7 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="text-center mb-4">アポイント登録</h1>
+    @if (session('warning'))
+        <div class="alert alert-danger">{{ session('warning') }}</div>
+    @endif
+    @if (App\User::roleIs('seller'))
+        <h1 class="text-center mb-4">アポイント一覧</h1>
+    @elseif (App\User::roleIs('appointer'))
+        <h1 class="text-center mb-4">アポイント登録</h1>
+    @endif
     <div class="row justify-content-around mb-2">
         <table class="table @if (App\User::roleIs('appointer')) table-hover @endif col-md-5 text-center">
             <thead>
@@ -34,10 +41,17 @@
                                 @elseif ($appointments_prev[$start_day->format('Y-m-d')][$time] === 0)
                                     <span class="link-disabled">0</span>
                                 @else
-                                    <a
-                                        href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time]) }}">
-                                        {{ $appointments_prev[$start_day->format('Y-m-d')][$time] }}
-                                    </a>
+                                    @if ($customer)
+                                        <a
+                                            href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time, 'customer' => $customer]) }}">
+                                            {{ $appointments_prev[$start_day->format('Y-m-d')][$time] }}
+                                        </a>
+                                    @else
+                                        <a
+                                            href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time]) }}">
+                                            {{ $appointments_prev[$start_day->format('Y-m-d')][$time] }}
+                                        </a>
+                                    @endif
                                 @endif
                             </td>
                         @endforeach
@@ -76,10 +90,17 @@
                                 @elseif ($appointments_later[$middle_day->format('Y-m-d')][$time] === 0)
                                     <span class="link-disabled">0</span>
                                 @else
-                                    <a
-                                        href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time]) }}">
-                                        {{ $appointments_later[$middle_day->format('Y-m-d')][$time] }}
-                                    </a>
+                                    @if ($customer)
+                                        <a
+                                            href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time, 'customer' => $customer]) }}">
+                                            {{ $appointments_later[$middle_day->format('Y-m-d')][$time] }}
+                                        </a>
+                                    @else
+                                        <a
+                                            href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time]) }}">
+                                            {{ $appointments_later[$middle_day->format('Y-m-d')][$time] }}
+                                        </a>
+                                    @endif
                                 @endif
                             </td>
                         @endforeach

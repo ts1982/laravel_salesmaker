@@ -115,6 +115,12 @@ class UserController extends Controller
             }
         }
 
-        return view('users.calendar', compact('time_zone', 'start_day', 'middle_day', 'end_day', 'hasAppointments', 'user', 'seller_appointment'));
+        if ($request->customer) {
+            $customer = $request->customer;
+        } else {
+            $customer = '';
+        }
+
+        return view('users.calendar', compact('time_zone', 'start_day', 'middle_day', 'end_day', 'hasAppointments', 'user', 'seller_appointment', 'customer'));
     }
 }

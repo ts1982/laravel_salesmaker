@@ -74,4 +74,15 @@ class Appointment extends Model
 
         return $seller;
     }
+
+    public static function isFuture($day, $hour)
+    {
+        $get_param = Carbon::parse("{$day} {$hour}:00:00");
+        $now = Carbon::now();
+        if ($get_param->greaterThan($now)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

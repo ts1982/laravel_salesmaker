@@ -42,64 +42,94 @@ class AppointmentController extends Controller
             $appointment = '';
         }
 
-        return view('appointments.index', compact('time_zone', 'start_day', 'middle_day', 'end_day', 'appointments_prev', 'appointments_later', 'appointment'));
+        if ($request->has('customer')) {
+            $customer = $request->customer;
+        } else {
+            $customer = '';
+        }
+
+        return view('appointments.index', compact('time_zone', 'start_day', 'middle_day', 'end_day', 'appointments_prev', 'appointments_later', 'appointment', 'customer'));
     }
 
     public function create(Request $request)
     {
+        if (!Appointment::isFuture($request->day, $request->hour)) {
+            return back()->with('warning', '過去の指定はできません。');
+        }
+
         $day = $request->day;
         $hour = $request->hour;
+        if ($request->has('customer')) {
+            $customer = Customer::find($request->customer);
+        } else {
+            $customer = '';
+        }
 
-        return view('appointments.create', compact('day', 'hour'));
+        return view('appointments.create', compact('day', 'hour', 'customer'));
     }
 
     public function store(Request $request)
     {
-        $request->validate(
-            [
-                'name' => 'required',
-                'address' => 'required',
-                'tel' => 'required',
-                'content' => 'required',
-            ],
-            [
-                'name.required' => '氏名を入力してください。',
-                'address.required' => '住所を入力してください。',
-                'tel.required' => '電話番号を入力してください。',
-                'content.required' => 'ヒアリング内容を入力してください。',
-            ]
-        );
 
         try {
             DB::beginTransaction();
 
             $user = Auth::user();
-
-            $customer = new Customer();
-            $customer->name = $request->name;
-            $customer->address = $request->address;
-            $customer->tel = $request->tel;
-            $customer->save();
-
             $appointment = new Appointment();
 
-            if ($user->role === 'appointer') {
-                $all_seller_id = User::where('role', 'seller')->pluck('id')->toArray();
-                $disabled_seller_id = Appointment::where('day', $request->day)->where('hour', $request->hour)->pluck('seller_id')->toArray();
-                $selected_id = array_diff($all_seller_id, $disabled_seller_id);
-                $selected_id = $selected_id[array_rand($selected_id, 1)];
-                $appointment->seller_id = $selected_id;
-            } else if ($user->role === 'seller') {
-                $appointment->seller_id = $user->id;
+            if ($request->has('customer')) {
+
+                $customer = $request->customer;
+                $appointment->customer_id = $customer;
+
+                if ($user->role === 'seller') {
+                    $appointment->seller_id = $user->id;
+                } else {
+                    $target_appointment = Appointment::where('customer_id', $customer)->orderBy('day', 'desc')->get()->first();
+                    $latest_seller = User::find($target_appointment->seller_id);
+                    $appointment->seller_id = $latest_seller->id;
+                }
             } else {
-                // nothing to do
+                $request->validate(
+                    [
+                        'name' => 'required',
+                        'address' => 'required',
+                        'tel' => 'required',
+                        'content' => 'required',
+                    ],
+                    [
+                        'name.required' => '氏名を入力してください。',
+                        'address.required' => '住所を入力してください。',
+                        'tel.required' => '電話番号を入力してください。',
+                        'content.required' => 'ヒアリング内容を入力してください。',
+                    ]
+                );
+
+                $customer = new Customer();
+                $customer->name = $request->name;
+                $customer->address = $request->address;
+                $customer->tel = $request->tel;
+                $customer->save();
+
+                $appointment->customer_id = $customer->id;
+
+                if ($user->role === 'appointer') {
+                    $all_seller_id = User::where('role', 'seller')->pluck('id')->toArray();
+                    $disabled_seller_id = Appointment::where('day', $request->day)->where('hour', $request->hour)->pluck('seller_id')->toArray();
+                    $selected_id = array_diff($all_seller_id, $disabled_seller_id);
+                    $selected_id = $selected_id[array_rand($selected_id, 1)];
+                    $appointment->seller_id = $selected_id;
+                } else if ($user->role === 'seller') {
+                    $appointment->seller_id = $user->id;
+                } else {
+                    // nothing to do
+                }
             }
 
             $appointment->day = $request->day;
             $appointment->hour = $request->hour;
             $appointment->content = $request->content;
             $appointment->user_id = $user->id;
-            $appointment->customer_id = $customer->id;
             $appointment->save();
 
             DB::commit();

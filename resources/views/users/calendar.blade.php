@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+    @if (session('warning'))
+        <div class="alert alert-danger">{{ session('warning') }}</div>
+    @endif
     @if (App\User::roleIs('seller') || $seller_appointment)
         <h1 class="text-center mb-4">{{ $user->name }}の営業予定</h1>
     @elseif (App\User::roleIs('appointer'))
@@ -45,8 +48,13 @@
                                             <a
                                                 href="{{ route('appointments.edit', ['day' => $start_day->toDateString(), 'hour' => $time, 'appointment' => $seller_appointment]) }}">○</a>
                                         @else
-                                            <a
-                                                href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time]) }}">○</a>
+                                            @if ($customer)
+                                                <a
+                                                    href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time, 'customer' => $customer]) }}">○</a>
+                                            @else
+                                                <a
+                                                    href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time]) }}">○</a>
+                                            @endif
                                         @endif
                                     @endif
                                 @elseif (App\User::roleIs('appointer'))
@@ -100,8 +108,13 @@
                                             <a
                                                 href="{{ route('appointments.edit', ['day' => $middle_day->toDateString(), 'hour' => $time, 'appointment' => $seller_appointment]) }}">○</a>
                                         @else
-                                            <a
-                                                href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time]) }}">○</a>
+                                            @if ($customer)
+                                                <a
+                                                    href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time, 'customer' => $customer]) }}">○</a>
+                                            @else
+                                                <a
+                                                    href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time]) }}">○</a>
+                                            @endif
                                         @endif
                                     @endif
                                 @elseif (App\User::roleIs('appointer'))

@@ -29,6 +29,11 @@
                 </div>
             </div>
             <div class="d-flex justify-content-end">
+                @if (App\User::roleIs('seller'))
+                    <a href="{{ route('users.calendar', compact('customer')) }}" class="btn btn-primary mr-3">作成</a>
+                @else
+                    <a href="{{ route('appointments.index', compact('customer')) }}" class="btn btn-primary mr-3">作成</a>
+                @endif
                 <a href="{{ route('customers.edit', compact('customer')) }}" class="btn btn-warning">編集</a>
             </div>
         </div>
