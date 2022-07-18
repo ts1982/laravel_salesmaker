@@ -86,6 +86,25 @@ class UserController extends Controller
         //
     }
 
+    public function edit_password()
+    {
+        return view('users.edit_password');
+    }
+
+    public function update_password(Request $request)
+    {
+        if ($request->password === $request->confirm_password) {
+            $user = Auth::user();
+
+            $user->password = bcrypt($request->password);
+            $user->update();
+        } else {
+            return back()->with('warning', 'パスワードが一致しません。');
+        }
+
+        return redirect('/');
+    }
+
     public function calendar(Request $request)
     {
         if ($request->seller) {
