@@ -214,11 +214,22 @@ class AppointmentController extends Controller
         $user = Auth::user();
         $day = new Carbon($request->day);
         if ($user->role === 'seller') {
-            $appointments = Appointment::where('day', $day->format('Y-m-d'))->where('seller_id', $user->id)->get();
+            $appointments = Appointment::where('day', $day->format('Y-m-d'))->where('seller_id', $user->id)->orderBy('hour', 'asc')->get();
         } else if ($user->role === 'appointer') {
             $appointments = Appointment::where('day', $day->format('Y-m-d'))->where('user_id', $user->id)->get();
         }
 
         return view('appointments.byday', compact('appointments', 'day'));
+    }
+
+    public function change_status(Request $request)
+    {
+        $appointment = Appointment::find($request->appointment);
+        $appointment->status = $request->status;
+        $appointment->update();
+
+        $day = $request->day;
+
+        return redirect()->route('appointments.byday', compact('day'));
     }
 }

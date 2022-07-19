@@ -68,8 +68,7 @@
                 @if (App\User::roleIs('seller'))
                     <a href="{{ route('users.calendar', compact('customer')) }}" class="btn btn-success mr-3">アポイント作成</a>
                 @else
-                    <a href="{{ route('appointments.index', compact('customer')) }}"
-                        class="btn btn-success">アポイント作成</a>
+                    <a href="{{ route('appointments.index', compact('customer')) }}" class="btn btn-success">アポイント作成</a>
                 @endif
             </div>
         </div>

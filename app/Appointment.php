@@ -137,14 +137,11 @@ class Appointment extends Model
         return $period; // ex) 2022-06
     }
 
-    public function isDone()
+    public function statusIs()
     {
-        $now = Carbon::now();
-        $target_appointment = Carbon::parse("{$this->day} {$this->hour}:00:00");
-        if ($target_appointment->lt($now)) {
-            return '訪問済';
-        } else {
-            return '未訪問';
-        }
+        $key = $this->status;
+        $status = self::STATUS_LIST[$key];
+
+        return [$key, $status];
     }
 }

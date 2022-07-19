@@ -3,11 +3,12 @@
 @section('content')
     <h1 class="text-center">アポイント詳細</h1>
     <div class="row justify-content-center mt-5">
-        <div class="col-md-10">
+        <div class="col-md-10 p-0">
             <div class="row mb-3">
                 <strong class="col-md-3">日時</strong>
                 <div class="col-md-9">
-                    <span>{{ date('Y年n月j日', strtotime($appointment->day)) }}&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時</span>
+                    <span><a
+                            href="{{ route('appointments.byday', ['day' => $appointment->day]) }}">{{ date('Y年n月j日', strtotime($appointment->day)) }}</a>&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時</span>
                 </div>
             </div>
             <div class="row mb-3">

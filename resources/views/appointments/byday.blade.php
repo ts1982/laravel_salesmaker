@@ -3,7 +3,7 @@
 @section('content')
     <h1 class="text-center">日別アポイント情報</h1>
     <div class="row justify-content-center mt-5">
-        <div class="col-md-10">
+        <div class="col-md-10 p-0">
             <h2 class="mb-3">{{ $day->format('Y年n月j日') }}&nbsp;({{ mb_substr($day->dayName, 0, 1) }})</h2>
             <table class="table">
                 <thead>
@@ -23,12 +23,21 @@
                                     href="{{ route('customers.show', ['customer' => $appointment->customer]) }}">{{ $appointment->customer->name }}</a>
                             </td>
                             <td>
-                                <form>
-                                    <select name="status" class="custom-select custom-select-sm w-75">
-                                        <option value="0" selected>{{ App\Appointment::STATUS_LIST[0] }}</option>
-                                        <option value="1">{{ App\Appointment::STATUS_LIST[1] }}</option>
-                                        <option value="2">{{ App\Appointment::STATUS_LIST[2] }}</option>
-                                        <option value="3">{{ App\Appointment::STATUS_LIST[3] }}</option>
+                                <form action="{{ route('appointments.change_status', compact('appointment')) }}"
+                                    method="post">
+                                    @csrf
+                                    @method('put')
+                                    <input type="hidden" name="day" value="{{ $day }}">
+                                    <select name="status" class="custom-select custom-select-sm w-75"
+                                        onchange="this.form.submit();">
+                                        @foreach (App\Appointment::STATUS_LIST as $key => $value)
+                                            @if ($appointment->status === $key)
+                                                <option value="{{ $key }}" selected>{{ $value }}
+                                                </option>
+                                            @else
+                                                <option value="{{ $key }}">{{ $value }}</option>
+                                            @endif
+                                        @endforeach
                                     </select>
                                 </form>
                             </td>
