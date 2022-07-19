@@ -1,6 +1,6 @@
 <nav class="header navbar navbar-expand-md navbar-light shadow-sm fixed-top">
     <div class="d-flex align-items-center mx-3">
-        <a class="navbar-brand mr-4" href="{{ url('/') }}">
+        <a class="navbar-brand mr-4" href="{{ url('/users/calendar') }}">
             <span class="h2">SalesMaker</span>
         </a>
         <form class="d-flex mr-auto header-search">

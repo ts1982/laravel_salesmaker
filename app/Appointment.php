@@ -23,15 +23,23 @@ class Appointment extends Model
     {
         Carbon::setLocale('ja');
         $time_zone = self::$time_zone;
+        $target_first_day = Carbon::parse($period . '-01');
+        $today = Carbon::now();
 
         if ($period) {
-            $start_day = Carbon::parse($period . '-01')->startOfMonth();
-            $middle_day = Carbon::parse($period . '-01')->startOfMonth()->addDays(15);
-            $end_day = Carbon::parse($period . '-01')->endOfMonth();
+            $start_day = $target_first_day->copy()->startOfMonth();
+            $middle_day = $target_first_day->copy()->startOfMonth()->addDays(15);
+            $end_day = $target_first_day->copy()->endOfMonth();
         } else {
-            $start_day = Carbon::now()->startOfMonth();
-            $middle_day = Carbon::now()->startOfMonth()->addDays(15);
-            $end_day = Carbon::now()->endOfMonth();
+            $start_day = $today->copy()->startOfMonth();
+            $middle_day = $today->copy()->startOfMonth()->addDays(15);
+            $end_day = $today->copy()->endOfMonth();
+        }
+
+        if ($today->day > 15) {
+            $start_day = $start_day->copy()->addDays(15);
+            $middle_day = $start_day->copy()->addMonth()->startOfMonth();
+            $end_day = $middle_day->copy()->addDays(14);
         }
 
         return [$time_zone, $start_day, $middle_day, $end_day];
@@ -40,9 +48,13 @@ class Appointment extends Model
     public static function getMonthlyAppointersAppointments($user, $period)
     {
         if (!$period) {
-            $period = Carbon::now();
+            $period = Carbon::now()->format('Y-m');
         }
-        $appointments = Appointment::where('day', 'like', "{$period}%")->where('user_id', $user->id)->get();
+
+        $carbon = new Carbon($period . '-1');
+        $end_of_period = $carbon->addMonth()->addDays(15);
+
+        $appointments = $user->appointments->whereBetween('day', [$period . '-1', $end_of_period]);
 
         return $appointments;
     }
@@ -50,9 +62,13 @@ class Appointment extends Model
     public static function getMonthlySellersAppointments($user, $period)
     {
         if (!$period) {
-            $period = Carbon::now();
+            $period = Carbon::now()->format('Y-m');
         }
-        $appointments = Appointment::where('day', 'like', "{$period}%")->where('seller_id', $user->id)->get();
+
+        $carbon = new Carbon($period . '-1');
+        $end_of_period = $carbon->addMonth()->addDays(15);
+
+        $appointments = Appointment::whereBetween('day', [$period . '-1', $end_of_period])->where('seller_id', $user->id)->get();
 
         return $appointments;
     }

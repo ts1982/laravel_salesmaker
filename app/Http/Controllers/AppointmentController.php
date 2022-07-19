@@ -37,7 +37,7 @@ class AppointmentController extends Controller
 
         $appointments_later = [];
         $day = $middle_day->copy();
-        for ($day; $day < $end_day; $day->addDay()) {
+        for ($day; $day <= $end_day; $day->addDay()) {
             foreach ($time_zone as $time) {
                 $count = Appointment::where('day', $day)->where('hour', $time)->count();
                 $appointments_later[$day->format('Y-m-d')][$time] = $total_seller - $count;
@@ -94,7 +94,7 @@ class AppointmentController extends Controller
             $user = Auth::user();
             $appointment = new Appointment();
 
-            if (!empty($customer)) {
+            if (!empty($request->customer)) {
 
                 $customer = $request->customer;
                 $appointment->customer_id = $customer;
@@ -190,7 +190,7 @@ class AppointmentController extends Controller
             $appointment->hour = $request->hour;
         }
         $appointment->content = $request->content;
-        $appointment->save();
+        $appointment->update();
 
         return redirect()->route('appointments.show', compact('appointment'));
     }
