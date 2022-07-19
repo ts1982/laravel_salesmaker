@@ -30,9 +30,9 @@
             </div>
             <div class="d-flex justify-content-end">
                 @if (App\User::roleIs('seller'))
-                    <a href="{{ route('users.calendar', compact('customer')) }}" class="btn btn-primary mr-3">作成</a>
+                    <a href="{{ route('users.calendar', compact('customer')) }}" class="btn btn-success mr-3">作成</a>
                 @else
-                    <a href="{{ route('appointments.index', compact('customer')) }}" class="btn btn-primary mr-3">作成</a>
+                    <a href="{{ route('appointments.index', compact('customer')) }}" class="btn btn-success mr-3">作成</a>
                 @endif
                 <a href="{{ route('customers.edit', compact('customer')) }}" class="btn btn-warning">編集</a>
             </div>
@@ -45,19 +45,25 @@
                 <thead>
                     <tr>
                         <th>日時</th>
-                        <th>顧客名</th>
                         <th>アポインター</th>
                         <th>営業担当</th>
+                        <th class="text-center">訪問ステータス</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($appointments as $appointment)
                         <tr>
-                            <td>{{ date('Y/m/d', strtotime($appointment->day)) }}&emsp;{{ $appointment->hour }}時</td>
-                            <td>{{ $appointment->customer->name }}</td>
+                            <td>
+                                {{ date('Y/m/d', strtotime($appointment->day)) }}&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時
+                            </td>
                             <td>{{ $appointment->thisAppointerHas()->name }}</td>
                             <td>{{ $appointment->thisSellerHas()->name }}</td>
+                            @if ($appointment->isDone() === '未訪問')
+                                <td class="text-danger text-center">{{ $appointment->isDone() }}</td>
+                            @elseif ($appointment->isDone() === '訪問済')
+                                <td class="text-success text-center">{{ $appointment->isDone() }}</td>
+                            @endif
                             <td>
                                 <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
                             </td>

@@ -20,15 +20,8 @@
         <!-- Left Side Of Navbar -->
         @auth
             <div class="sidebar-list">
-                <h4 class="mt-3">メニュー</h4>
+                <h3 class="mt-3">メニュー</h3>
                 <ul class="navbar-nav mr-auto">
-                    <li>
-                        @if (App\User::roleIs('seller'))
-                            <a href="{{ route('appointments.index') }}">アポイント一覧</a>
-                        @elseif (App\User::roleIs('appointer'))
-                            <a href="{{ route('appointments.index') }}">アポイント登録</a>
-                        @endif
-                    </li>
                     <li>
                         @if (App\User::roleIs('seller'))
                             <a href="{{ route('users.calendar') }}">営業予定</a>
@@ -37,25 +30,34 @@
                         @endif
                     </li>
                     <li>
+                        @if (App\User::roleIs('seller'))
+                            <a href="{{ route('appointments.index') }}">アポイント一覧</a>
+                        @elseif (App\User::roleIs('appointer'))
+                            <a href="{{ route('appointments.index') }}">アポイント登録</a>
+                        @endif
+                    </li>
+                    <li>
                         <a href="{{ route('customers.index') }}">顧客一覧</a>
                     </li>
                 </ul>
             @endauth
-        </div>
-
-        <!-- Right Side Of Navbar -->
-        <ul class="navbar-nav ml-auto">
-            <!-- Authentication Links -->
             @guest
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                </li>
-                @if (Route::has('register'))
+                <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                        <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                     </li>
-                @endif
+                    @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                        </li>
+                    @endif
+                </ul>
             @else
+            </div>
+
+            <!-- Right Side Of Navbar -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Authentication Links -->
                 <li class="nav-item dropdown">
                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

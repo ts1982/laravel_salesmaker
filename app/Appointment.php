@@ -45,6 +45,14 @@ class Appointment extends Model
         return [$time_zone, $start_day, $middle_day, $end_day];
     }
 
+    public function getDayName()
+    {
+        $day = Carbon::parse($this->day);
+        $day_name = mb_substr($day->dayName, 0, 1);
+
+        return $day_name;
+    }
+
     public static function getMonthlyAppointersAppointments($user, $period)
     {
         if (!$period) {
@@ -126,5 +134,16 @@ class Appointment extends Model
         $period = $day->format('Y-m');
 
         return $period; // ex) 2022-06
+    }
+
+    public function isDone()
+    {
+        $now = Carbon::now();
+        $target_appointment = Carbon::parse("{$this->day} {$this->hour}:00:00");
+        if ($target_appointment->lt($now)) {
+            return '訪問済';
+        } else {
+            return '未訪問';
+        }
     }
 }

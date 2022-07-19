@@ -17,7 +17,10 @@
                     @foreach ($appointments as $appointment)
                         <tr>
                             <td>{{ $appointment->hour }}時</td>
-                            <td>{{ $appointment->customer->name }}</td>
+                            <td>
+                                <a
+                                    href="{{ route('customers.show', ['customer' => $appointment->customer]) }}">{{ $appointment->customer->name }}</a>
+                            </td>
                             <td>
                                 <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
                             </td>

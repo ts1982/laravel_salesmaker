@@ -8,9 +8,9 @@
                 <strong class="col-md-3">日時</strong>
                 <div class="col-md-5">
                     @if ($day && $hour)
-                        <span>{{ date('Y年n月j日', strtotime($day)) }}&emsp;{{ $hour }}時</span>
+                        <span>{{ date('Y年n月j日', strtotime($day)) }}&nbsp;({{ mb_substr(Carbon\Carbon::parse($day)->dayName, 0, 1) }})&emsp;{{ $hour }}時</span>
                     @else
-                        <span>{{ date('Y年n月j日', strtotime($appointment->day)) }}&emsp;{{ $appointment->hour }}時</span>
+                        <span>{{ date('Y年n月j日', strtotime($appointment->day)) }}&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時</span>
                     @endif
                 </div>
                 <div class="col-md-4">

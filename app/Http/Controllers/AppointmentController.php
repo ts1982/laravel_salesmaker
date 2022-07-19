@@ -76,7 +76,7 @@ class AppointmentController extends Controller
 
             // 未訪問のアポイントチェック
             if (!$customer->isLatestAppointment($day, $hour)) {
-                return back()->with('warning', '未訪問のアポイントがあります。');
+                return back()->with('warning', '指定した日付より後に、まだ未訪問のアポイントがあります。');
             }
         } else {
             $customer = '';
@@ -168,17 +168,22 @@ class AppointmentController extends Controller
 
     public function edit(Appointment $appointment, Request $request)
     {
-        $appointer = $appointment->user;
-        $seller = User::find($appointment->seller_id);
-        $seller_appointment = $appointment;
-
         if ($request->has('day', 'hour')) {
             $day = $request->day;
             $hour = $request->hour;
+            // 登録日のチェック
+            if (!Appointment::isFuture($day, $hour)) {
+                return back()->with('warning', '過去の指定はできません。');
+            }
         } else {
             $day = '';
             $hour = '';
         }
+
+
+        $appointer = $appointment->user;
+        $seller = User::find($appointment->seller_id);
+        $seller_appointment = $appointment;
 
         return view('appointments.edit', compact('appointment', 'seller_appointment', 'appointer', 'seller', 'day', 'hour'));
     }

@@ -7,7 +7,8 @@
             <div class="row mb-3">
                 <strong class="col-md-3">日時</strong>
                 <div class="col-md-9">
-                    {{ date('Y年n月j日', strtotime($appointment->day)) }}&emsp;{{ $appointment->hour }}時</div>
+                    <span>{{ date('Y年n月j日', strtotime($appointment->day)) }}&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時</span>
+                </div>
             </div>
             <div class="row mb-3">
                 <strong class="col-md-3">顧客名</strong>

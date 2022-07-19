@@ -5,14 +5,14 @@
             @if (App\User::roleIs('seller'))
                 <a href="{{ route('users.calendar') }}">営業予定</a>
             @elseif (App\User::roleIs('appointer'))
-                <a href="{{ route('appointments.index') }}">アポイント登録</a>
+                <a href="{{ route('users.calendar') }}">マイアポイント</a>
             @endif
         </li>
         <li>
             @if (App\User::roleIs('seller'))
                 <a href="{{ route('appointments.index') }}">アポイント一覧</a>
             @elseif (App\User::roleIs('appointer'))
-                <a href="{{ route('users.calendar') }}">マイアポイント</a>
+                <a href="{{ route('appointments.index') }}">アポイント登録</a>
             @endif
         </li>
         <li>
