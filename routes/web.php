@@ -19,17 +19,19 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/users/calendar', 'UserController@calendar')->name('users.calendar');
+Route::get('/users/calendar', 'UserController@calendar')->name('users.calendar')->middleware('auth');
+Route::get('/users/password/edit', 'UserController@edit_password')->name('users.edit_password')->middleware('auth');
+Route::put('/users/update_password', 'UserController@update_password')->name('users.update_password')->middleware('auth');
 
-Route::get('/customers', 'CustomerController@index')->name('customers.index');
-Route::get('/customers/{customer}', 'CustomerController@show')->name('customers.show');
-Route::get('/customers/{customer}/edit', 'CustomerController@edit')->name('customers.edit');
-Route::put('/customers/{customer}/update', 'CustomerController@update')->name('customers.update');
+Route::get('/customers', 'CustomerController@index')->name('customers.index')->middleware('auth');
+Route::get('/customers/{customer}', 'CustomerController@show')->name('customers.show')->middleware('auth');
+Route::get('/customers/{customer}/edit', 'CustomerController@edit')->name('customers.edit')->middleware('auth');
+Route::put('/customers/{customer}/update', 'CustomerController@update')->name('customers.update')->middleware('auth');
 
-Route::get('/appointments', 'AppointmentController@index')->name('appointments.index');
-Route::get('/appointments/new', 'AppointmentController@create')->name('appointments.create');
-Route::post('/appointments/store', 'AppointmentController@store')->name('appointments.store');
-Route::get('/appointments/byday', 'AppointmentController@byday')->name('appointments.byday');
-Route::get('/appointments/{appointment}', 'AppointmentController@show')->name('appointments.show');
-Route::get('/appointments/{appointment}/edit', 'AppointmentController@edit')->name('appointments.edit');
-Route::put('/appointments/{appointment}/update', 'AppointmentController@update')->name('appointments.update');
+Route::get('/appointments', 'AppointmentController@index')->name('appointments.index')->middleware('auth');
+Route::get('/appointments/new', 'AppointmentController@create')->name('appointments.create')->middleware('auth');
+Route::post('/appointments/store', 'AppointmentController@store')->name('appointments.store')->middleware('auth');
+Route::get('/appointments/byday', 'AppointmentController@byday')->name('appointments.byday')->middleware('auth');
+Route::get('/appointments/{appointment}', 'AppointmentController@show')->name('appointments.show')->middleware('auth');
+Route::get('/appointments/{appointment}/edit', 'AppointmentController@edit')->name('appointments.edit')->middleware('auth');
+Route::put('/appointments/{appointment}/update', 'AppointmentController@update')->name('appointments.update')->middleware('auth');
