@@ -7,7 +7,8 @@ use Carbon\Carbon;
 
 class Appointment extends Model
 {
-    public static $time_zone = [10, 13, 16, 19];
+    const TIME_ZONE = [10, 13, 16, 19];
+    const STATUS_LIST = ['未訪問', '再訪問', 'NG', '契約'];
 
     public function user()
     {
@@ -22,7 +23,7 @@ class Appointment extends Model
     public static function makeCalendar($period)
     {
         Carbon::setLocale('ja');
-        $time_zone = self::$time_zone;
+        $time_zone = self::TIME_ZONE;
         $target_first_day = Carbon::parse($period . '-01');
         $today = Carbon::now();
 

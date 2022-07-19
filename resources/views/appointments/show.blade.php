@@ -38,7 +38,12 @@
                 <div class="col-md-9">{{ $seller->name }}</div>
             </div>
             <div class="d-flex justify-content-end">
-                <a href="{{ route('appointments.edit', compact('appointment')) }}" class="btn btn-warning">アポイント編集</a>
+                <a href="{{ route('appointments.edit', compact('appointment')) }}" class="btn btn-warning mr-2">編集</a>
+                <form action="{{ route('appointments.destroy', compact('appointment')) }}" method="post">
+                    @csrf
+                    @method('delete')
+                    <button type="submit" class="btn btn-danger">削除</button>
+                </form>
             </div>
         </div>
     </div>

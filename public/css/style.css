@@ -11,11 +11,6 @@ li {
     list-style: none;
 }
 
-.navbar-nav li {
-    margin-bottom: 8px;
-    margin-left: 8px;
-}
-
 .sidebar {
     height: 100vh;
 }
@@ -69,6 +64,11 @@ td {
 }
 
 @media (max-width: 768px) {
+    .navbar-nav li {
+        margin-bottom: 8px;
+        margin-left: 8px;
+    }
+
     .sidebar {
         display: none;
     }

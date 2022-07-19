@@ -35,6 +35,7 @@ Route::get('/appointments/byday', 'AppointmentController@byday')->name('appointm
 Route::get('/appointments/{appointment}', 'AppointmentController@show')->name('appointments.show')->middleware('auth');
 Route::get('/appointments/{appointment}/edit', 'AppointmentController@edit')->name('appointments.edit')->middleware('auth');
 Route::put('/appointments/{appointment}/update', 'AppointmentController@update')->name('appointments.update')->middleware('auth');
+Route::delete('/appointments/{appointment}/destroy', 'AppointmentController@destroy')->name('appointments.destroy')->middleware('auth');
 
 if (App::environment('production')) {
     URL::forceScheme('https');

@@ -36,10 +36,10 @@
                 <tr>
                     <th>日付</th>
                     <th>曜日</th>
-                    <th>10時</th>
-                    <th>13時</th>
-                    <th>16時</th>
-                    <th>19時</th>
+                    <th>{{ App\Appointment::TIME_ZONE[0] }}時</th>
+                    <th>{{ App\Appointment::TIME_ZONE[1] }}時</th>
+                    <th>{{ App\Appointment::TIME_ZONE[2] }}時</th>
+                    <th>{{ App\Appointment::TIME_ZONE[3] }}時</th>
                 </tr>
             </thead>
             <tbody>
@@ -96,10 +96,10 @@
                 <tr>
                     <th>日付</th>
                     <th>曜日</th>
-                    <th>10時</th>
-                    <th>13時</th>
-                    <th>16時</th>
-                    <th>19時</th>
+                    <th>{{ App\Appointment::TIME_ZONE[0] }}時</th>
+                    <th>{{ App\Appointment::TIME_ZONE[1] }}時</th>
+                    <th>{{ App\Appointment::TIME_ZONE[2] }}時</th>
+                    <th>{{ App\Appointment::TIME_ZONE[3] }}時</th>
                 </tr>
             </thead>
             <tbody>

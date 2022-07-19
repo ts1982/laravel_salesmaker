@@ -10,6 +10,7 @@
                     <tr>
                         <th>日時</th>
                         <th>顧客名</th>
+                        <th>訪問ステータス</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -20,6 +21,16 @@
                             <td>
                                 <a
                                     href="{{ route('customers.show', ['customer' => $appointment->customer]) }}">{{ $appointment->customer->name }}</a>
+                            </td>
+                            <td>
+                                <form>
+                                    <select name="status" class="custom-select custom-select-sm w-75">
+                                        <option value="0" selected>{{ App\Appointment::STATUS_LIST[0] }}</option>
+                                        <option value="1">{{ App\Appointment::STATUS_LIST[1] }}</option>
+                                        <option value="2">{{ App\Appointment::STATUS_LIST[2] }}</option>
+                                        <option value="3">{{ App\Appointment::STATUS_LIST[3] }}</option>
+                                    </select>
+                                </form>
                             </td>
                             <td>
                                 <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
