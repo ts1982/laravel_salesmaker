@@ -23,12 +23,21 @@
                                     href="{{ route('customers.show', ['customer' => $appointment->customer]) }}">{{ $appointment->customer->name }}</a>
                             </td>
                             <td>
-                                <form>
-                                    <select name="status" class="custom-select custom-select-sm w-75">
-                                        <option value="0" selected>{{ App\Appointment::STATUS_LIST[0] }}</option>
-                                        <option value="1">{{ App\Appointment::STATUS_LIST[1] }}</option>
-                                        <option value="2">{{ App\Appointment::STATUS_LIST[2] }}</option>
-                                        <option value="3">{{ App\Appointment::STATUS_LIST[3] }}</option>
+                                <form action="{{ route('appointments.change_status', compact('appointment')) }}"
+                                    method="post">
+                                    @csrf
+                                    @method('put')
+                                    <input type="hidden" name="day" value="{{ $day }}">
+                                    <select name="status" class="custom-select custom-select-sm w-75"
+                                        onchange="this.form.submit();">
+                                        @foreach (App\Appointment::STATUS_LIST as $key => $value)
+                                            @if ($appointment->status === $key)
+                                                <option value="{{ $key }}" selected>{{ $value }}
+                                                </option>
+                                            @else
+                                                <option value="{{ $key }}">{{ $value }}</option>
+                                            @endif
+                                        @endforeach
                                     </select>
                                 </form>
                             </td>

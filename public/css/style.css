@@ -53,6 +53,18 @@ td {
     color: #aaa;
 }
 
+.status-color1 {
+    color: rgb(224, 87, 255);
+}
+
+.status-color2 {
+    color: rgb(255, 56, 56);
+}
+
+.status-color3 {
+    color: rgb(0, 169, 59);
+}
+
 @media (min-width: 768px) {
     .header {
         height: 50px;

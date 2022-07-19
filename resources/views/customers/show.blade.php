@@ -36,13 +36,13 @@
     <h3 class="text-center mt-4">アポイント履歴</h3>
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <table class="table">
+            <table class="table text-center">
                 <thead>
                     <tr>
                         <th>日時</th>
+                        <th class="text-center">訪問ステータス</th>
                         <th>アポインター</th>
                         <th>営業担当</th>
-                        <th class="text-center">訪問ステータス</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -50,15 +50,12 @@
                     @foreach ($appointments as $appointment)
                         <tr>
                             <td>
-                                {{ date('Y/m/d', strtotime($appointment->day)) }}&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時
+                                <a
+                                    href="{{ route('appointments.byday', ['day' => $appointment->day]) }}">{{ date('Y/m/d', strtotime($appointment->day)) }}&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時</a>
                             </td>
+                            <td class="status-color{{ $appointment->statusIs()[0] }}">{{ $appointment->statusIs()[1] }}</td>
                             <td>{{ $appointment->thisAppointerHas()->name }}</td>
                             <td>{{ $appointment->thisSellerHas()->name }}</td>
-                            @if ($appointment->isDone() === '未訪問')
-                                <td class="text-danger text-center">{{ $appointment->isDone() }}</td>
-                            @elseif ($appointment->isDone() === '訪問済')
-                                <td class="text-success text-center">{{ $appointment->isDone() }}</td>
-                            @endif
                             <td>
                                 <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
                             </td>
