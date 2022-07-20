@@ -4,6 +4,9 @@
     @if (session('warning'))
         <div class="alert alert-danger">{{ session('warning') }}</div>
     @endif
+    @if ($day && $hour)
+        <div class="alert alert-warning">{{ date('Y年n月j日', strtotime($day)) }}&emsp;{{ $hour }}時から変更</div>
+    @endif
     @if (App\User::roleIs('seller') || $seller_appointment)
         <h1 class="text-center">{{ $user->name }}の営業予定</h1>
     @elseif (App\User::roleIs('appointer'))

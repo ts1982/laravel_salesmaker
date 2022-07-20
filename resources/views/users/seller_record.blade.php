@@ -53,8 +53,8 @@
                                 <a
                                     href="{{ route('appointments.byday', ['day' => $appointment->day]) }}">{{ date('Y年n月j日', strtotime($appointment->day)) }}</a>&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時
                             </td>
-                            <td class="status-color{{ $appointment->statusIs()[0] }}">
-                                {{ $appointment->statusIs()[1] }}</td>
+                            <td class="status-color{{ $appointment->statusIs()[0] }}">{{ $appointment->statusIs()[1] }}
+                            </td>
                             <td>{{ $appointment->thisAppointerHas()->name }}</td>
                             <td>{{ $appointment->thisSellerHas()->name }}</td>
                             <td>

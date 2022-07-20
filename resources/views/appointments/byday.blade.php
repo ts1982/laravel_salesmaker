@@ -3,7 +3,7 @@
 @section('content')
     <h1 class="text-center">日別アポイント情報</h1>
     <div class="row justify-content-center mt-5">
-        <div class="col-md-10">
+        <div class="col-md-10 p-0">
             <h2 class="mb-3">{{ $day->format('Y年n月j日') }}&nbsp;({{ mb_substr($day->dayName, 0, 1) }})</h2>
             <table class="table">
                 <thead>

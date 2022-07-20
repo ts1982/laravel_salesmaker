@@ -111,10 +111,14 @@ class UserController extends Controller
             $user = User::find($request->seller);
             $seller_appointment = $request->seller_appointment;
             $seller = $request->seller;
+            $day = $request->day;
+            $hour = $request->hour;
         } else {
             $user = Auth::user();
             $seller_appointment = '';
             $seller = '';
+            $day = '';
+            $hour = '';
         }
 
         // 期間取得
@@ -151,6 +155,6 @@ class UserController extends Controller
             $customer = '';
         }
 
-        return view('users.calendar', compact('period', 'time_zone', 'start_day', 'middle_day', 'end_day', 'hasAppointments', 'user', 'seller_appointment', 'seller', 'customer'));
+        return view('users.calendar', compact('period', 'time_zone', 'start_day', 'middle_day', 'end_day', 'hasAppointments', 'user', 'seller_appointment', 'seller', 'customer', 'day', 'hour'));
     }
 }
