@@ -1,48 +1,41 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="mb-5 text-center">顧客詳細情報</h1>
-    <div class="row justify-content-center">
-        <div class="col-sm-6 p-0">
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <strong>顧客名</strong>
-                </div>
-                <div class="col-md-8">
-                    <span>{{ $customer->name }}</span>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <strong>住所</strong>
-                </div>
-                <div class="col-md-8">
-                    <span>{{ $customer->address }}</span>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <strong>電話番号</strong>
-                </div>
-                <div class="col-md-8">
-                    <span>{{ $customer->tel }}</span>
-                </div>
-            </div>
-            <div class="d-flex justify-content-end">
-                <a href="{{ route('customers.edit', compact('customer')) }}" class="btn btn-warning">編集</a>
-            </div>
-        </div>
-    </div>
-    <h3 class="text-center mt-4">アポイント履歴</h3>
+    <h1 class="text-center mt-4">{{ date('Y年n月', strtotime($period . '-01')) }}営業成績</h1>
     <div class="row justify-content-center">
         <div class="col-md-10 p-0">
             <table class="table text-center">
                 <thead>
                     <tr>
+                        <th>訪問件数</th>
+                        <th>契約件数</th>
+                        <th>契約率</th>
+                        <th>ランク</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ $total }}</td>
+                        <td>{{ $contract_count }}</td>
+                        <td>{{ $rate }}%</td>
+                        <td>{{ $rank }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="term-changer">
+            <a href="{{ url('/users/record/?period=' . App\Appointment::getPrevPeriod($period)) }}">&lt;&lt;&nbsp;prev</a>
+            <span>{{ date('Y年n月', strtotime($period . '-01')) }}</span>
+            <a href="{{ url('/users/record/?period=' . App\Appointment::getNextPeriod($period)) }}">next&nbsp;&gt;&gt;</a>
+        </div>
+        <div class="col-md-10 p-0">
+            <table class="table text-center">
+                <thead>
+                    <tr>
                         <th>日時</th>
+                        <th>顧客名</th>
                         <th class="text-center">訪問ステータス</th>
                         <th>アポインター</th>
-                        <th>営業担当</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -50,13 +43,13 @@
                     @foreach ($appointments as $appointment)
                         <tr>
                             <td>
-                                <a
-                                    href="{{ route('appointments.byday', ['day' => $appointment->day]) }}">{{ date('Y年n月j日', strtotime($appointment->day)) }}</a>&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時
+                                {{ date('j日', strtotime($appointment->day)) }}&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時
                             </td>
-                            <td class="status-color{{ $appointment->statusIs()[0] }}">{{ $appointment->statusIs()[1] }}
+                            <td>{{ $appointment->customer->name }}</td>
+                            <td class="status-color{{ $appointment->statusIs()[0] }}">
+                                {{ $appointment->statusIs()[1] }}
                             </td>
                             <td>{{ $appointment->thisAppointerHas()->name }}</td>
-                            <td>{{ $appointment->thisSellerHas()->name }}</td>
                             <td>
                                 <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
                             </td>
@@ -64,13 +57,6 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="d-flex justify-content-end">
-                @if (App\User::roleIs('seller'))
-                    <a href="{{ route('users.calendar', compact('customer')) }}" class="btn btn-success mr-3">アポイント作成</a>
-                @else
-                    <a href="{{ route('appointments.index', compact('customer')) }}" class="btn btn-success">アポイント作成</a>
-                @endif
-            </div>
         </div>
     </div>
 @endsection

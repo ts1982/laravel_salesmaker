@@ -8,7 +8,7 @@
                 <strong class="col-md-3">日時</strong>
                 <div class="col-md-9">
                     <span><a
-                            href="{{ route('appointments.byday', ['day' => $appointment->day]) }}">{{ date('Y年n月j日', strtotime($appointment->day)) }}</a>&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時</span>
+                            href="{{ route('appointments.byday', ['day' => $appointment->day]) }}">{{ date('Y/m/d', strtotime($appointment->day)) }}</a>&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時</span>
                 </div>
             </div>
             <div class="row mb-3">

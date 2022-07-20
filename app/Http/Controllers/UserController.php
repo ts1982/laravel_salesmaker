@@ -157,4 +157,30 @@ class UserController extends Controller
 
         return view('users.calendar', compact('period', 'time_zone', 'start_day', 'middle_day', 'end_day', 'hasAppointments', 'user', 'seller_appointment', 'seller', 'customer', 'day', 'hour'));
     }
+
+    public function seller_record(Request $request)
+    {
+        // 期間取得
+        if ($request->period) {
+            $period = $request->period;
+        } else {
+            $period = Carbon::now();
+            $period = $period->format('Y-m');
+        }
+
+        //
+        $user = Auth::user();
+        $appointments = Appointment::where('seller_id', $user->id)->where('day', 'like', "$period%")->orderBy('day', 'asc')->orderBy('hour', 'asc')->get();
+
+        $total = $appointments->whereIn('status', [2, 3])->count();
+        $contract_count = $appointments->where('status', 3)->count();
+        if ($total !== 0) {
+            $rate = number_format($contract_count / $total * 100, 1);
+        } else {
+            $rate = 0;
+        }
+        $rank = $user->getRank($rate);
+
+        return view('users.seller_record', compact('appointments', 'period', 'total', 'contract_count', 'rate', 'rank'));
+    }
 }

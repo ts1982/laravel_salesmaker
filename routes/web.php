@@ -22,6 +22,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/users/calendar', 'UserController@calendar')->name('users.calendar')->middleware('auth');
 Route::get('/users/password/edit', 'UserController@edit_password')->name('users.edit_password')->middleware('auth');
 Route::put('/users/update_password', 'UserController@update_password')->name('users.update_password')->middleware('auth');
+Route::get('/users/record', 'UserController@seller_record')->name('users.seller_record')->middleware('auth');
 
 Route::get('/customers', 'CustomerController@index')->name('customers.index')->middleware('auth');
 Route::get('/customers/{customer}', 'CustomerController@show')->name('customers.show')->middleware('auth');

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Appointment;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,8 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use Notifiable;
+
+    const RANK_LIST = ['A' => 25, 'B' => 20, 'C' => 15, 'D' => 0];
 
     /**
      * The attributes that are mass assignable.
@@ -52,5 +55,27 @@ class User extends Authenticatable
         }
 
         return false;
+    }
+
+    public function sales()
+    {
+        $sales = Appointment::where('seller_id', $this->id)->orderBy('day', 'desc')->orderBy('hour', 'desc')->get();
+
+        return $sales;
+    }
+
+    public function getRank($rate)
+    {
+        $list = self::RANK_LIST;
+
+        if ($rate >= $list['A']) {
+            return 'A';
+        } elseif ($list['A'] > $rate && $rate >= $list['B']) {
+            return 'B';
+        } elseif ($list['B'] > $rate && $rate >= $list['C']) {
+            return 'C';
+        } elseif ($list['C'] > $rate) {
+            return 'D';
+        }
     }
 }
