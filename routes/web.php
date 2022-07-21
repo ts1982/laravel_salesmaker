@@ -33,6 +33,7 @@ Route::get('/appointments', 'AppointmentController@index')->name('appointments.i
 Route::get('/appointments/new', 'AppointmentController@create')->name('appointments.create')->middleware('auth');
 Route::post('/appointments/store', 'AppointmentController@store')->name('appointments.store')->middleware('auth');
 Route::get('/appointments/byday', 'AppointmentController@byday')->name('appointments.byday')->middleware('auth');
+Route::get('/appointments/report', 'AppointmentController@report')->name('appointments.report')->middleware('auth');
 Route::put('/appointments/change_status', 'AppointmentController@change_status')->name('appointments.change_status')->middleware('auth');
 Route::get('/appointments/{appointment}', 'AppointmentController@show')->name('appointments.show')->middleware('auth');
 Route::get('/appointments/{appointment}/edit', 'AppointmentController@edit')->name('appointments.edit')->middleware('auth');

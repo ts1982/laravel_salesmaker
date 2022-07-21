@@ -7,6 +7,7 @@ use App\Customer;
 use App\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
@@ -20,14 +21,14 @@ class CustomerController extends Controller
             $customer_id = Appointment::where('seller_id', $user->id)->pluck('customer_id')->unique();
         }
 
-        $customers = Customer::whereIn('id', $customer_id)->get();
+        $customers = Customer::whereIn('id', $customer_id)->orderBy('id')->get();
 
         return view('customers.index', compact('customers'));
     }
 
     public function show(Customer $customer)
     {
-        $appointments = Appointment::where('customer_id', $customer->id)->orderBy('day', 'desc')->orderBy('hour', 'desc')->get();
+        $appointments = Appointment::where('customer_id', $customer->id)->orderBy('day')->orderBy('hour')->get();
 
         return view('customers.show', compact('customer', 'appointments'));
     }

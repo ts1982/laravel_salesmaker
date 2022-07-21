@@ -12,6 +12,26 @@ body,
     margin: 0;
 }
 
+.btn-success {
+    background: rgb(20, 181, 162);
+    border-color: rgb(20, 181, 162);
+}
+
+.btn-success:hover {
+    background: rgb(13, 127, 114);
+    border-color: rgb(13, 127, 114);
+}
+
+.btn-success:not(:disabled):not(.disabled):active {
+    background: rgb(13, 127, 114);
+    border-color: rgb(13, 127, 114);
+}
+
+.btn-success:focus {
+    background: rgb(13, 127, 114);
+    border-color: rgb(13, 127, 114);
+}
+
 ul {
     padding: 0;
 }
@@ -67,7 +87,7 @@ td {
 }
 
 .status-color1 {
-    color: rgb(224, 87, 255);
+    color: rgb(237, 221, 0);
 }
 
 .status-color2 {
@@ -76,6 +96,11 @@ td {
 
 .status-color3 {
     color: rgb(0, 169, 59);
+}
+
+.event-none {
+    pointer-events: none;
+    color: #999;
 }
 
 @media (min-width: 768px) {

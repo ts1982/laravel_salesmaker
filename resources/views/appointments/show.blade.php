@@ -39,13 +39,26 @@
                 <div class="col-md-9">{{ $seller->name }}</div>
             </div>
             <div class="d-flex justify-content-end">
-                <a href="{{ route('appointments.edit', compact('appointment')) }}" class="btn btn-warning mr-2">編集</a>
+                <a href="{{ route('appointments.edit', compact('appointment')) }}"
+                    class="btn btn-warning mr-2 @if ($appointment->status != 0) event-none @endif">編集</a>
                 <form action="{{ route('appointments.destroy', compact('appointment')) }}" method="post">
                     @csrf
                     @method('delete')
-                    <button type="submit" class="btn btn-danger">削除</button>
+                    <button type="submit" class="btn btn-danger" @if ($appointment->status != 0) disabled @endif>削除
+                    </button>
                 </form>
             </div>
+            @if ($appointment->status != 0)
+                <h2 class="text-center mt-4">営業結果報告</h2>
+                <div class="row mb-3">
+                    <strong class="col-md-3">ステータス</strong>
+                    <div class="col-md-9">{{ $appointment->statusIs()[1] }}</div>
+                </div>
+                <div class="row mb-3">
+                    <strong class="col-md-3">報告内容</strong>
+                    <div class="col-md-9">{{ $appointment->report }}</div>
+                </div>
+            @endif
         </div>
     </div>
 @endsection

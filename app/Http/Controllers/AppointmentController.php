@@ -163,6 +163,8 @@ class AppointmentController extends Controller
         $appointer = $appointment->user;
         $seller = User::find($appointment->seller_id);
 
+        $status_list = Appointment::STATUS_LIST;
+
         return view('appointments.show', compact('appointment', 'appointer', 'seller'));
     }
 
@@ -219,16 +221,30 @@ class AppointmentController extends Controller
             $appointments = Appointment::where('day', $day->format('Y-m-d'))->where('user_id', $user->id)->get();
         }
 
-        return view('appointments.byday', compact('appointments', 'day'));
+        $status_list = Appointment::STATUS_LIST;
+
+        return view('appointments.byday', compact('appointments', 'day', 'status_list'));
+    }
+
+    public function report(Request $request)
+    {
+        $appointment = Appointment::find($request->appointment);
+        $status_list = Appointment::STATUS_LIST;
+
+        return view('appointments.report', compact('appointment', 'status_list'));
     }
 
     public function change_status(Request $request)
     {
+        if ($request->status == 0) {
+            return back()->with('warning', 'ステータスを変更してください。');
+        }
         $appointment = Appointment::find($request->appointment);
         $appointment->status = $request->status;
+        $appointment->report = $request->report;
         $appointment->update();
 
-        $day = $request->day;
+        $day = $appointment->day;
 
         return redirect()->route('appointments.byday', compact('day'));
     }
