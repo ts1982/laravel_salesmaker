@@ -4,7 +4,14 @@
     <h1 class="text-center">日別アポイント情報</h1>
     <div class="row justify-content-center mt-5">
         <div class="col-md-10 p-0">
-            <h2 class="mb-3">{{ $day->format('Y年n月j日') }}&nbsp;({{ mb_substr($day->dayName, 0, 1) }})</h2>
+            <h2 class="mb-3 text-center">{{ $day->copy()->format('Y年n月j日') }}&nbsp;({{ mb_substr($day->copy()->dayName, 0, 1) }})</h2>
+            <div class="text-center">
+                <a
+                    href="{{ url('/appointments/byday/?day=' .$day->copy()->subDay()->format('Y-m-d')) }}">&lt;&lt;&nbsp;prev</a>
+                <span>{{ $day->format('Y/n/j') }}</span>
+                <a
+                    href="{{ url('/appointments/byday/?day=' .$day->copy()->addDay()->format('Y-m-d')) }}">next&nbsp;&gt;&gt;</a>
+            </div>
             <table class="table text-center">
                 <thead>
                     <tr>
@@ -48,10 +55,12 @@
                                 <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
                             </td>
                             <td>
-                                @if ($appointment->status === 0)
-                                    <a href="{{ route('appointments.report', compact('appointment')) }}">報告</a>
-                                @else
-                                    <a href="#" class="event-none">報告済</a>
+                                @if (App\User::roleIs('seller'))
+                                    @if ($appointment->status === 0)
+                                        <a href="{{ route('appointments.report', compact('appointment')) }}">報告</a>
+                                    @else
+                                        <a href="#" class="event-none">報告済</a>
+                                    @endif
                                 @endif
                             </td>
                         </tr>

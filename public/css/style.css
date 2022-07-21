@@ -103,6 +103,14 @@ td {
     color: #999;
 }
 
+.mark-now {
+    background: rgb(255, 246, 209);
+    display: block;
+    margin: 0 auto;
+    width: 50%;
+    height: 100%;
+}
+
 @media (min-width: 768px) {
     .header {
         height: 50px;
@@ -125,5 +133,9 @@ td {
 
     .header-search {
         display: none !important;
+    }
+
+    .footer {
+        display: none;
     }
 }

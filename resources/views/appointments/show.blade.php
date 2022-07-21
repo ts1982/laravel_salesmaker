@@ -2,7 +2,7 @@
 
 @section('content')
     <h1 class="text-center">アポイント詳細</h1>
-    <div class="row justify-content-center mt-5">
+    <div class="row justify-content-center mt-4">
         <div class="col-md-10 p-0">
             <div class="row mb-3">
                 <strong class="col-md-3">日時</strong>
@@ -50,9 +50,10 @@
             </div>
             @if ($appointment->status != 0)
                 <h2 class="text-center mt-4">営業結果報告</h2>
-                <div class="row mb-3">
+                <div class="row mb-3 mt-4">
                     <strong class="col-md-3">ステータス</strong>
-                    <div class="col-md-9">{{ $appointment->statusIs()[1] }}</div>
+                    <div class="col-md-9 status-color{{ $appointment->statusIs()[0] }}">
+                        {{ $appointment->statusIs()[1] }}</div>
                 </div>
                 <div class="row mb-3">
                     <strong class="col-md-3">報告内容</strong>

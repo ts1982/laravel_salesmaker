@@ -33,7 +33,7 @@
                         @if (App\User::roleIs('seller'))
                             <a href="{{ route('users.seller_record') }}">営業成績</a>
                         @elseif (App\User::roleIs('appointer'))
-                            <a href="">アポインター成績</a>
+                            <a href="{{ route('users.appointer_record') }}">アポインター成績</a>
                         @endif
                     </li>
                     <li>

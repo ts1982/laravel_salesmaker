@@ -66,26 +66,27 @@
                             <td>
                                 @if (App\User::roleIs('seller') || $seller_appointment)
                                     @if (isset($hasAppointments[$start_day->format('Y-m-d')][$time]))
-                                        <span>×</span>
+                                        <span class="{{ App\Appointment::isNow($start_day, $time) }}">×</span>
                                     @else
                                         @if ($seller_appointment)
-                                            <a
-                                                href="{{ route('appointments.edit', ['day' => $start_day->toDateString(), 'hour' => $time, 'appointment' => $seller_appointment]) }}">○</a>
+                                            <a href="{{ route('appointments.edit', ['day' => $start_day->toDateString(), 'hour' => $time, 'appointment' => $seller_appointment]) }}"
+                                                class="{{ App\Appointment::isNow($start_day, $time) }}">○</a>
                                         @else
                                             @if ($customer)
-                                                <a
-                                                    href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time, 'customer' => $customer]) }}">○</a>
+                                                <a href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time, 'customer' => $customer]) }}"
+                                                    class="{{ App\Appointment::isNow($start_day, $time) }}">○</a>
                                             @else
-                                                <a
-                                                    href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time]) }}">○</a>
+                                                <a href="{{ route('appointments.create', ['day' => $start_day->toDateString(), 'hour' => $time]) }}"
+                                                    class="{{ App\Appointment::isNow($start_day, $time) }}">○</a>
                                             @endif
                                         @endif
                                     @endif
                                 @elseif (App\User::roleIs('appointer'))
                                     @if (isset($hasAppointments[$start_day->format('Y-m-d')][$time]))
-                                        <span>{{ $hasAppointments[$start_day->format('Y-m-d')][$time] }}</span>
+                                        <span
+                                            class="{{ App\Appointment::isNow($start_day, $time) }}">{{ $hasAppointments[$start_day->format('Y-m-d')][$time] }}</span>
                                     @else
-                                        <span>0</span>
+                                        <span class="{{ App\Appointment::isNow($start_day, $time) }}">0</span>
                                     @endif
                                 @endif
                             </td>
@@ -126,26 +127,27 @@
                             <td>
                                 @if (App\User::roleIs('seller') || $seller_appointment)
                                     @if (isset($hasAppointments[$middle_day->format('Y-m-d')][$time]))
-                                        <span>×</span>
+                                        <span class="{{ App\Appointment::isNow($middle_day, $time) }}">×</span>
                                     @else
                                         @if ($seller_appointment)
-                                            <a
-                                                href="{{ route('appointments.edit', ['day' => $middle_day->toDateString(), 'hour' => $time, 'appointment' => $seller_appointment]) }}">○</a>
+                                            <a href="{{ route('appointments.edit', ['day' => $middle_day->toDateString(), 'hour' => $time, 'appointment' => $seller_appointment]) }}"
+                                                class="{{ App\Appointment::isNow($middle_day, $time) }}">○</a>
                                         @else
                                             @if ($customer)
-                                                <a
-                                                    href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time, 'customer' => $customer]) }}">○</a>
+                                                <a href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time, 'customer' => $customer]) }}"
+                                                    class="{{ App\Appointment::isNow($middle_day, $time) }}">○</a>
                                             @else
-                                                <a
-                                                    href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time]) }}">○</a>
+                                                <a href="{{ route('appointments.create', ['day' => $middle_day->toDateString(), 'hour' => $time]) }}"
+                                                    class="{{ App\Appointment::isNow($middle_day, $time) }}">○</a>
                                             @endif
                                         @endif
                                     @endif
                                 @elseif (App\User::roleIs('appointer'))
                                     @if (isset($hasAppointments[$middle_day->format('Y-m-d')][$time]))
-                                        <span>{{ $hasAppointments[$middle_day->format('Y-m-d')][$time] }}</span>
+                                        <span
+                                            class="{{ App\Appointment::isNow($middle_day, $time) }}">{{ $hasAppointments[$middle_day->format('Y-m-d')][$time] }}</span>
                                     @else
-                                        <span>0</span>
+                                        <span class="{{ App\Appointment::isNow($middle_day, $time) }}">0</span>
                                     @endif
                                 @endif
                             </td>

@@ -54,6 +54,19 @@ class Appointment extends Model
         return $day_name;
     }
 
+    public static function isNow($day, $time)
+    {
+        $target = Carbon::parse("{$day->format('Y-m-d')} {$time}:00:00");
+        $now = Carbon::now();
+        $diff = 3; // アポイントの間隔設定値
+
+        if ($target->isToday()) {
+            if ($target->copy()->lt($now) && $target->copy()->addHour($diff)->gt($now)) {
+                return 'mark-now';
+            }
+        }
+    }
+
     public static function getMonthlyAppointersAppointments($user, $period)
     {
         if (!$period) {

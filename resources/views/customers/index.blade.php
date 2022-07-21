@@ -2,7 +2,7 @@
 
 @section('content')
     <h1 class="text-center">顧客一覧</h1>
-    <div class="row justify-content-center mt-5">
+    <div class="row justify-content-center mt-3">
         <div class="col-sm-7">
             <table class="table text-center">
                 <thead>
@@ -26,6 +26,7 @@
                     @endforeach
                 </tbody>
             </table>
+            <div class="d-flex justify-content-center">{{ $customers->links() }}</div>
         </div>
     </div>
 @endsection

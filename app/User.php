@@ -12,7 +12,8 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    const RANK_LIST = ['A' => 25, 'B' => 20, 'C' => 15, 'D' => 0];
+    private const SELLER_RANK_LIST = ['A' => 25, 'B' => 20, 'C' => 15, 'D' => 0];
+    private const APPOINTER_RANK_LIST = ['A' => 15, 'B' => 10, 'C' => 5, 'D' => 0];
 
     /**
      * The attributes that are mass assignable.
@@ -66,7 +67,12 @@ class User extends Authenticatable
 
     public function getRank($rate)
     {
-        $list = self::RANK_LIST;
+        if (self::roleIs('seller')) {
+            $list = self::SELLER_RANK_LIST;
+        }
+        if (self::roleIs('appointer')) {
+            $list = self::APPOINTER_RANK_LIST;
+        }
 
         if ($rate >= $list['A']) {
             return 'A';

@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="text-center mt-4">{{ date('Y年n月', strtotime($period . '-01')) }}営業成績</h1>
+    <h1 class="text-center mt-4">{{ date('Y年n月', strtotime($period . '-01')) }}アポインター成績</h1>
     <div class="row justify-content-center mt-3">
         <div class="col-md-10 p-0">
             <table class="table text-center">
                 <thead>
                     <tr>
-                        <th>訪問件数</th>
+                        <th>アポイント件数</th>
                         <th>成約件数</th>
                         <th>成約率</th>
                         <th>ランク</th>
@@ -24,9 +24,11 @@
             </table>
         </div>
         <div class="term-changer mt-4">
-            <a href="{{ url('/sellers/record/?period=' . App\Appointment::getPrevPeriod($period)) }}">&lt;&lt;&nbsp;prev</a>
+            <a
+                href="{{ url('/appointers/record/?period=' . App\Appointment::getPrevPeriod($period)) }}">&lt;&lt;&nbsp;prev</a>
             <span>{{ date('Y年n月', strtotime($period . '-01')) }}</span>
-            <a href="{{ url('/sellers/record/?period=' . App\Appointment::getNextPeriod($period)) }}">next&nbsp;&gt;&gt;</a>
+            <a
+                href="{{ url('/appointers/record/?period=' . App\Appointment::getNextPeriod($period)) }}">next&nbsp;&gt;&gt;</a>
         </div>
         <div class="col-md-10 p-0">
             <table class="table text-center">
@@ -35,7 +37,7 @@
                         <th>日時</th>
                         <th>顧客名</th>
                         <th class="text-center">ステータス</th>
-                        <th>アポインター</th>
+                        <th>営業担当者</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -49,7 +51,7 @@
                             <td class="status-color{{ $appointment->statusIs()[0] }}">
                                 {{ $appointment->statusIs()[1] }}
                             </td>
-                            <td>{{ $appointment->thisAppointerHas()->name }}</td>
+                            <td>{{ $appointment->thisSellerHas()->name }}</td>
                             <td>
                                 <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
                             </td>

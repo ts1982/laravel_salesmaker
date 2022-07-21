@@ -21,7 +21,7 @@ class CustomerController extends Controller
             $customer_id = Appointment::where('seller_id', $user->id)->pluck('customer_id')->unique();
         }
 
-        $customers = Customer::whereIn('id', $customer_id)->orderBy('id')->get();
+        $customers = Customer::whereIn('id', $customer_id)->orderBy('id')->paginate(15);
 
         return view('customers.index', compact('customers'));
     }
