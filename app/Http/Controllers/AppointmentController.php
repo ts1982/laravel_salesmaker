@@ -136,6 +136,8 @@ class AppointmentController extends Controller
                     $selected_id = array_diff($all_seller_id, $disabled_seller_id);
                     $selected_id = $selected_id[array_rand($selected_id, 1)];
                     $appointment->seller_id = $selected_id;
+
+                    // $disabled_seller_id = Appointment::where('day', $request->day)->where('hour', $request->hour)->pluck('seller_id')
                 } else if ($user->role === 'seller') {
                     $appointment->seller_id = $user->id;
                 } else {

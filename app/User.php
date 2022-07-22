@@ -13,7 +13,7 @@ class User extends Authenticatable
     use Notifiable;
 
     private const SELLER_RANK_LIST = ['A' => 25, 'B' => 20, 'C' => 15, 'D' => 0];
-    private const APPOINTER_RANK_LIST = ['A' => 15, 'B' => 10, 'C' => 5, 'D' => 0];
+    private const APPOINTER_RANK_LIST = ['A' => 25, 'B' => 20, 'C' => 15, 'D' => 0];
 
     /**
      * The attributes that are mass assignable.
