@@ -8,7 +8,7 @@
         <div class="alert alert-warning">{{ date('Y年n月j日', strtotime($day)) }}&emsp;{{ $hour }}時から変更</div>
     @endif
     @if (App\User::roleIs('seller') || $seller_appointment)
-        <h1 class="text-center">{{ $user->name }}の営業予定</h1>
+        <h1 class="text-center">マイカレンダー</h1>
     @elseif (App\User::roleIs('appointer'))
         <h1 class="text-center">マイアポイント</h1>
     @endif
@@ -26,8 +26,7 @@
             <a
                 href="{{ url('/users/calendar/?period=' . App\Appointment::getNextPeriod($period) . '&seller_appointment=' . $seller_appointment . '&seller=' . $seller) }}">next&nbsp;&gt;&gt;</a>
         @else
-            <a
-                href="{{ url('/users/calendar/?period=' . App\Appointment::getPrevPeriod($period)) }}">&lt;&lt;&nbsp;prev</a>
+            <a href="{{ url('/users/calendar/?period=' . App\Appointment::getPrevPeriod($period)) }}">&lt;&lt;&nbsp;prev</a>
             <span>{{ date('Y年n月', strtotime($period . '-01')) }}</span>
             <a
                 href="{{ url('/users/calendar/?period=' . App\Appointment::getNextPeriod($period)) }}">next&nbsp;&gt;&gt;</a>

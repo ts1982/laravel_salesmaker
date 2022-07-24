@@ -16,7 +16,6 @@ class AppointmentsTableSeeder extends Seeder
      */
     public function run()
     {
-        $users = User::all();
         $seller_id = User::where('role', 'seller')->pluck('id');
         $appointer_id = User::where('role', 'appointer')->pluck('id');
         $customers = Customer::all();

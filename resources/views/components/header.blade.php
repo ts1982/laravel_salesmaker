@@ -24,7 +24,7 @@
                 <ul class="navbar-nav mr-auto">
                     <li>
                         @if (App\User::roleIs('seller'))
-                            <a href="{{ route('users.calendar') }}">営業予定</a>
+                            <a href="{{ route('users.calendar') }}">マイカレンダー</a>
                         @elseif (App\User::roleIs('appointer'))
                             <a href="{{ route('users.calendar') }}">マイアポイント</a>
                         @endif

@@ -40,7 +40,7 @@
                 <thead>
                     <tr>
                         <th>日時</th>
-                        <th class="text-center">訪問ステータス</th>
+                        <th class="text-center">ステータス</th>
                         <th>アポインター</th>
                         <th>営業担当</th>
                         <th></th>
@@ -66,9 +66,9 @@
             </table>
             <div class="d-flex justify-content-end">
                 @if (App\User::roleIs('seller'))
-                    <a href="{{ route('users.calendar', compact('customer')) }}" class="btn btn-success mr-3">アポイント作成</a>
+                    <a href="{{ route('users.calendar', compact('customer')) }}" class="btn btn-outline-success mr-3">アポイント作成</a>
                 @else
-                    <a href="{{ route('appointments.index', compact('customer')) }}" class="btn btn-success">アポイント作成</a>
+                    <a href="{{ route('users.calendar', compact('customer')) }}" class="btn btn-outline-success">アポイント作成</a>
                 @endif
             </div>
         </div>
