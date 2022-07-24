@@ -1,6 +1,6 @@
 <nav class="header navbar navbar-expand-md navbar-light shadow-sm fixed-top">
     <div class="d-flex align-items-center mx-3">
-        <a class="navbar-brand mr-4" href="{{ url('/users/calendar') }}">
+        <a class="navbar-brand mr-4" href="{{ url('/') }}">
             <span class="h2">SalesMaker</span>
         </a>
         <form class="d-flex mr-auto header-search">
@@ -26,7 +26,7 @@
                         @if (App\User::roleIs('seller'))
                             <a href="{{ route('users.calendar') }}">マイカレンダー</a>
                         @elseif (App\User::roleIs('appointer'))
-                            <a href="{{ route('users.calendar') }}">マイアポイント</a>
+                            <a href="{{ route('users.appointer_calendar') }}">マイアポイント</a>
                         @endif
                     </li>
                     <li>

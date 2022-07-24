@@ -5,7 +5,7 @@
             @if (App\User::roleIs('seller'))
                 <a href="{{ route('users.calendar') }}">マイカレンダー</a>
             @elseif (App\User::roleIs('appointer'))
-                <a href="{{ route('users.calendar') }}">マイアポイント</a>
+                <a href="{{ route('users.appointer_calendar') }}">マイアポイント</a>
             @endif
         </li>
         <li>

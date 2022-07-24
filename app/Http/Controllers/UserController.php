@@ -107,12 +107,25 @@ class UserController extends Controller
 
     public function calendar(Request $request)
     {
-        if ($request->seller) {
+        if ($request->customer) {
+            $customer = $request->customer;
+        } else {
+            $customer = '';
+        }
+
+        if ($request->seller) { // 編集から
             $user = User::find($request->seller);
             $seller_appointment = $request->seller_appointment;
-            $seller = $request->seller;
+            $seller = $user;
             $day = $request->day;
             $hour = $request->hour;
+        } else if (User::roleIs('appointer')) { // 追加作成から
+            $latest_appointment = Appointment::where('customer_id', $request->customer)->latest()->first();
+            $user = $latest_appointment->thisSellerHas();
+            $seller_appointment = '';
+            $seller = $user;
+            $day = '';
+            $hour = '';
         } else {
             $user = Auth::user();
             $seller_appointment = '';
@@ -132,30 +145,38 @@ class UserController extends Controller
         list($time_zone, $start_day, $middle_day, $end_day) = Appointment::makeCalendar($period);
         $hasAppointments = [];
 
-        if ($user->role === 'seller') {
-            $appointments = Appointment::getMonthlySellersAppointments($user, $period);
-            foreach ($appointments as $appointment) {
-                $hasAppointments[$appointment->day][$appointment->hour] = true;
-            }
-        }
-
-        if ($user->role === 'appointer') {
-            $appointments = Appointment::getMonthlyAppointersAppointments($user, $period);
-            foreach ($appointments as $appointment) {
-                if (!isset($hasAppointments[$appointment->day][$appointment->hour])) {
-                    $hasAppointments[$appointment->day][$appointment->hour] = 0;
-                }
-                $hasAppointments[$appointment->day][$appointment->hour] += 1;
-            }
-        }
-
-        if ($request->customer) {
-            $customer = $request->customer;
-        } else {
-            $customer = '';
+        $appointments = Appointment::getMonthlySellersAppointments($user, $period);
+        foreach ($appointments as $appointment) {
+            $hasAppointments[$appointment->day][$appointment->hour] = true;
         }
 
         return view('users.calendar', compact('period', 'time_zone', 'start_day', 'middle_day', 'end_day', 'hasAppointments', 'user', 'seller_appointment', 'seller', 'customer', 'day', 'hour'));
+    }
+
+    public function appointer_calendar(Request $request)
+    {
+        $user = Auth::user();
+
+        // 期間取得
+        if ($request->period) {
+            $period = $request->period;
+        } else {
+            $period = Carbon::now()->format('Y-m');
+        }
+
+        // カレンダー作成
+        list($time_zone, $start_day, $middle_day, $end_day) = Appointment::makeCalendar($period);
+        $hasAppointments = [];
+
+        $appointments = Appointment::getMonthlyAppointersAppointments($user, $period);
+        foreach ($appointments as $appointment) {
+            if (!isset($hasAppointments[$appointment->day][$appointment->hour])) {
+                $hasAppointments[$appointment->day][$appointment->hour] = 0;
+            }
+            $hasAppointments[$appointment->day][$appointment->hour] += 1;
+        }
+
+        return view('users.appointer_calendar', compact('period', 'time_zone', 'start_day', 'middle_day', 'end_day', 'hasAppointments', 'user'));
     }
 
     public function seller_record(Request $request)
