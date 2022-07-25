@@ -21,6 +21,7 @@
                                     ステータス
                                 </div>
                                 <div class="dropdown-menu">
+                                    <a href="{{ route('customers.index') }}" class="dropdown-item">全て表示</a>
                                     @foreach ($sort_query as $key => $val)
                                         <a href="{{ route('customers.index', ['sort' => $val]) }}"
                                             class="dropdown-item">{{ $val }}</a>

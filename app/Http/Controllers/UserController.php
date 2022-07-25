@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Customer;
 use App\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -202,7 +203,15 @@ class UserController extends Controller
         }
         $rank = $user->getRank($rate);
 
-        return view('users.seller_record', compact('appointments', 'period', 'total', 'contract_count', 'rate', 'rank'));
+        // ソート
+        $sort_query = Appointment::STATUS_LIST;
+
+        if ($request->sort) {
+            $key = array_search($request->sort, $sort_query);
+            $appointments = Appointment::where('seller_id', $user->id)->where('status', $key)->where('day', 'like', "$period%")->orderBy('day', 'asc')->orderBy('hour', 'asc')->get();
+        }
+
+        return view('users.seller_record', compact('appointments', 'period', 'total', 'contract_count', 'rate', 'rank', 'sort_query'));
     }
 
     public function appointer_record(Request $request)
@@ -228,6 +237,15 @@ class UserController extends Controller
         }
         $rank = $user->getRank($rate);
 
-        return view('users.appointer_record', compact('appointments', 'period', 'total', 'contract_count', 'rate', 'rank'));
+
+        // ソート
+        $sort_query = Appointment::STATUS_LIST;
+
+        if ($request->sort) {
+            $key = array_search($request->sort, $sort_query);
+            $appointments = Appointment::where('user_id', $user->id)->where('status', $key)->where('day', 'like', "$period%")->orderBy('day', 'asc')->orderBy('hour', 'asc')->get();
+        }
+
+        return view('users.appointer_record', compact('appointments', 'period', 'total', 'contract_count', 'rate', 'rank', 'sort_query'));
     }
 }

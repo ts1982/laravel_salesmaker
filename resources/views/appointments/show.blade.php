@@ -49,7 +49,7 @@
                 </form>
             </div>
             @if ($appointment->status != 0)
-                <h2 class="text-center mt-4">営業結果報告</h2>
+                <h2 class="text-center mt-5">営業結果報告</h2>
                 <div class="row mb-3 mt-4">
                     <strong class="col-md-3">ステータス</strong>
                     <div class="col-md-9 status-color{{ $appointment->statusIs()[0] }}">

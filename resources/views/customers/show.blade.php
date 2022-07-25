@@ -44,6 +44,7 @@
                         <th>アポインター</th>
                         <th>営業担当</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,16 +61,21 @@
                             <td>
                                 <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
                             </td>
+                            <td>
+                                @if (App\User::roleIs('seller'))
+                                    @if ($appointment->status === 0)
+                                        <a href="{{ route('appointments.report', compact('appointment')) }}">報告</a>
+                                    @else
+                                        <a href="#" class="event-none">報告済</a>
+                                    @endif
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
             <div class="d-flex justify-content-end">
-                @if (App\User::roleIs('seller'))
-                    <a href="{{ route('users.calendar', compact('customer')) }}" class="btn btn-outline-success mr-3">アポイント作成</a>
-                @else
-                    <a href="{{ route('users.calendar', compact('customer')) }}" class="btn btn-outline-success">アポイント作成</a>
-                @endif
+                <a href="{{ route('users.calendar', compact('customer')) }}" class="btn btn-outline-success">アポイント作成</a>
             </div>
         </div>
     </div>

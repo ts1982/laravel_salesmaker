@@ -32,24 +32,48 @@
             <table class="table text-center">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>日時</th>
                         <th>顧客名</th>
-                        <th class="text-center">ステータス</th>
-                        <th>アポインター</th>
+                        <th>
+                            <div class="dropdown">
+                                <div class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    ステータス
+                                </div>
+                                <div class="dropdown-menu">
+                                    <a href="{{ route('users.seller_record', compact('period')) }}"
+                                        class="dropdown-item">全て表示</a>
+                                    @foreach ($sort_query as $key => $val)
+                                        <a href="{{ route('users.seller_record', ['sort' => $val, 'period' => $period]) }}"
+                                            class="dropdown-item">{{ $val }}</a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </th>
+                        {{-- <th>アポインター</th> --}}
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $i = 1;
+                    @endphp
                     @foreach ($appointments as $appointment)
                         <tr>
                             <td>
+                                <strong>{{ $i++ }}</strong>
+                            </td>
+                            <td>
                                 {{ date('j日', strtotime($appointment->day)) }}&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時
                             </td>
-                            <td>{{ $appointment->customer->name }}</td>
+                            <td>
+                                <a
+                                    href="{{ route('customers.show', ['customer' => $appointment->customer]) }}">{{ $appointment->customer->name }}</a>
+                            </td>
                             <td class="status-color{{ $appointment->statusIs()[0] }}">
                                 {{ $appointment->statusIs()[1] }}
                             </td>
-                            <td>{{ $appointment->thisAppointerHas()->name }}</td>
+                            {{-- <td>{{ $appointment->thisAppointerHas()->name }}</td> --}}
                             <td>
                                 <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
                             </td>

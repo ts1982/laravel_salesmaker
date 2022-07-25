@@ -57,6 +57,10 @@ li {
     background: rgb(179, 237, 244);
 }
 
+.navbar-toggler {
+    border: none;
+}
+
 td {
     padding: 2px !important;
 }
