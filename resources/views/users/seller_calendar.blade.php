@@ -15,21 +15,21 @@
     <div class="text-center">
         @if ($customer)
             <a
-                href="{{ url('/users/calendar/?period=' . App\Appointment::getPrevPeriod($period) . '&customer=' . $customer) }}">&lt;&lt;&nbsp;prev</a>
+                href="{{ url('/sellers/calendar/?period=' . App\Appointment::getPrevPeriod($period) . '&customer=' . $customer) }}">&lt;&lt;&nbsp;prev</a>
             <span>{{ date('Y年n月', strtotime($period . '-01')) }}</span>
             <a
-                href="{{ url('/users/calendar/?period=' . App\Appointment::getNextPeriod($period) . '&customer=' . $customer) }}">next&nbsp;&gt;&gt;</a>
+                href="{{ url('/sellers/calendar/?period=' . App\Appointment::getNextPeriod($period) . '&customer=' . $customer) }}">next&nbsp;&gt;&gt;</a>
         @elseif ($seller_appointment && $seller)
             <a
-                href="{{ url('/users/calendar/?period=' . App\Appointment::getPrevPeriod($period) . '&seller_appointment=' . $seller_appointment . '&seller=' . $seller) }}">&lt;&lt;&nbsp;prev</a>
+                href="{{ url('/sellers/calendar/?period=' . App\Appointment::getPrevPeriod($period) . '&seller_appointment=' . $seller_appointment . '&seller=' . $seller) }}">&lt;&lt;&nbsp;prev</a>
             <span>{{ date('Y年n月', strtotime($period . '-01')) }}</span>
             <a
-                href="{{ url('/users/calendar/?period=' . App\Appointment::getNextPeriod($period) . '&seller_appointment=' . $seller_appointment . '&seller=' . $seller) }}">next&nbsp;&gt;&gt;</a>
+                href="{{ url('/sellers/calendar/?period=' . App\Appointment::getNextPeriod($period) . '&seller_appointment=' . $seller_appointment . '&seller=' . $seller) }}">next&nbsp;&gt;&gt;</a>
         @else
-            <a href="{{ url('/users/calendar/?period=' . App\Appointment::getPrevPeriod($period)) }}">&lt;&lt;&nbsp;prev</a>
+            <a href="{{ url('/sellers/calendar/?period=' . App\Appointment::getPrevPeriod($period)) }}">&lt;&lt;&nbsp;prev</a>
             <span>{{ date('Y年n月', strtotime($period . '-01')) }}</span>
             <a
-                href="{{ url('/users/calendar/?period=' . App\Appointment::getNextPeriod($period)) }}">next&nbsp;&gt;&gt;</a>
+                href="{{ url('/sellers/calendar/?period=' . App\Appointment::getNextPeriod($period)) }}">next&nbsp;&gt;&gt;</a>
         @endif
     </div>
     <div class="row justify-content-around mb-2">

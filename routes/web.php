@@ -15,11 +15,13 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::get('/web', 'WebController@index')->name('web.index');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/users/calendar', 'UserController@calendar')->name('users.calendar')->middleware('auth');
+Route::get('/sellers/calendar', 'UserController@seller_calendar')->name('users.seller_calendar')->middleware('auth');
 Route::get('/appointers/calendar', 'UserController@appointer_calendar')->name('users.appointer_calendar')->middleware('auth');
 
 Route::get('/users/password/edit', 'UserController@edit_password')->name('users.edit_password')->middleware('auth');
@@ -42,6 +44,14 @@ Route::get('/appointments/{appointment}', 'AppointmentController@show')->name('a
 Route::get('/appointments/{appointment}/edit', 'AppointmentController@edit')->name('appointments.edit')->middleware('auth');
 Route::put('/appointments/{appointment}/update', 'AppointmentController@update')->name('appointments.update')->middleware('auth');
 Route::delete('/appointments/{appointment}/destroy', 'AppointmentController@destroy')->name('appointments.destroy')->middleware('auth');
+
+Route::get('/dashboard', 'AdminController@dashboard')->middleware('auth:admins');
+
+Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
+    Route::get('login', 'Dashboard\Auth\LoginController@showLoginForm')->name('login');
+    Route::post('login', 'Dashboard\Auth\LoginController@login')->name('login');
+    Route::resource('customers', 'Dashboard\CustomerController')->middleware('auth:admins');
+});
 
 if (App::environment('production')) {
     URL::forceScheme('https');

@@ -1,5 +1,7 @@
 body,
 .table {
+    /* font-family: "Sawarabi Gothic", "BIZ UDGothic", sans-serif; */
+    /* font-weight: bold; */
     font-size: 1.15rem;
     color: #333 !important;
     box-sizing: border-box;
@@ -143,4 +145,8 @@ td {
     .footer {
         display: none;
     }
+}
+
+#dashboard .header {
+    background: rgb(34, 48, 134);
 }

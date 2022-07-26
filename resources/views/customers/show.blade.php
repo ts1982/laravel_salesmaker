@@ -75,7 +75,7 @@
                 </tbody>
             </table>
             <div class="d-flex justify-content-end">
-                <a href="{{ route('users.calendar', compact('customer')) }}" class="btn btn-outline-success">アポイント作成</a>
+                <a href="{{ route('users.seller_calendar', compact('customer')) }}" class="btn btn-outline-success">アポイント作成</a>
             </div>
         </div>
     </div>

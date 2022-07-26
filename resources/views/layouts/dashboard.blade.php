@@ -21,23 +21,22 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Sawarabi+Gothic&display=swap');
-    </style>
 </head>
 
 <body>
     <div id="app">
-        @component('components.header')
-        @endcomponent
+        <div id="dashboard">
+            @component('components.dashboard.header')
+            @endcomponent
 
-        @auth
             <main class="row">
-                <div class="sidebar col-md-2 shadow-sm">
-                    <div class="mt-5 py-5">
-                        @component('components.sidebar')
-                        @endcomponent
-                    </div>
+                <div class="sidebar col-md-2">
+                    @if (Auth::guard('admins')->check())
+                        <div class="mt-5 py-5">
+                            @component('components.dashboard.sidebar')
+                            @endcomponent
+                        </div>
+                    @endif
                 </div>
                 <div class="col-md-9">
                     <div class="mt-5 py-5">
@@ -45,16 +44,8 @@
                     </div>
                 </div>
             </main>
-        @endauth
 
-        @guest
-            <div class="mt-5 py-5">
-                @yield('auth.content')
-            </div>
-        @endguest
-
-        @component('components.footer')
-        @endcomponent
+        </div>
     </div>
 </body>
 

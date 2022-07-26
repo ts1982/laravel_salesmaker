@@ -1,25 +1,12 @@
-<nav class="header navbar navbar-expand-md navbar-light shadow-sm fixed-top">
+<nav class="header navbar navbar-expand-md navbar-dark shadow-sm fixed-top">
     <div class="d-flex align-items-center mx-3">
-        @auth
-            @if (App\User::roleIs('seller'))
-                <a class="navbar-brand mr-4" href="{{ url('/sellers/calendar') }}">
-                    <span class="h2">SalesMaker</span>
-                </a>
-            @elseif (App\User::roleIs('appointer'))
-                <a class="navbar-brand mr-4" href="{{ url('/appointers/calendar') }}">
-                    <span class="h2">SalesMaker</span>
-                </a>
-            @endif
-        @endauth
-        @guest
-            <a class="navbar-brand mr-4" href="{{ url('/login') }}">
-                <span class="h2">SalesMaker</span>
-            </a>
-        @endguest
-        <form class="d-flex mr-auto header-search">
+        <a class="navbar-brand mr-4" href="{{ url('/dashboard') }}">
+            <span class="h2">SalesMaker</span>
+        </a>
+        {{-- <form class="d-flex mr-auto header-search">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-success" type="submit">Search</button>
-        </form>
+        </form> --}}
     </div>
 
     <div class="d-flex ml-auto">
@@ -36,41 +23,29 @@
                 <h3 class="mt-3">メニュー</h3>
                 <ul class="navbar-nav mr-auto">
                     <li>
-                        @if (App\User::roleIs('seller'))
-                            <a href="{{ route('users.seller_calendar') }}">マイカレンダー</a>
-                        @elseif (App\User::roleIs('appointer'))
-                            <a href="{{ route('users.appointer_calendar') }}">マイアポイント</a>
-                        @endif
+                        営業一覧
                     </li>
                     <li>
-                        @if (App\User::roleIs('seller'))
-                            <a href="{{ route('users.seller_record') }}">営業成績</a>
-                        @elseif (App\User::roleIs('appointer'))
-                            <a href="{{ route('users.appointer_record') }}">アポインター成績</a>
-                        @endif
+                        アポインター一覧
                     </li>
                     <li>
-                        @if (App\User::roleIs('seller'))
-                            <a href="{{ route('appointments.index') }}">アポイント一覧</a>
-                        @elseif (App\User::roleIs('appointer'))
-                            <a href="{{ route('appointments.index') }}">アポイント登録</a>
-                        @endif
+                        <a href="">顧客一覧</a>
                     </li>
                     <li>
-                        <a href="{{ route('customers.index') }}">顧客一覧</a>
+                        インセンティブ
                     </li>
                 </ul>
             @endauth
             @guest
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">{{ __('ログイン') }}</a>
+                        <a class="nav-link" href="{{ route('dashboard.login') }}">{{ __('ログイン') }}</a>
                     </li>
-                    @if (Route::has('register'))
+                    {{-- @if (Route::has('register'))
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('register') }}">{{ __('ユーザー登録') }}</a>
                         </li>
-                    @endif
+                    @endif --}}
                 </ul>
             @else
             </div>
@@ -85,7 +60,7 @@
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a href="{{ route('users.edit_password') }}" class="dropdown-item mb-3">パスワード変更</a>
+                        {{-- <a href="{{ route('users.edit_password') }}" class="dropdown-item mb-3">パスワード変更</a> --}}
                         <a class="dropdown-item" href="{{ route('logout') }}"
                             onclick="event.preventDefault();
                                              document.getElementById('logout-form').submit();">

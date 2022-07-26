@@ -1,11 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @section('content')
     <h1 class="text-center">顧客一覧</h1>
-    <form action="{{ route('customers.index') }}" method="get" class="d-flex row justify-content-center">
+    <form action="{{ route('dashboard.customers.index') }}" method="get" class="d-flex row justify-content-center">
         <div class="d-flex col-md-4">
-            <input type="hidden" name="sort" value="{{ $sort }}">
-            <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="ID,顧客名">
+            <input type="search" name="search" value="{{ $keyword }}" class="form-control" placeholder="ID,顧客名">
             <button type="submit" class="btn btn-success w-25">検索</button>
         </div>
     </form>
@@ -22,10 +21,9 @@
                                     ステータス
                                 </div>
                                 <div class="dropdown-menu">
-                                    <a href="{{ route('customers.index', ['search' => $search]) }}"
-                                        class="dropdown-item">全て表示</a>
+                                    <a href="{{ route('dashboard.customers.index') }}" class="dropdown-item">全て表示</a>
                                     @foreach ($sort_query as $key => $val)
-                                        <a href="{{ route('customers.index', ['sort' => $val, 'search' => $search]) }}"
+                                        <a href="{{ route('dashboard.customers.index', ['sort' => $val]) }}"
                                             class="dropdown-item">{{ $val }}</a>
                                     @endforeach
                                 </div>
@@ -43,7 +41,7 @@
                                 <td class="status-color{{ $customer->appointments->last()->statusIs()[0] }}">
                                     {{ $customer->appointments->last()->statusIs()[1] }}</td>
                                 <td>
-                                    <a href="{{ route('customers.show', compact('customer')) }}">詳細</a>
+                                    <a href="{{ route('dashboard.customers.show', compact('customer')) }}">詳細</a>
                                 </td>
                             </tr>
                         @endif

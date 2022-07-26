@@ -106,7 +106,7 @@ class UserController extends Controller
         return redirect('/');
     }
 
-    public function calendar(Request $request)
+    public function seller_calendar(Request $request)
     {
         if ($request->customer) {
             $customer = $request->customer;
@@ -151,7 +151,7 @@ class UserController extends Controller
             $hasAppointments[$appointment->day][$appointment->hour] = true;
         }
 
-        return view('users.calendar', compact('period', 'time_zone', 'start_day', 'middle_day', 'end_day', 'hasAppointments', 'user', 'seller_appointment', 'seller', 'customer', 'day', 'hour'));
+        return view('users.seller_calendar', compact('period', 'time_zone', 'start_day', 'middle_day', 'end_day', 'hasAppointments', 'user', 'seller_appointment', 'seller', 'customer', 'day', 'hour'));
     }
 
     public function appointer_calendar(Request $request)

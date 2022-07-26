@@ -14,7 +14,7 @@
                     @endif
                 </div>
                 <div class="col-md-4">
-                    <a href="{{ route('users.calendar', ['seller_appointment' => $seller_appointment, 'seller' => $seller, 'day' => $appointment->day, 'hour' => $appointment->hour]) }}"
+                    <a href="{{ route('users.seller_calendar', ['seller_appointment' => $seller_appointment, 'seller' => $seller, 'day' => $appointment->day, 'hour' => $appointment->hour]) }}"
                         class="btn btn-outline-primary btn-sm">日時変更</a>
                 </div>
             </div>
