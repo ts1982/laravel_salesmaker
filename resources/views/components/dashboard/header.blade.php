@@ -20,17 +20,24 @@
         <!-- Left Side Of Navbar -->
         @auth
             <div class="sidebar-list">
-                <h3 class="mt-3">メニュー</h3>
-                <ul class="navbar-nav mr-auto">
+                <h3 class="mt-4 mb-3">管理メニュー</h3>
+                <h4>一覧メニュー</h4>
+                <ul>
                     <li>
-                        営業一覧
+                        <a href="{{ route('dashboard.users.sellers_index') }}">営業</a>
                     </li>
                     <li>
-                        アポインター一覧
+                        <a href="{{ route('dashboard.users.appointers_index') }}">アポインター</a>
                     </li>
                     <li>
-                        <a href="">顧客一覧</a>
+                        <a href="{{ route('dashboard.customers.index') }}">顧客</a>
                     </li>
+                    <li>
+                        <a href="{{ route('dashboard.appointments.index') }}">アポイント</a>
+                    </li>
+                </ul>
+                <h4>その他</h4>
+                <ul>
                     <li>
                         インセンティブ
                     </li>

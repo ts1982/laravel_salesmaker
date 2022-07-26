@@ -150,3 +150,31 @@ td {
 #dashboard .header {
     background: rgb(34, 48, 134);
 }
+
+#dashboard .sidebar h3 {
+    margin-left: 8px;
+}
+
+#dashboard .sidebar ul {
+    margin-left: 24px;
+}
+
+#dashboard .sidebar-list h4 {
+    margin-left: 8px;
+}
+
+#dashboard .sidebar-list ul {
+    margin-left: 24px;
+}
+
+#dashboard .sidebar-list ul li {
+    margin-bottom: 5px;
+}
+
+#dashboard .sidebar-list {
+    color: #ddd;
+}
+
+#dashboard .sidebar-list a {
+    color: rgb(161, 202, 255);
+}

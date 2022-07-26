@@ -50,7 +50,11 @@ Route::get('/dashboard', 'AdminController@dashboard')->middleware('auth:admins')
 Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
     Route::get('login', 'Dashboard\Auth\LoginController@showLoginForm')->name('login');
     Route::post('login', 'Dashboard\Auth\LoginController@login')->name('login');
+    Route::resource('users', 'Dashboard\UserController')->middleware('auth:admins');
+    Route::get('sellers', 'Dashboard\UserController@sellers_index')->name('users.sellers_index')->middleware('auth:admins');
+    Route::get('appointers', 'Dashboard\UserController@appointers_index')->name('users.appointers_index')->middleware('auth:admins');
     Route::resource('customers', 'Dashboard\CustomerController')->middleware('auth:admins');
+    Route::resource('appointments', 'Dashboard\AppointmentController')->middleware('auth:admins');
 });
 
 if (App::environment('production')) {
