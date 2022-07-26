@@ -201,7 +201,7 @@ class UserController extends Controller
         } else {
             $rate = 0;
         }
-        $rank = $user->getRank($rate);
+        $rank = $user->getRank($rate, 'seller');
 
         // ソート
         $sort_query = Appointment::STATUS_LIST;
@@ -235,7 +235,7 @@ class UserController extends Controller
         } else {
             $rate = 0;
         }
-        $rank = $user->getRank($rate);
+        $rank = $user->getRank($rate, 'appointer');
 
 
         // ソート

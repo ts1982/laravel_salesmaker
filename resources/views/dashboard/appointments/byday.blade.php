@@ -8,10 +8,10 @@
                 {{ $day->copy()->format('Y年n月j日') }}&nbsp;({{ mb_substr($day->copy()->dayName, 0, 1) }})</h2>
             <div class="text-center">
                 <a
-                    href="{{ url('/appointments/byday/?day=' .$day->copy()->subDay()->format('Y-m-d')) }}">&lt;&lt;&nbsp;prev</a>
+                    href="{{ url('/dashboard/appointments/byday/?day=' .$day->copy()->subDay()->format('Y-m-d')) }}">&lt;&lt;&nbsp;prev</a>
                 <span>{{ $day->format('Y/n/j') }}</span>
                 <a
-                    href="{{ url('/appointments/byday/?day=' .$day->copy()->addDay()->format('Y-m-d')) }}">next&nbsp;&gt;&gt;</a>
+                    href="{{ url('/dashboard/appointments/byday/?day=' .$day->copy()->addDay()->format('Y-m-d')) }}">next&nbsp;&gt;&gt;</a>
             </div>
             <table class="table text-center">
                 <thead>
@@ -19,7 +19,8 @@
                         <th>日時</th>
                         <th>顧客名</th>
                         <th>ステータス</th>
-                        <th></th>
+                        <th>アポインター</th>
+                        <th>営業担当者</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -29,21 +30,14 @@
                             <td>{{ $appointment->hour }}時</td>
                             <td>
                                 <a
-                                    href="{{ route('customers.show', ['customer' => $appointment->customer]) }}">{{ $appointment->customer->name }}</a>
+                                    href="{{ route('dashboard.customers.show', ['customer' => $appointment->customer]) }}">{{ $appointment->customer->name }}</a>
                             </td>
                             <td class="status-color{{ $appointment->statusIs()[0] }}">
                                 {{ $appointment->statusIs()[1] }}</td>
+                            <td>{{ $appointment->thisAppointerHas()->name }}</td>
+                            <td>{{ $appointment->thisSellerHas()->name }}</td>
                             <td>
-                                <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
-                            </td>
-                            <td>
-                                @if (App\User::roleIs('seller'))
-                                    @if ($appointment->status === 0)
-                                        <a href="{{ route('appointments.report', compact('appointment')) }}">報告</a>
-                                    @else
-                                        <a href="#" class="event-none">報告済</a>
-                                    @endif
-                                @endif
+                                <a href="{{ route('dashboard.appointments.show', compact('appointment')) }}">詳細</a>
                             </td>
                         </tr>
                     @endforeach

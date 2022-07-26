@@ -7,7 +7,7 @@
             <table class="table text-center">
                 <thead>
                     <tr>
-                        <th>アポイント件数</th>
+                        <th>訪問件数</th>
                         <th>成約件数</th>
                         <th>成約率</th>
                         <th>ランク</th>
@@ -66,7 +66,10 @@
                             <td>
                                 {{ date('j日', strtotime($appointment->day)) }}&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時
                             </td>
-                            <td>{{ $appointment->customer->name }}</td>
+                            <td>
+                                <a
+                                    href="{{ route('customers.show', ['customer' => $appointment->customer]) }}">{{ $appointment->customer->name }}</a>
+                            </td>
                             <td class="status-color{{ $appointment->statusIs()[0] }}">
                                 {{ $appointment->statusIs()[1] }}
                             </td>

@@ -28,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/dashboard';
+    protected $redirectTo = '/dashboard/sellers';
 
     /**
      * Create a new controller instance.
@@ -50,14 +50,19 @@ class LoginController extends Controller
         return view('dashboard.auth.login');
     }
 
-    public function loggedOut(Request $request)
+    protected function loggedOut(Request $request)
     {
-        return redirect(route('dashboard.login'));
+        return redirect('dashboard/login');
     }
 
     public function logout(Request $request)
     {
         $this->performLogout($request);
         return redirect('dashboard.login');
+    }
+
+    public function redirectPath()
+    {
+        return '/dashboard/sellers';
     }
 }

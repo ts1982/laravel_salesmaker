@@ -93,9 +93,11 @@ class AppointmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Appointment $appointment)
     {
-        //
+        $status_list = Appointment::STATUS_LIST;
+
+        return view('dashboard.appointments.show', compact('appointment'));
     }
 
     /**
@@ -130,5 +132,20 @@ class AppointmentController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function byday(Request $request)
+    {
+        // $user = Auth::user();
+        $day = new Carbon($request->day);
+        // if ($user->role === 'seller') {
+        $appointments = Appointment::where('day', $day->format('Y-m-d'))->orderBy('hour', 'asc')->get();
+        // } else if ($user->role === 'appointer') {
+        //     $appointments = Appointment::where('day', $day->format('Y-m-d'))->where('user_id', $user->id)->get();
+        // }
+
+        $status_list = Appointment::STATUS_LIST;
+
+        return view('dashboard.appointments.byday', compact('appointments', 'day', 'status_list'));
     }
 }

@@ -88,9 +88,9 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Customer $customer)
     {
-        //
+        return view('dashboard.customers.edit', compact('customer'));
     }
 
     /**
@@ -100,9 +100,14 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Customer $customer, Request $request)
     {
-        //
+        $customer->name = $request->name;
+        $customer->address = $request->address;
+        $customer->tel = $request->tel;
+        $customer->update();
+
+        return redirect()->route('dashboard.customers.show', compact('customer'));
     }
 
     /**

@@ -52,14 +52,14 @@
                         <tr>
                             <td>
                                 <a
-                                    href="#">{{ date('Y/m/d', strtotime($appointment->day)) }}</a>&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時
+                                    href="{{ route('dashboard.appointments.byday', ['day' => $appointment->day]) }}">{{ date('Y/m/d', strtotime($appointment->day)) }}</a>&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時
                             </td>
                             <td class="status-color{{ $appointment->statusIs()[0] }}">
                                 {{ $appointment->statusIs()[1] }}</td>
                             <td>{{ $appointment->thisAppointerHas()->name }}</td>
                             <td>{{ $appointment->thisSellerHas()->name }}</td>
                             <td>
-                                <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
+                                <a href="{{ route('dashboard.appointments.show', compact('appointment')) }}">詳細</a>
                             </td>
                             <td>
                                 @if (App\User::roleIs('seller'))
@@ -74,10 +74,6 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="d-flex justify-content-end">
-                <a href="{{ route('users.seller_calendar', compact('customer')) }}"
-                    class="btn btn-outline-success">アポイント作成</a>
-            </div>
         </div>
     </div>
 @endsection

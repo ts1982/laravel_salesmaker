@@ -11,6 +11,7 @@
                         <th>氏名</th>
                         <th>メールアドレス</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -20,6 +21,13 @@
                                 <td>{{ $user->id }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
+                                <td>
+                                    @if ($user->role === 'seller')
+                                        <a href="{{ route('dashboard.users.sellers_record', compact('user')) }}">成績</a>
+                                    @elseif ($user->role === 'appointer')
+                                        <a href="{{ route('dashboard.users.appointers_record', compact('user')) }}">成績</a>
+                                    @endif
+                                </td>
                                 <td>
                                     <a href="{{ route('dashboard.users.show', compact('user')) }}">詳細</a>
                                 </td>

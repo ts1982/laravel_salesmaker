@@ -1,12 +1,8 @@
 <nav class="header navbar navbar-expand-md navbar-dark shadow-sm fixed-top">
     <div class="d-flex align-items-center mx-3">
-        <a class="navbar-brand mr-4" href="{{ url('/dashboard') }}">
+        <a class="navbar-brand mr-4" href="{{ url('/dashboard/appointments') }}">
             <span class="h2">SalesMaker</span>
         </a>
-        {{-- <form class="d-flex mr-auto header-search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-success" type="submit">Search</button>
-        </form> --}}
     </div>
 
     <div class="d-flex ml-auto">
@@ -21,8 +17,11 @@
         @auth
             <div class="sidebar-list">
                 <h3 class="mt-4 mb-3">管理メニュー</h3>
-                <h4>一覧メニュー</h4>
+                <h4>各種一覧</h4>
                 <ul>
+                    <li>
+                        <a href="{{ route('dashboard.appointments.index') }}">アポイント</a>
+                    </li>
                     <li>
                         <a href="{{ route('dashboard.users.sellers_index') }}">営業</a>
                     </li>
@@ -32,14 +31,20 @@
                     <li>
                         <a href="{{ route('dashboard.customers.index') }}">顧客</a>
                     </li>
-                    <li>
-                        <a href="{{ route('dashboard.appointments.index') }}">アポイント</a>
-                    </li>
                 </ul>
                 <h4>その他</h4>
                 <ul>
                     <li>
-                        インセンティブ
+                        <a href="#">月別営業成績</a>
+                    </li>
+                    <li>
+                        <a href="#">月別アポインター成績</a>
+                    </li>
+                    <li>
+                        <a href="#">インセンティブ</a>
+                    </li>
+                    <li>
+                        <a href="#">休日設定</a>
                     </li>
                 </ul>
             @endauth

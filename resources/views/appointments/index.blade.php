@@ -36,7 +36,7 @@
             </thead>
             <tbody>
                 @for ($start_day; $start_day < $middle_day; $start_day->addDay())
-                    <tr @if ($start_day->isToday()) class="mark-today" @endif>
+                    <tr>
                         <td>{{ $start_day->format('n/j') }}</td>
                         <td>
                             @if ($start_day->isSaturday())
@@ -86,7 +86,7 @@
             </thead>
             <tbody>
                 @for ($middle_day; $middle_day <= $end_day; $middle_day->addDay())
-                    <tr @if ($middle_day->isToday()) class="mark-today" @endif>
+                    <tr>
                         <td>{{ $middle_day->format('n/j') }}</td>
                         <td>
                             @if ($middle_day->isSaturday())

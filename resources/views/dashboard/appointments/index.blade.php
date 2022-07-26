@@ -26,8 +26,12 @@
             </thead>
             <tbody>
                 @for ($start_day; $start_day < $middle_day; $start_day->addDay())
-                    <tr @if ($start_day->isToday()) class="mark-today" @endif>
-                        <td>{{ $start_day->format('n/j') }}</td>
+                    <tr>
+                        <td>
+                            <a href="{{ route('dashboard.appointments.byday', ['day' => $start_day->format('Y-m-d')]) }}">
+                                <span>{{ $start_day->format('n/j') }}</span>
+                            </a>
+                        </td>
                         <td>
                             @if ($start_day->isSaturday())
                                 <span class="saturday">{{ mb_substr($start_day->dayName, 0, 1) }}</span>
@@ -65,8 +69,12 @@
             </thead>
             <tbody>
                 @for ($middle_day; $middle_day <= $end_day; $middle_day->addDay())
-                    <tr @if ($middle_day->isToday()) class="mark-today" @endif>
-                        <td>{{ $middle_day->format('n/j') }}</td>
+                    <tr>
+                        <td>
+                            <a href="{{ route('dashboard.appointments.byday', ['day' => $middle_day->format('Y-m-d')]) }}">
+                                <span>{{ $middle_day->format('n/j') }}</span>
+                            </a>
+                        </td>
                         <td>
                             @if ($middle_day->isSaturday())
                                 <span class="saturday">{{ mb_substr($middle_day->dayName, 0, 1) }}</span>

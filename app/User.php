@@ -65,12 +65,12 @@ class User extends Authenticatable
         return $sales;
     }
 
-    public function getRank($rate)
+    public function getRank($rate, $role)
     {
-        if (self::roleIs('seller')) {
+        if ($role === 'seller') {
             $list = self::SELLER_RANK_LIST;
         }
-        if (self::roleIs('appointer')) {
+        if ($role === 'appointer') {
             $list = self::APPOINTER_RANK_LIST;
         }
 

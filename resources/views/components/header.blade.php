@@ -44,9 +44,9 @@
                     </li>
                     <li>
                         @if (App\User::roleIs('seller'))
-                            <a href="{{ route('users.seller_record') }}">営業成績</a>
+                            <a href="{{ route('users.seller_record') }}">マイレコード</a>
                         @elseif (App\User::roleIs('appointer'))
-                            <a href="{{ route('users.appointer_record') }}">アポインター成績</a>
+                            <a href="{{ route('users.appointer_record') }}">マイレコード</a>
                         @endif
                     </li>
                     <li>

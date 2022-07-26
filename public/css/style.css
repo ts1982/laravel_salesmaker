@@ -37,6 +37,7 @@ body,
 
 ul {
     padding: 0;
+    margin-left: 16px;
 }
 
 li {
@@ -152,19 +153,20 @@ td {
 }
 
 #dashboard .sidebar h3 {
-    margin-left: 8px;
+    margin-left: 16px;
 }
 
 #dashboard .sidebar ul {
-    margin-left: 24px;
+    margin-left: 32px;
 }
 
 #dashboard .sidebar-list h4 {
-    margin-left: 8px;
+    margin-top: 24px;
+    margin-left: 16px;
 }
 
 #dashboard .sidebar-list ul {
-    margin-left: 24px;
+    margin-left: 32px;
 }
 
 #dashboard .sidebar-list ul li {
