@@ -54,9 +54,10 @@
                         </li>
                     @endif --}}
                 </ul>
-            @else
-            </div>
+            @endguest
+        </div>
 
+        @auth
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
                 <!-- Authentication Links -->
@@ -79,7 +80,7 @@
                         </form>
                     </div>
                 </li>
-            @endguest
-        </ul>
+            </ul>
+        @endauth
     </div>
 </nav>
