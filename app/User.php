@@ -14,6 +14,9 @@ class User extends Authenticatable
 
     private const SELLER_RANK_LIST = ['A' => 25, 'B' => 20, 'C' => 15, 'D' => 0];
     private const APPOINTER_RANK_LIST = ['A' => 25, 'B' => 20, 'C' => 15, 'D' => 0];
+    const INCENTIVE_RATE = ['A' => 100, 'B' => 80, 'C' => 50, 'D' => 20];
+    const SELLER_INCENTIVE_BASIC = 20000;
+    const APPOINTER_INCENTIVE_BASIC = 5000;
 
     /**
      * The attributes that are mass assignable.
@@ -83,5 +86,12 @@ class User extends Authenticatable
         } elseif ($list['C'] > $rate) {
             return 'D';
         }
+    }
+
+    public function incentiveRate($rate)
+    {
+        $incentive_rate = self::INCENTIVE_RATE[$this->getRank($rate, $this->role)] / 100;
+
+        return $incentive_rate;
     }
 }

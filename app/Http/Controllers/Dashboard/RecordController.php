@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\User;
 use App\Customer;
 use App\Appointment;
+use App\Record;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -22,24 +23,9 @@ class RecordController extends Controller
         }
 
         //
-        $users = User::where('role', 'seller')->orderBy('id')->get();
-        $user_list = [];
+        $seller_list = Record::getUsersRecord('seller', $period);
 
-        foreach ($users as $user) {
-            $appointments = Appointment::where('seller_id', $user->id)->where('day', 'like', "$period%")->orderBy('day', 'asc')->orderBy('hour', 'asc')->get();
-
-            $total = $appointments->whereIn('status', [2, 3])->count();
-            $contract_count = $appointments->where('status', 3)->count();
-            if ($total !== 0) {
-                $rate = number_format($contract_count / $total * 100, 1);
-            } else {
-                $rate = 0;
-            }
-            $rank = $user->getRank($rate, 'seller');
-            $user_list[$user->id] = [$user->name, $total, $contract_count, $rate, $rank];
-        }
-
-        return view('dashboard.records.sellers', compact('user_list', 'period'));
+        return view('dashboard.records.sellers', compact('seller_list', 'period'));
     }
 
     public function appointers(Request $request)
@@ -53,23 +39,35 @@ class RecordController extends Controller
         }
 
         //
-        $users = User::where('role', 'appointer')->orderBy('id')->get();
-        $user_list = [];
+        $appointer_list = Record::getUsersRecord('appointer', $period);
 
-        foreach ($users as $user) {
-            $appointments = Appointment::where('user_id', $user->id)->where('day', 'like', "$period%")->orderBy('day', 'asc')->orderBy('hour', 'asc')->get();
+        return view('dashboard.records.appointers', compact('appointer_list', 'period'));
+    }
 
-            $total = $appointments->whereIn('status', [2, 3])->count();
-            $contract_count = $appointments->where('status', 3)->count();
-            if ($total !== 0) {
-                $rate = number_format($contract_count / $total * 100, 1);
-            } else {
-                $rate = 0;
-            }
-            $rank = $user->getRank($rate, 'appointer');
-            $user_list[$user->id] = [$user->name, $total, $contract_count, $rate, $rank];
+    public function incentive(Request $request)
+    {
+        // 期間取得
+        if ($request->period) {
+            $period = $request->period;
+        } else {
+            $period = Carbon::now();
+            $period = $period->format('Y-m');
         }
 
-        return view('dashboard.records.appointers', compact('user_list', 'period'));
+        // 営業
+        $seller_list = Record::getUsersRecord('seller', $period);
+        $seller_total = 0;
+        foreach ($seller_list as $seller) {
+            $seller_total += $seller[6];
+        }
+
+        // アポインター
+        $appointer_list = Record::getUsersRecord('appointer', $period);
+        $appointer_total = 0;
+        foreach ($appointer_list as $appointer) {
+            $appointer_total += $appointer[6];
+        }
+
+        return view('dashboard.records.incentive', compact('seller_list', 'appointer_list', 'period', 'seller_total', 'appointer_total'));
     }
 }

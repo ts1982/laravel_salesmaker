@@ -20,15 +20,17 @@ class UserController extends Controller
     public function sellers_index()
     {
         $users = User::where('role', 'seller')->orderBy('id')->get();
+        $role = '営業';
 
-        return view('dashboard.users.index', compact('users'));
+        return view('dashboard.users.index', compact('users', 'role'));
     }
 
     public function appointers_index()
     {
         $users = User::where('role', 'appointer')->orderBy('id')->get();
+        $role = 'アポインター';
 
-        return view('dashboard.users.index', compact('users'));
+        return view('dashboard.users.index', compact('users', 'role'));
     }
 
     /**

@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('content')
-    <h1 class="text-center">顧客一覧</h1>
+    <h1 class="text-center">{{ $role }}一覧</h1>
     <div class="row justify-content-center mt-3">
         <div class="col-sm-10">
             <table class="table">

@@ -24,7 +24,7 @@
             <a href="{{ route('dashboard.records.appointers') }}">アポインター</a>
         </li>
         <li>
-            <a href="#">インセンティブ</a>
+            <a href="{{ route('dashboard.records.incentive') }}">インセンティブ</a>
         </li>
     </ul>
     <h3>設定</h3>

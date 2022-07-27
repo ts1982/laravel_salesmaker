@@ -60,6 +60,7 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
     Route::resource('appointments', 'Dashboard\AppointmentController')->middleware('auth:admins');
     Route::get('records/sellers', 'Dashboard\RecordController@sellers')->name('records.sellers')->middleware('auth:admins');
     Route::get('records/appointers', 'Dashboard\RecordController@appointers')->name('records.appointers')->middleware('auth:admins');
+    Route::get('records/incentive', 'Dashboard\RecordController@incentive')->name('records.incentive')->middleware('auth:admins');
 });
 
 if (App::environment('production')) {
