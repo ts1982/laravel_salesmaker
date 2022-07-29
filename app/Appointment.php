@@ -20,6 +20,11 @@ class Appointment extends Model
         return $this->belongsTo('App\Customer');
     }
 
+    public function contents()
+    {
+        return $this->hasMany('App\Content');
+    }
+
     public static function makeCalendar($period)
     {
         Carbon::setLocale('ja');

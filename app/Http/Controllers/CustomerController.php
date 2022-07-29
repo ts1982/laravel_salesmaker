@@ -19,19 +19,23 @@ class CustomerController extends Controller
 
         $key = array_search($request->sort, $sort_query);
 
-        if (User::roleIs('appointer')) {
-            $latest_id = Appointment::selectRaw('max(id) as latest_id')->where('user_id', $user->id)->groupBy('customer_id')->pluck('latest_id');
-        } elseif (User::roleIs('seller')) {
-            $latest_id = Appointment::selectRaw('max(id) as latest_id')->where('seller_id', $user->id)->groupBy('customer_id')->pluck('latest_id');
-        }
+        $latest_id = Appointment::selectRaw('max(id) as latest_id')->groupBy('customer_id')->pluck('latest_id');
 
         if ($request->sort && $request->search) { // ソート & 検索
             $sort = $request->sort;
             $search = trim($request->search);
-            $customers_id = Appointment::whereIn('id', $latest_id)->where('status', $key)->pluck('customer_id');
+            if (User::roleIs('appointer')) {
+                $customers_id = Appointment::whereIn('id', $latest_id)->where('user_id', $user->id)->where('status', $key)->pluck('customer_id');
+            } elseif (User::roleIs('seller')) {
+                $customers_id = Appointment::whereIn('id', $latest_id)->where('seller_id', $user->id)->where('status', $key)->pluck('customer_id');
+            }
             $customers = Customer::whereIn('id', $customers_id)->where('name', 'like', "%{$search}%")->orderBy('id')->paginate(15)->onEachSide(1);
         } else if ($request->sort) { // ソート
-            $customers_id = Appointment::whereIn('id', $latest_id)->where('status', $key)->pluck('customer_id');
+            if (User::roleIs('appointer')) {
+                $customers_id = Appointment::whereIn('id', $latest_id)->where('user_id', $user->id)->where('status', $key)->pluck('customer_id');
+            } elseif (User::roleIs('seller')) {
+                $customers_id = Appointment::whereIn('id', $latest_id)->where('seller_id', $user->id)->where('status', $key)->pluck('customer_id');
+            }
             $customers = Customer::whereIn('id', $customers_id)->orderBy('id')->paginate(15)->onEachSide(1);
             $sort = $request->sort;
             $search = '';

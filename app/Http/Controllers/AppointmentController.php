@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Customer;
 use App\Appointment;
+use App\Content;
 use App\Holiday;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -105,19 +106,20 @@ class AppointmentController extends Controller
             $user = Auth::user();
             $appointment = new Appointment();
 
-            if (!empty($request->customer)) {
+            if (!empty($request->customer)) { // 既存
 
                 $customer = $request->customer;
                 $appointment->customer_id = $customer;
+                $appointment->user_id = Appointment::where('customer_id', $customer)->latest()->first()->user_id;
 
                 if ($user->role === 'seller') {
                     $appointment->seller_id = $user->id;
                 } else {
-                    $target_appointment = Appointment::where('customer_id', $customer)->orderBy('day', 'desc')->get()->first();
+                    $target_appointment = Appointment::where('customer_id', $customer)->latest()->first();
                     $latest_seller = User::find($target_appointment->seller_id);
                     $appointment->seller_id = $latest_seller->id;
                 }
-            } else {
+            } else { // 新規
                 $request->validate(
                     [
                         'name' => 'required',
@@ -140,6 +142,7 @@ class AppointmentController extends Controller
                 $customer->save();
 
                 $appointment->customer_id = $customer->id;
+                $appointment->user_id = $user->id;
 
                 if ($user->role === 'appointer') {
                     $all_seller_id = User::where('role', 'seller')->pluck('id')->toArray();
@@ -158,9 +161,13 @@ class AppointmentController extends Controller
 
             $appointment->day = $request->day;
             $appointment->hour = $request->hour;
-            $appointment->content = $request->content;
-            $appointment->user_id = $user->id;
             $appointment->save();
+
+            $content = new Content();
+            $content->appointment_id = $appointment->id;
+            $content->user_id = $user->id;
+            $content->content = $request->content;
+            $content->save();
 
             DB::commit();
         } catch (\Exception $e) {
@@ -170,46 +177,51 @@ class AppointmentController extends Controller
         return redirect()->route('appointments.show', compact('appointment'));
     }
 
-    public function show(Appointment $appointment)
+    public function show(Appointment $appointment, Request $request)
     {
+        $seller_appointment = $appointment;
+
         $appointer = $appointment->user;
         $seller = User::find($appointment->seller_id);
+        $contents = $appointment->contents->sortByDesc('created_at');
 
         $status_list = Appointment::STATUS_LIST;
 
-        return view('appointments.show', compact('appointment', 'appointer', 'seller'));
+        return view('appointments.show', compact('appointment', 'seller_appointment', 'contents', 'appointer', 'seller'));
+    }
+
+    public function date_update(Appointment $appointment, Request $request)
+    {
+        $day = $request->day;
+        $hour = $request->hour;
+
+        if (!Appointment::isFuture($day, $hour)) {
+            return back()->with('warning', '過去の指定はできません。');
+        }
+
+        $appointment = Appointment::find($request->appointment);
+        $appointment->day = $day;
+        $appointment->hour = $hour;
+        $appointment->update();
+
+        return redirect()->route('appointments.show', compact('appointment'));
     }
 
     public function edit(Appointment $appointment, Request $request)
     {
-        if ($request->has('day', 'hour')) {
-            $day = $request->day;
-            $hour = $request->hour;
-            // 登録日のチェック
-            if (!Appointment::isFuture($day, $hour)) {
-                return back()->with('warning', '過去の指定はできません。');
-            }
-        } else {
-            $day = '';
-            $hour = '';
-        }
 
-
-        $appointer = $appointment->user;
-        $seller = User::find($appointment->seller_id);
-        $seller_appointment = $appointment;
-
-        return view('appointments.edit', compact('appointment', 'seller_appointment', 'appointer', 'seller', 'day', 'hour'));
+        return view('appointments.edit', compact('appointment', 'seller_appointment', 'appointer', 'seller'));
     }
 
     public function update(Appointment $appointment, Request $request)
     {
-        if ($request->day && $request->hour) {
-            $appointment->day = $request->day;
-            $appointment->hour = $request->hour;
-        }
-        $appointment->content = $request->content;
-        $appointment->update();
+        $user = Auth::user();
+
+        $content = new Content();
+        $content->appointment_id = $appointment->id;
+        $content->user_id = $user->id;
+        $content->content = $request->content;
+        $content->save();
 
         return redirect()->route('appointments.show', compact('appointment'));
     }

@@ -50,6 +50,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Appointment');
     }
 
+    public function content()
+    {
+        return $this->belongsTo('App\Content');
+    }
+
     public static function roleIs($role)
     {
         $user = Auth::user();

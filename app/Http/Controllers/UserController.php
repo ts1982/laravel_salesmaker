@@ -114,7 +114,7 @@ class UserController extends Controller
             $customer = '';
         }
 
-        if ($request->seller) { // 編集から
+        if ($request->seller) { // 日時変更から
             $user = User::find($request->seller);
             $seller_appointment = $request->seller_appointment;
             $seller = $user;

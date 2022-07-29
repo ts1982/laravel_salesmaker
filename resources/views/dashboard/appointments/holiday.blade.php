@@ -1,6 +1,9 @@
 @extends('layouts.dashboard')
 
 @section('content')
+    @if ($info)
+        <div class="alert alert-warning">{{ $info }}</div>
+    @endif
     <h1 class="text-center">休日設定</h1>
     <div class="text-center">
         @if ($half === 'first')

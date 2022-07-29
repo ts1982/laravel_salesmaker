@@ -48,7 +48,9 @@ class HolidayController extends Controller
             }
         }
 
-        return view('dashboard.appointments.holiday', compact('period', 'start_day', 'end_day', 'calendar', 'half'));
+        $info = $request->info;
+
+        return view('dashboard.appointments.holiday', compact('period', 'start_day', 'end_day', 'calendar', 'half', 'info'));
     }
 
     public function holiday_store(Request $request)
@@ -68,6 +70,8 @@ class HolidayController extends Controller
 
         $period = $request->period;
 
-        return redirect()->route('dashboard.appointments.holiday', compact('period'));
+        $info = '設定を変更しました。';
+
+        return redirect()->route('dashboard.appointments.holiday', compact('period', 'info'));
     }
 }

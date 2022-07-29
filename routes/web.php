@@ -37,6 +37,7 @@ Route::put('/customers/{customer}/update', 'CustomerController@update')->name('c
 Route::get('/appointments', 'AppointmentController@index')->name('appointments.index')->middleware('auth');
 Route::get('/appointments/new', 'AppointmentController@create')->name('appointments.create')->middleware('auth');
 Route::post('/appointments/store', 'AppointmentController@store')->name('appointments.store')->middleware('auth');
+Route::put('/appointments/date_update', 'AppointmentController@date_update')->name('appointments.date_update')->middleware('auth');
 Route::get('/appointments/byday', 'AppointmentController@byday')->name('appointments.byday')->middleware('auth');
 Route::get('/appointments/report', 'AppointmentController@report')->name('appointments.report')->middleware('auth');
 Route::put('/appointments/change_status', 'AppointmentController@change_status')->name('appointments.change_status')->middleware('auth');

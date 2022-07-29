@@ -1,21 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="text-center">アポイント情報編集</h1>
+    <h1 class="text-center">アポイント情報追加</h1>
     <div class="row justify-content-center mt-5">
         <div class="col-md-10 p-0">
             <div class="row mb-3">
                 <strong class="col-md-3">日時</strong>
                 <div class="col-md-5">
-                    @if ($day && $hour)
-                        <span>{{ date('Y/m/d', strtotime($day)) }}&nbsp;({{ mb_substr(Carbon\Carbon::parse($day)->dayName, 0, 1) }})&emsp;{{ $hour }}時</span>
-                    @else
-                        <span>{{ date('Y/m/d', strtotime($appointment->day)) }}&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時</span>
-                    @endif
-                </div>
-                <div class="col-md-4">
-                    <a href="{{ route('users.seller_calendar', ['seller_appointment' => $seller_appointment, 'seller' => $seller, 'day' => $appointment->day, 'hour' => $appointment->hour]) }}"
-                        class="btn btn-outline-primary btn-sm">日時変更</a>
+                    <span>{{ date('Y/m/d', strtotime($appointment->day)) }}&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時</span>
                 </div>
             </div>
             <div class="row mb-3">
@@ -30,6 +22,19 @@
                 <strong class="col-md-3">電話番号</strong>
                 <div class="col-md-9">{{ $appointment->customer->tel }}</div>
             </div>
+            <div class="row mb-3">
+                <strong class="col-md-3">アポインター</strong>
+                <div class="col-md-9">{{ $appointment->user->name }}</div>
+            </div>
+            <div class="row mb-3">
+                <strong class="col-md-3">営業担当者</strong>
+                <div class="col-md-9">{{ $appointment->thisSellerHas()->name }}</div>
+            </div>
+            <div class="row mb-3">
+                <strong class="col-md-3">ステータス</strong>
+                <div class="col-md-9 status-color{{ $appointment->statusIs()[0] }}">
+                    {{ $appointment->statusIs()[1] }}</div>
+            </div>
             <form action="{{ route('appointments.update', compact('appointment')) }}" method="post">
                 @csrf
                 @method('put')
@@ -40,18 +45,8 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="row mb-3">
-                    <strong class="col-md-3">アポインター</strong>
-                    <div class="col-md-9">{{ $appointer->name }}</div>
-                </div>
-                <div class="row mb-3">
-                    <strong class="col-md-3">営業担当者</strong>
-                    <div class="col-md-9">{{ $seller->name }}</div>
-                </div>
                 <div class="d-flex justify-content-end">
-                    <input type="hidden" name="day" value="{{ $day }}">
-                    <input type="hidden" name="hour" value="{{ $hour }}">
-                    <input type="submit" value="更新" class="btn btn-success">
+                    <input type="submit" value="登録" class="btn btn-success">
                 </div>
             </form>
         </div>
