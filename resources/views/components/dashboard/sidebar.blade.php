@@ -30,7 +30,7 @@
     <h3>設定</h3>
     <ul>
         <li>
-            <a href="#">休日設定</a>
+            <a href="{{ route('dashboard.appointments.holiday') }}">休日設定</a>
         </li>
     </ul>
 </div>

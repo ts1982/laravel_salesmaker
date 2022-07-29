@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Customer;
 use App\Appointment;
+use App\Holiday;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,25 +23,35 @@ class AppointmentController extends Controller
         }
 
         // カレンダー作成
-        list($time_zone, $start_day, $middle_day, $end_day) = Appointment::makeCalendar($period);
+        list($time_zone, $start_day, $middle_day, $end_day, $sellers_holidays) = Appointment::makeCalendar($period);
 
         $total_seller = User::where('role', 'seller')->count();
 
         $appointments_prev = [];
         $day = $start_day->copy();
         for ($day; $day < $middle_day; $day->addDay()) {
+            if (!empty($sellers_holidays[$day->format('Y-m-d')])) {
+                $holiday_count = count($sellers_holidays[$day->format('Y-m-d')]);
+            } else {
+                $holiday_count = 0;
+            }
             foreach ($time_zone as $time) {
                 $count = Appointment::where('day', $day)->where('hour', $time)->count();
-                $appointments_prev[$day->format('Y-m-d')][$time] = $total_seller - $count;
+                $appointments_prev[$day->format('Y-m-d')][$time] = $total_seller - $count - $holiday_count;
             }
         }
 
         $appointments_later = [];
         $day = $middle_day->copy();
         for ($day; $day <= $end_day; $day->addDay()) {
+            if (!empty($sellers_holidays[$day->format('Y-m-d')])) {
+                $holiday_count = count($sellers_holidays[$day->format('Y-m-d')]);
+            } else {
+                $holiday_count = 0;
+            }
             foreach ($time_zone as $time) {
                 $count = Appointment::where('day', $day)->where('hour', $time)->count();
-                $appointments_later[$day->format('Y-m-d')][$time] = $total_seller - $count;
+                $appointments_later[$day->format('Y-m-d')][$time] = $total_seller - $count - $holiday_count;
             }
         }
 
@@ -132,12 +143,12 @@ class AppointmentController extends Controller
 
                 if ($user->role === 'appointer') {
                     $all_seller_id = User::where('role', 'seller')->pluck('id')->toArray();
-                    $disabled_seller_id = Appointment::where('day', $request->day)->where('hour', $request->hour)->pluck('seller_id')->toArray();
+                    $hasAppointment_seller_id = Appointment::where('day', $request->day)->where('hour', $request->hour)->pluck('seller_id')->toArray();
+                    $holiday_seller_id = Holiday::where('day', $request->day)->pluck('user_id')->toArray();
+                    $disabled_seller_id = array_merge($hasAppointment_seller_id, $holiday_seller_id);
                     $selected_id = array_diff($all_seller_id, $disabled_seller_id);
                     $selected_id = $selected_id[array_rand($selected_id, 1)];
                     $appointment->seller_id = $selected_id;
-
-                    // $disabled_seller_id = Appointment::where('day', $request->day)->where('hour', $request->hour)->pluck('seller_id')
                 } else if ($user->role === 'seller') {
                     $appointment->seller_id = $user->id;
                 } else {
@@ -155,7 +166,6 @@ class AppointmentController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
         }
-
 
         return redirect()->route('appointments.show', compact('appointment'));
     }

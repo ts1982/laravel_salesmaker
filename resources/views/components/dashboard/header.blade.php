@@ -32,7 +32,7 @@
                         <a href="{{ route('dashboard.customers.index') }}">顧客</a>
                     </li>
                 </ul>
-                <h3>月別成績</h3>
+                <h4>月別成績</h4>
                 <ul>
                     <li>
                         <a href="{{ route('dashboard.records.sellers') }}">営業</a>
@@ -44,10 +44,10 @@
                         <a href="{{ route('dashboard.records.incentive') }}">インセンティブ</a>
                     </li>
                 </ul>
-                <h3>設定</h3>
+                <h4>設定</h4>
                 <ul>
                     <li>
-                        <a href="#">休日設定</a>
+                        <a href="{{ route('dashboard.appointments.holiday') }}">休日設定</a>
                     </li>
                 </ul>
             @endauth

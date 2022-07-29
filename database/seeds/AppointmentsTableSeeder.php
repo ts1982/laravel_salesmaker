@@ -3,6 +3,7 @@
 use App\User;
 use App\Appointment;
 use App\Customer;
+use App\Holiday;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,7 @@ class AppointmentsTableSeeder extends Seeder
         $customers = Customer::all();
         $time_zone = [10, 13, 16, 19];
         $start = Carbon::parse('2022-06-01');
-        $end = Carbon::parse('2022-07-31');
+        $end = Carbon::parse('2022-08-10');
         $position = [];
         $remain_position = [];
 
@@ -54,21 +55,25 @@ class AppointmentsTableSeeder extends Seeder
                     } else {
                         $status = 2;
                     }
-                    $disabled_seller_id = Appointment::where('day', $date)->where('hour', $hour)->pluck('seller_id');
+                    $hasAppointment_seller_id = Appointment::where('day', $date)->where('hour', $hour)->pluck('seller_id');
+                    $holiday_seller_id = Holiday::where('day', $date)->pluck('user_id');
+                    $disabled_seller_id = $hasAppointment_seller_id->merge($holiday_seller_id);
                     $selected_id = $seller_id->diff($disabled_seller_id);
-                    $disabled_customer = Appointment::pluck('customer_id');
-                    $customer_id = $customers->pluck('id');
-                    $selectable_customer = $customer_id->diff($disabled_customer);
-                    Appointment::create([
-                        'day' => $date,
-                        'hour' => $hour,
-                        'content' => str_repeat("content ", 50),
-                        'user_id' => $appointer_id->random(),
-                        'seller_id' => $selected_id->random(),
-                        'customer_id' => $selectable_customer->random(),
-                        'status' => $status,
-                        'report' => str_repeat("result ", 50),
-                    ]);
+                    if (count($selected_id) > 0) {
+                        $disabled_customer = Appointment::pluck('customer_id');
+                        $customer_id = $customers->pluck('id');
+                        $selectable_customer = $customer_id->diff($disabled_customer);
+                        Appointment::create([
+                            'day' => $date,
+                            'hour' => $hour,
+                            'content' => str_repeat("content ", 50),
+                            'user_id' => $appointer_id->random(),
+                            'seller_id' => $selected_id->random(),
+                            'customer_id' => $selectable_customer->random(),
+                            'status' => $status,
+                            'report' => str_repeat("result ", 50),
+                        ]);
+                    }
                 }
             }
         }
@@ -78,34 +83,38 @@ class AppointmentsTableSeeder extends Seeder
             foreach ($time_zone as $hour => $count) {
                 if ($count !== 0) {
                     for ($i = 0; $i < $count; $i++) {
-                        $disabled_seller_id = Appointment::where('day', $date)->where('hour', $hour)->pluck('seller_id');
+                        $hasAppointment_seller_id = Appointment::where('day', $date)->where('hour', $hour)->pluck('seller_id');
+                        $holiday_seller_id = Holiday::where('day', $date)->pluck('user_id');
+                        $disabled_seller_id = $hasAppointment_seller_id->merge($holiday_seller_id);
                         $selected_id = $seller_id->diff($disabled_seller_id);
-                        $selected_id = $selected_id->random();
-                        $appointment = $appointments->where('day', '<', $date)->where('seller_id', $selected_id)->first();
-                        if ($appointment) {
-                            $rand = rand(1, 4);
-                            if ($rand === 1) {
-                                $user_id = $appointment->user_id;
-                            } else {
-                                $user_id = $selected_id;
+                        if (count($selected_id) > 0) {
+                            $selected_id = $selected_id->random();
+                            $appointment = $appointments->where('day', '<', $date)->where('seller_id', $selected_id)->first();
+                            if ($appointment) {
+                                $rand = rand(1, 4);
+                                if ($rand === 1) {
+                                    $user_id = $appointment->user_id;
+                                } else {
+                                    $user_id = $selected_id;
+                                }
+                                $key = $appointments->search($appointment);
+                                $appointments->forget($key);
+                                if ($rand === 1) {
+                                    $status = 3;
+                                } else {
+                                    $status = 2;
+                                }
+                                Appointment::create([
+                                    'day' => $date,
+                                    'hour' => $hour,
+                                    'content' => str_repeat("content2 ", 50),
+                                    'user_id' => $user_id,
+                                    'seller_id' => $selected_id,
+                                    'customer_id' => $appointment->customer_id,
+                                    'status' => $status,
+                                    'report' => str_repeat("result2 ", 50),
+                                ]);
                             }
-                            $key = $appointments->search($appointment);
-                            $appointments->forget($key);
-                            if ($rand === 1) {
-                                $status = 3;
-                            } else {
-                                $status = 2;
-                            }
-                            Appointment::create([
-                                'day' => $date,
-                                'hour' => $hour,
-                                'content' => str_repeat("content2 ", 50),
-                                'user_id' => $user_id,
-                                'seller_id' => $selected_id,
-                                'customer_id' => $appointment->customer_id,
-                                'status' => $status,
-                                'report' => str_repeat("result2 ", 50),
-                            ]);
                         }
                     }
                 }

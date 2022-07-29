@@ -43,7 +43,19 @@ class Appointment extends Model
             $end_day = $middle_day->copy()->addDays(14);
         }
 
-        return [$time_zone, $start_day, $middle_day, $end_day];
+        $holidays = Holiday::whereBetween('day', [$start_day, $end_day])->get();
+        $sellers_id = User::where('role', 'seller')->pluck('id');
+        $sellers_holidays = [];
+
+        foreach ($holidays as $holiday) {
+            foreach ($sellers_id as $id) {
+                if ($holiday->user_id === $id) {
+                    $sellers_holidays[$holiday->day][$id] = 1;
+                }
+            }
+        }
+
+        return [$time_zone, $start_day, $middle_day, $end_day, $sellers_holidays];
     }
 
     public function getDayName()

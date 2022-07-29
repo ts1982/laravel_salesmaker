@@ -57,6 +57,8 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
     Route::get('appointers', 'Dashboard\UserController@appointers_index')->name('users.appointers_index')->middleware('auth:admins');
     Route::resource('customers', 'Dashboard\CustomerController')->middleware('auth:admins');
     Route::get('appointments/byday', 'Dashboard\AppointmentController@byday')->name('appointments.byday')->middleware('auth:admins');
+    Route::get('appointments/holiday', 'Dashboard\HolidayController@holiday')->name('appointments.holiday')->middleware('auth:admins');
+    Route::post('appointments/holiday/store', 'Dashboard\HolidayController@holiday_store')->name('appointments.holiday_store')->middleware('auth:admins');
     Route::resource('appointments', 'Dashboard\AppointmentController')->middleware('auth:admins');
     Route::get('records/sellers', 'Dashboard\RecordController@sellers')->name('records.sellers')->middleware('auth:admins');
     Route::get('records/appointers', 'Dashboard\RecordController@appointers')->name('records.appointers')->middleware('auth:admins');

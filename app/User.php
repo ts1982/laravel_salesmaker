@@ -94,4 +94,14 @@ class User extends Authenticatable
 
         return $incentive_rate;
     }
+
+    public function userHasHoliday($day)
+    {
+        $exists = Holiday::where('user_id', $this->id)->where('day', $day)->count();
+        if ($exists === 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

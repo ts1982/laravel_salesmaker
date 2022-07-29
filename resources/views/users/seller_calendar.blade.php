@@ -26,7 +26,8 @@
             <a
                 href="{{ url('/sellers/calendar/?period=' . App\Appointment::getNextPeriod($period) . '&seller_appointment=' . $seller_appointment . '&seller=' . $seller) }}">next&nbsp;&gt;&gt;</a>
         @else
-            <a href="{{ url('/sellers/calendar/?period=' . App\Appointment::getPrevPeriod($period)) }}">&lt;&lt;&nbsp;prev</a>
+            <a
+                href="{{ url('/sellers/calendar/?period=' . App\Appointment::getPrevPeriod($period)) }}">&lt;&lt;&nbsp;prev</a>
             <span>{{ date('Y年n月', strtotime($period . '-01')) }}</span>
             <a
                 href="{{ url('/sellers/calendar/?period=' . App\Appointment::getNextPeriod($period)) }}">next&nbsp;&gt;&gt;</a>
@@ -46,7 +47,7 @@
             </thead>
             <tbody>
                 @for ($start_day; $start_day < $middle_day; $start_day->addDay())
-                    <tr>
+                    <tr @if ($user->userHasHoliday($start_day->format('Y-m-d'))) class="tr-dark" @endif>
                         <td>
                             <a href="{{ route('appointments.byday', ['day' => $start_day->format('Y-m-d')]) }}">
                                 <span>{{ $start_day->format('n/j') }}</span>
@@ -65,6 +66,8 @@
                             <td>
                                 @if (isset($hasAppointments[$start_day->format('Y-m-d')][$time]))
                                     <span class="{{ App\Appointment::isNow($start_day, $time) }}">×</span>
+                                @elseif ($user->userHasHoliday($start_day->format('Y-m-d')))
+                                    <span class="{{ App\Appointment::isNow($start_day, $time) }}">-</span>
                                 @else
                                     @if ($seller_appointment)
                                         <a href="{{ route('appointments.edit', ['day' => $start_day->toDateString(), 'hour' => $time, 'appointment' => $seller_appointment]) }}"
@@ -98,7 +101,7 @@
             </thead>
             <tbody>
                 @for ($middle_day; $middle_day <= $end_day; $middle_day->addDay())
-                    <tr>
+                    <tr @if ($user->userHasHoliday($middle_day->format('Y-m-d'))) class="tr-dark" @endif>
                         <td>
                             <a href="{{ route('appointments.byday', ['day' => $middle_day->format('Y-m-d')]) }}">
                                 <span>{{ $middle_day->format('n/j') }}</span>
@@ -117,6 +120,8 @@
                             <td>
                                 @if (isset($hasAppointments[$middle_day->format('Y-m-d')][$time]))
                                     <span class="{{ App\Appointment::isNow($middle_day, $time) }}">×</span>
+                                @elseif ($user->userHasHoliday($middle_day->format('Y-m-d')))
+                                    <span class="{{ App\Appointment::isNow($middle_day, $time) }}">-</span>
                                 @else
                                     @if ($seller_appointment)
                                         <a href="{{ route('appointments.edit', ['day' => $middle_day->toDateString(), 'hour' => $time, 'appointment' => $seller_appointment]) }}"

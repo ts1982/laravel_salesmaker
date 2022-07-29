@@ -85,6 +85,15 @@ td {
     vertical-align: middle;
 }
 
+.tr-dark {
+    opacity: 0.5;
+}
+
+.tr-dark a {
+    color: #666;
+    pointer-events: none;
+}
+
 .link-disabled {
     pointer-events: none;
     color: #aaa;

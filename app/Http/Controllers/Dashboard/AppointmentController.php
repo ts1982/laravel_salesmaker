@@ -28,25 +28,35 @@ class AppointmentController extends Controller
         }
 
         // カレンダー作成
-        list($time_zone, $start_day, $middle_day, $end_day) = Appointment::makeCalendar($period);
+        list($time_zone, $start_day, $middle_day, $end_day, $sellers_holidays) = Appointment::makeCalendar($period);
 
         $total_seller = User::where('role', 'seller')->count();
 
         $appointments_prev = [];
         $day = $start_day->copy();
         for ($day; $day < $middle_day; $day->addDay()) {
+            if (!empty($sellers_holidays[$day->format('Y-m-d')])) {
+                $holiday_count = count($sellers_holidays[$day->format('Y-m-d')]);
+            } else {
+                $holiday_count = 0;
+            }
             foreach ($time_zone as $time) {
                 $count = Appointment::where('day', $day)->where('hour', $time)->count();
-                $appointments_prev[$day->format('Y-m-d')][$time] = $total_seller - $count;
+                $appointments_prev[$day->format('Y-m-d')][$time] = $total_seller - $count - $holiday_count;
             }
         }
 
         $appointments_later = [];
         $day = $middle_day->copy();
         for ($day; $day <= $end_day; $day->addDay()) {
+            if (!empty($sellers_holidays[$day->format('Y-m-d')])) {
+                $holiday_count = count($sellers_holidays[$day->format('Y-m-d')]);
+            } else {
+                $holiday_count = 0;
+            }
             foreach ($time_zone as $time) {
                 $count = Appointment::where('day', $day)->where('hour', $time)->count();
-                $appointments_later[$day->format('Y-m-d')][$time] = $total_seller - $count;
+                $appointments_later[$day->format('Y-m-d')][$time] = $total_seller - $count - $holiday_count;
             }
         }
 
