@@ -6,13 +6,13 @@
     @endif
     <h1 class="text-center">休日設定</h1>
     <div class="text-center">
-        @if ($half === 'first')
+        @if ($half === 'later')
             <a
                 href="{{ url('/dashboard/appointments/holiday/?period=' . App\Appointment::getPrevPeriod(explode('/', $period)[0])) . '/' . $half }}">&lt;&lt;&nbsp;prev</a>
             <span>{{ date('Y年n月', strtotime(explode('/', $period)[0] . '-01')) }}</span>
             <a
                 href="{{ url('/dashboard/appointments/holiday/?period=' . explode('/', $period)[0]) . '/' . $half }}">next&nbsp;&gt;&gt;</a>
-        @elseif ($half === 'second')
+        @elseif ($half === 'former')
             <a
                 href="{{ url('/dashboard/appointments/holiday/?period=' . explode('/', $period)[0]) . '/' . $half }}">&lt;&lt;&nbsp;prev</a>
             <span>{{ date('Y年n月', strtotime(explode('/', $period)[0] . '-01')) }}</span>

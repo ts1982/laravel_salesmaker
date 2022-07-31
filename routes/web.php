@@ -52,6 +52,7 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
     Route::get('login', 'Dashboard\Auth\LoginController@showLoginForm')->name('login');
     Route::post('login', 'Dashboard\Auth\LoginController@login')->name('login');
     Route::resource('users', 'Dashboard\UserController')->middleware('auth:admins');
+    Route::put('users/{user}/join', 'Dashboard\UserController@join')->name('users.join')->middleware('auth:admins');
     Route::get('sellers/record', 'Dashboard\UserController@sellers_record')->name('users.sellers_record')->middleware('auth:admins');
     Route::get('appointers/record', 'Dashboard\UserController@appointers_record')->name('users.appointers_record')->middleware('auth:admins');
     Route::get('sellers', 'Dashboard\UserController@sellers_index')->name('users.sellers_index')->middleware('auth:admins');

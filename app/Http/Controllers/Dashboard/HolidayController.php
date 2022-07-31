@@ -23,22 +23,22 @@ class HolidayController extends Controller
             $period = $request->period;
         } else {
             if ($today->day <= 15) {
-                $period = Carbon::now()->format('Y-m/first');
+                $period = Carbon::now()->format('Y-m/') . 'later';
             } else {
-                $period = Carbon::now()->format('Y-m/second');
+                $period = Carbon::now()->format('Y-m/') . 'former';
             }
         }
 
         // カレンダー作成
         list($start_day, $end_day, $sellers_holidays, $half) = Holiday::getSellersHolidays($period);
 
-        $sellers = User::where('role', 'seller')->get();
+        $sellers = User::where('role', 'seller')->orderBy('id')->get();
         $calendar = [];
         $start = $start_day->copy();
         foreach ($sellers as $seller) {
             $start = $start_day->copy();
             for ($start; $start < $end_day; $start->addDay()) {
-                if (Appointment::where('seller_id', $seller->id)->where('day', $start)->count()) {
+                if (!$seller->betweenStartAndEnd($start) || Appointment::where('seller_id', $seller->id)->where('day', $start)->count()) {
                     $calendar[$seller->id][$start->format('Y-m-d')] = 2;
                 } else if (isset($sellers_holidays[$start->format('Y-m-d')][$seller->id])) {
                     $calendar[$seller->id][$start->format('Y-m-d')] = 1;

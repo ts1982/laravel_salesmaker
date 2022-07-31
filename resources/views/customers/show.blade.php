@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+    @if (session('warning'))
+        <div class="alert alert-danger">{{ session('warning') }}</div>
+    @endif
     <h1 class="mb-5 text-center">顧客詳細情報</h1>
     <div class="row justify-content-center">
         <div class="col-sm-6 p-0">
@@ -75,7 +78,8 @@
                 </tbody>
             </table>
             <div class="d-flex justify-content-end">
-                <a href="{{ route('users.seller_calendar', compact('customer')) }}" class="btn btn-outline-success">アポイント作成</a>
+                <a href="{{ route('users.seller_calendar', compact('customer')) }}"
+                    class="btn btn-outline-success">アポイント作成</a>
             </div>
         </div>
     </div>

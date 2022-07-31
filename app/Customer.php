@@ -12,13 +12,11 @@ class Customer extends Model
         return $this->hasMany('App\Appointment');
     }
 
-    public function isLatestAppointment($day, $hour)
+    public function existsNotVisitedAppointment()
     {
-        $latest_appointment = $this->appointments->sortByDesc('day')->first();
-        $latest_date = Carbon::parse("{$latest_appointment->day} {$latest_appointment->hour}:00:00");
-        $target_date = Carbon::parse("{$day} {$hour}:00:00");
+        $status = $this->appointments->pluck('status');
 
-        if ($target_date->gt($latest_date)) {
+        if ($status->contains(0)) {
             return true;
         } else {
             return false;

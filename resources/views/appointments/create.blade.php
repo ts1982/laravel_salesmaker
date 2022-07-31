@@ -2,27 +2,27 @@
 
 @section('content')
     <h1 class="text-center">アポイント作成</h1>
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mt-5">
         <div class="col-md-8">
             <form action="{{ route('appointments.store', compact('customer')) }}" method="post">
                 @csrf
                 <input type="hidden" name="day" value="{{ $day }}">
                 <input type="hidden" name="hour" value="{{ $hour }}">
-                {{-- <input type="hidden" name="customer" value="{{ $customer }}"> --}}
-                <div class="my-3">
-                    <h4>日時：{{ date('Y年n月j日', strtotime($day)) }}&emsp;{{ $hour }}時</h4>
+                <div class="row mb-3">
+                    <strong class="col-md-3 p-0">日時</strong>
+                    <div class="col-md-9">{{ date('Y年n月j日', strtotime($day)) }}&emsp;{{ $hour }}時</div>
                 </div>
                 @if ($customer)
                     <div class="row mb-3">
-                        <strong class="col-md-3">氏名</strong>
+                        <strong class="col-md-3 p-0">氏名</strong>
                         <div class="col-md-9">{{ $customer->name }}</div>
                     </div>
                     <div class="row mb-3">
-                        <strong class="col-md-3">住所</strong>
+                        <strong class="col-md-3 p-0">住所</strong>
                         <div class="col-md-9">{{ $customer->address }}</div>
                     </div>
                     <div class="row mb-3">
-                        <strong class="col-md-3">電話番号</strong>
+                        <strong class="col-md-3 p-0">電話番号</strong>
                         <div class="col-md-9">{{ $customer->tel }}</div>
                     </div>
                 @else

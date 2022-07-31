@@ -6,6 +6,8 @@ use App\User;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -46,6 +48,14 @@ class LoginController extends Controller
         }
         if (User::roleIs('appointer')) {
             return 'appointers/calendar';
+        }
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        if ($user->join_flag == 1) {
+            Auth::logout();
+            return redirect()->route('login')->with('warning', '管理者の許可がありません。');
         }
     }
 }

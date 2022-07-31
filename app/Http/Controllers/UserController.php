@@ -109,7 +109,12 @@ class UserController extends Controller
     public function seller_calendar(Request $request)
     {
         if ($request->customer) {
-            $customer = $request->customer;
+            $customer = Customer::find($request->customer);
+
+            // 未訪問のアポイントチェック
+            if (!$request->period && $customer->existsNotVisitedAppointment()) {
+                return back()->with('warning', '未訪問のアポイントがあります。');
+            }
         } else {
             $customer = '';
         }
@@ -121,7 +126,7 @@ class UserController extends Controller
             $day = $request->day;
             $hour = $request->hour;
         } else if (User::roleIs('appointer')) { // 追加作成から
-            $latest_appointment = Appointment::where('customer_id', $request->customer)->latest()->first();
+            $latest_appointment = Appointment::where('customer_id', $customer->id)->latest()->first();
             $user = $latest_appointment->thisSellerHas();
             $seller_appointment = '';
             $seller = $user;

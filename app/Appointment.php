@@ -48,6 +48,12 @@ class Appointment extends Model
             $end_day = $middle_day->copy()->addDays(14);
         }
 
+        $sellers_count = [];
+        $day = $start_day->copy();
+        for ($day; $day <= $end_day; $day->addDay()) {
+            $sellers_count[$day->format('Y-m-d')] = User::countSellersInOperate($day->format('Y-m-d'));
+        }
+
         $holidays = Holiday::whereBetween('day', [$start_day, $end_day])->get();
         $sellers_id = User::where('role', 'seller')->pluck('id');
         $sellers_holidays = [];
@@ -60,7 +66,7 @@ class Appointment extends Model
             }
         }
 
-        return [$time_zone, $start_day, $middle_day, $end_day, $sellers_holidays];
+        return [$time_zone, $start_day, $middle_day, $end_day, $sellers_holidays, $sellers_count];
     }
 
     public function getDayName()
@@ -86,24 +92,18 @@ class Appointment extends Model
 
     public static function getMonthlyAppointersAppointments($user, $period)
     {
-        if (!$period) {
-            $period = Carbon::now()->format('Y-m');
-        }
+        $today = Carbon::now();
 
-        $carbon = new Carbon($period . '-1');
+        $carbon = new Carbon($period . '-01');
         $end_of_period = $carbon->addMonth()->addDays(15);
 
-        $appointments = $user->appointments->whereBetween('day', [$period . '-1', $end_of_period]);
+        $appointments = $user->appointments->whereBetween('day', [$period . '-01', $end_of_period]);
 
         return $appointments;
     }
 
     public static function getMonthlySellersAppointments($user, $period)
     {
-        if (!$period) {
-            $period = Carbon::now()->format('Y-m');
-        }
-
         $carbon = new Carbon($period . '-1');
         $end_of_period = $carbon->addMonth()->addDays(15);
 

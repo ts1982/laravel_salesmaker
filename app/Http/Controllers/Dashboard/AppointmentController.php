@@ -28,7 +28,7 @@ class AppointmentController extends Controller
         }
 
         // カレンダー作成
-        list($time_zone, $start_day, $middle_day, $end_day, $sellers_holidays) = Appointment::makeCalendar($period);
+        list($time_zone, $start_day, $middle_day, $end_day, $sellers_holidays, $sellers_count) = Appointment::makeCalendar($period);
 
         $total_seller = User::where('role', 'seller')->count();
 
@@ -40,9 +40,10 @@ class AppointmentController extends Controller
             } else {
                 $holiday_count = 0;
             }
+            $total_count = $sellers_count[$day->format('Y-m-d')];
             foreach ($time_zone as $time) {
                 $count = Appointment::where('day', $day)->where('hour', $time)->count();
-                $appointments_prev[$day->format('Y-m-d')][$time] = $total_seller - $count - $holiday_count;
+                $appointments_prev[$day->format('Y-m-d')][$time] = $total_count - $count - $holiday_count;
             }
         }
 
@@ -54,9 +55,10 @@ class AppointmentController extends Controller
             } else {
                 $holiday_count = 0;
             }
+            $total_count = $sellers_count[$day->format('Y-m-d')];
             foreach ($time_zone as $time) {
                 $count = Appointment::where('day', $day)->where('hour', $time)->count();
-                $appointments_later[$day->format('Y-m-d')][$time] = $total_seller - $count - $holiday_count;
+                $appointments_later[$day->format('Y-m-d')][$time] = $total_count - $count - $holiday_count;
             }
         }
 
@@ -105,9 +107,12 @@ class AppointmentController extends Controller
      */
     public function show(Appointment $appointment)
     {
+        $seller_appointment = $appointment;
+        $contents = $appointment->contents->sortByDesc('created_at');
+
         $status_list = Appointment::STATUS_LIST;
 
-        return view('dashboard.appointments.show', compact('appointment'));
+        return view('dashboard.appointments.show', compact('appointment', 'seller_appointment', 'contents'));
     }
 
     /**
@@ -139,9 +144,13 @@ class AppointmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Appointment $appointment)
     {
-        //
+        $customer = $appointment->customer;
+
+        $appointment->delete();
+
+        return redirect()->route('dashboard.customers.show', compact('customer'));
     }
 
     public function byday(Request $request)

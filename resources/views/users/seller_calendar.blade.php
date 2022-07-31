@@ -47,9 +47,9 @@
             </thead>
             <tbody>
                 @for ($start_day; $start_day < $middle_day; $start_day->addDay())
-                    <tr @if ($user->userHasHoliday($start_day->format('Y-m-d'))) class="tr-dark" @endif>
+                    <tr @if ($user->userHasHoliday($start_day->format('Y-m-d')) || !$user->betweenStartAndEnd($start_day)) class="tr-dark" @endif>
                         <td>
-                            @if ($seller_appointment)
+                            @if ($seller_appointment || $customer)
                                 <span>{{ $start_day->format('n/j') }}</span>
                             @else
                                 <a href="{{ route('appointments.byday', ['day' => $start_day->format('Y-m-d')]) }}">
@@ -68,7 +68,9 @@
                         </td>
                         @foreach ($time_zone as $time)
                             <td>
-                                @if (isset($hasAppointments[$start_day->format('Y-m-d')][$time]))
+                                @if (!$user->betweenStartAndEnd($start_day))
+                                    <span class="{{ App\Appointment::isNow($start_day, $time) }}">-</span>
+                                @elseif (isset($hasAppointments[$start_day->format('Y-m-d')][$time]))
                                     <span class="{{ App\Appointment::isNow($start_day, $time) }}">×</span>
                                 @elseif ($user->userHasHoliday($start_day->format('Y-m-d')))
                                     <span class="{{ App\Appointment::isNow($start_day, $time) }}">-</span>
@@ -112,9 +114,9 @@
             </thead>
             <tbody>
                 @for ($middle_day; $middle_day <= $end_day; $middle_day->addDay())
-                    <tr @if ($user->userHasHoliday($middle_day->format('Y-m-d'))) class="tr-dark" @endif>
+                    <tr @if ($user->userHasHoliday($middle_day->format('Y-m-d')) || !$user->betweenStartAndEnd($middle_day)) class="tr-dark" @endif>
                         <td>
-                            @if ($seller_appointment)
+                            @if ($seller_appointment || $customer)
                                 <span>{{ $middle_day->format('n/j') }}</span>
                             @else
                                 <a href="{{ route('appointments.byday', ['day' => $middle_day->format('Y-m-d')]) }}">
@@ -133,7 +135,9 @@
                         </td>
                         @foreach ($time_zone as $time)
                             <td>
-                                @if (isset($hasAppointments[$middle_day->format('Y-m-d')][$time]))
+                                @if (!$user->betweenStartAndEnd($middle_day))
+                                    <span class="{{ App\Appointment::isNow($middle_day, $time) }}">-</span>
+                                @elseif (isset($hasAppointments[$middle_day->format('Y-m-d')][$time]))
                                     <span class="{{ App\Appointment::isNow($middle_day, $time) }}">×</span>
                                 @elseif ($user->userHasHoliday($middle_day->format('Y-m-d')))
                                     <span class="{{ App\Appointment::isNow($middle_day, $time) }}">-</span>

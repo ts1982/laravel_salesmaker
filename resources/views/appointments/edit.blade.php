@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="text-center">アポイント情報追加</h1>
+    <h1 class="text-center">ヒアリング内容追加</h1>
     <div class="row justify-content-center mt-5">
         <div class="col-md-10 p-0">
             <div class="row mb-3">
@@ -34,6 +34,20 @@
                 <strong class="col-md-3">ステータス</strong>
                 <div class="col-md-9 status-color{{ $appointment->statusIs()[0] }}">
                     {{ $appointment->statusIs()[1] }}</div>
+            </div>
+            <div class="row mb-3">
+                <strong class="col-md-3">前回</strong>
+                <div class="col-md-9">
+                    @foreach ($appointment->contents as $content)
+                        <div class="mb-4">
+                            <div>
+                                {{ date("Y/m/d ({$content->appointment->getDayName()}) H:i", strtotime($content->created_at)) }}&emsp;登録者：{{ $content->user->name }}
+                            </div>
+                            <div>{{ $content->content }}</div>
+                        </div>
+                        <hr>
+                    @endforeach
+                </div>
             </div>
             <form action="{{ route('appointments.update', compact('appointment')) }}" method="post">
                 @csrf

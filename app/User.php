@@ -109,4 +109,64 @@ class User extends Authenticatable
             return false;
         }
     }
+
+    public function hasHolidaysOutOfRange($start, $end)
+    {
+        $holidays = Holiday::where('user_id', $this->id)->get();
+        if (!$holidays->contains('day', '<', $start) && $end === null) {
+            return false;
+        } else if ($holidays->contains('day', '<', $start) || $holidays->contains('day', '>', $end)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function sellerHasAppointmentsOutOfRange($start, $end)
+    {
+        $appointments = Appointment::where('seller_id', $this->id)->get();
+        if (!$appointments->contains('day', '<', $start) && $end === null) {
+            return false;
+        } else if ($appointments->contains('day', '<', $start) || $appointments->contains('day', '>', $end)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static function sellersInOperate($day)
+    {
+        $sellers_in_operate_1 = User::where('role', 'seller')->where('end', '>=', date('Y-m-d', strtotime($day)))->where('start', '<=', date('Y-m-d', strtotime($day)))->get();
+        $sellers_in_operate_2 = User::where('role', 'seller')->where('end', null)->where('start', '<=', date('Y-m-d', strtotime($day)))->get();
+
+        $sellers_in_operate = $sellers_in_operate_1->merge($sellers_in_operate_2);
+
+        return $sellers_in_operate;
+    }
+
+    public static function countSellersInOperate($day)
+    {
+        $has_started = User::where('role', 'seller')->where('start', '<=', date('Y-m-d', strtotime($day)))->count();
+        $has_ended = User::where('role', 'seller')->where('end', '<', date('Y-m-d', strtotime($day)))->count();
+        $count = $has_started - $has_ended;
+
+        return $count;
+    }
+
+    public function betweenStartAndEnd($day)
+    {
+        if ($this->end !== null) {
+            if ($this->start <= date('Y-m-d', strtotime($day)) && $this->end >= date('Y-m-d', strtotime($day))) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if ($this->start <= date('Y-m-d', strtotime($day))) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 }

@@ -11,8 +11,8 @@
                             href="{{ route('appointments.byday', ['day' => $appointment->day]) }}">{{ date('Y/m/d', strtotime($appointment->day)) }}</a>&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時</span>
                 </div>
                 <div class="col-md-4">
-                    <a href="{{ route('users.seller_calendar', ['seller_appointment' => $seller_appointment, 'seller' => $seller, 'day' => $appointment->day, 'hour' => $appointment->hour]) }}"
-                        class="btn btn-outline-danger btn-sm">日時変更</a>
+                    <a href="{{ route('users.seller_calendar', ['seller_appointment' => $seller_appointment, 'seller' => $appointment->thisSellerHas(), 'day' => $appointment->day, 'hour' => $appointment->hour]) }}"
+                        class="btn btn-outline-danger btn-sm @if ($appointment->status != 0) event-none @endif">日時変更</a>
                 </div>
             </div>
             <div class="row mb-3">
@@ -32,11 +32,11 @@
             </div>
             <div class="row mb-3">
                 <strong class="col-md-3">アポインター</strong>
-                <div class="col-md-9">{{ $appointer->name }}</div>
+                <div class="col-md-9">{{ $appointment->user->name }}</div>
             </div>
             <div class="row mb-3">
                 <strong class="col-md-3">営業担当者</strong>
-                <div class="col-md-9">{{ $seller->name }}</div>
+                <div class="col-md-9">{{ $appointment->thisSellerHas()->name }}</div>
             </div>
             <div class="row mb-3">
                 <strong class="col-md-3">ステータス</strong>
@@ -65,13 +65,7 @@
             </div>
             <div class="d-flex justify-content-end">
                 <a href="{{ route('appointments.edit', compact('appointment')) }}"
-                    class="btn btn-success mr-2 @if ($appointment->status != 0) event-none @endif">追加</a>
-                {{-- <form action="{{ route('appointments.destroy', compact('appointment')) }}" method="post">
-                    @csrf
-                    @method('delete')
-                    <button type="submit" class="btn btn-danger" @if ($appointment->status != 0) disabled @endif>削除
-                    </button>
-                </form> --}}
+                    class="btn btn-outline-success mr-2 @if ($appointment->status != 0) event-none @endif">ヒアリング追加</a>
             </div>
         </div>
     </div>

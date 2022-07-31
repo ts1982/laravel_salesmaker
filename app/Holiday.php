@@ -7,24 +7,20 @@ use Carbon\Carbon;
 
 class Holiday extends Model
 {
-    public static function getSellersHolidays($period) // ex) 2022-07/first
+    public static function getSellersHolidays($period) // ex) 2022-08/former
     {
         Carbon::setLocale('ja');
         $today = Carbon::now();
 
         // 月の前半と後半で場合分け
-        if (strpos($period, 'second') || $today->day <= 15) {
+        if (strpos($period, 'former')) {
             $target_first_day = Carbon::parse(explode('/', $period)[0] . '-01');
             $end_day = $target_first_day->copy()->startOfMonth()->addDays(15);
-            $half = 'first';
-        } else if (strpos($period, 'first') || $today->day > 15) {
+            $half = 'later';
+        } else if (strpos($period, 'later')) {
             $target_first_day = Carbon::parse(explode('/', $period)[0] . '-16');
             $end_day = $target_first_day->copy()->endOfMonth();
-            $half = 'second';
-        } else {
-            $target_first_day = Carbon::parse(explode('/', $period)[0] . '-01');
-            $end_day = $target_first_day->copy()->endOfMonth();
-            $half = '';
+            $half = 'former';
         }
 
         $start_day = $target_first_day->copy();

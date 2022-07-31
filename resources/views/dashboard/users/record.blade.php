@@ -92,14 +92,14 @@
                             </td>
                             <td>
                                 <a
-                                    href="{{ route('customers.show', ['customer' => $appointment->customer]) }}">{{ $appointment->customer->name }}</a>
+                                    href="{{ route('dashboard.customers.show', ['customer' => $appointment->customer]) }}">{{ $appointment->customer->name }}</a>
                             </td>
                             <td class="status-color{{ $appointment->statusIs()[0] }}">
                                 {{ $appointment->statusIs()[1] }}
                             </td>
                             {{-- <td>{{ $appointment->thisAppointerHas()->name }}</td> --}}
                             <td>
-                                <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
+                                <a href="{{ route('dashboard.appointments.show', compact('appointment')) }}">詳細</a>
                             </td>
                         </tr>
                     @endforeach

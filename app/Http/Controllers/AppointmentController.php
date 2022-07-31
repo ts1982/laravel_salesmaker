@@ -24,7 +24,7 @@ class AppointmentController extends Controller
         }
 
         // カレンダー作成
-        list($time_zone, $start_day, $middle_day, $end_day, $sellers_holidays) = Appointment::makeCalendar($period);
+        list($time_zone, $start_day, $middle_day, $end_day, $sellers_holidays, $sellers_count) = Appointment::makeCalendar($period);
 
         $total_seller = User::where('role', 'seller')->count();
 
@@ -36,9 +36,10 @@ class AppointmentController extends Controller
             } else {
                 $holiday_count = 0;
             }
+            $total_count = $sellers_count[$day->format('Y-m-d')];
             foreach ($time_zone as $time) {
                 $count = Appointment::where('day', $day)->where('hour', $time)->count();
-                $appointments_prev[$day->format('Y-m-d')][$time] = $total_seller - $count - $holiday_count;
+                $appointments_prev[$day->format('Y-m-d')][$time] = $total_count - $count - $holiday_count;
             }
         }
 
@@ -50,9 +51,10 @@ class AppointmentController extends Controller
             } else {
                 $holiday_count = 0;
             }
+            $total_count = $sellers_count[$day->format('Y-m-d')];
             foreach ($time_zone as $time) {
                 $count = Appointment::where('day', $day)->where('hour', $time)->count();
-                $appointments_later[$day->format('Y-m-d')][$time] = $total_seller - $count - $holiday_count;
+                $appointments_later[$day->format('Y-m-d')][$time] = $total_count - $count - $holiday_count;
             }
         }
 
@@ -85,11 +87,6 @@ class AppointmentController extends Controller
         // 新規か既存か
         if ($request->has('customer')) {
             $customer = Customer::find($request->customer);
-
-            // 未訪問のアポイントチェック
-            if (!$customer->isLatestAppointment($day, $hour)) {
-                return back()->with('warning', '指定した日付より後に、未訪問のアポイントがあります。');
-            }
         } else {
             $customer = '';
         }
@@ -145,7 +142,8 @@ class AppointmentController extends Controller
                 $appointment->user_id = $user->id;
 
                 if ($user->role === 'appointer') {
-                    $all_seller_id = User::where('role', 'seller')->pluck('id')->toArray();
+                    $all_seller = User::sellersInOperate($request->day);
+                    $all_seller_id = $all_seller->pluck('id')->toArray();
                     $hasAppointment_seller_id = Appointment::where('day', $request->day)->where('hour', $request->hour)->pluck('seller_id')->toArray();
                     $holiday_seller_id = Holiday::where('day', $request->day)->pluck('user_id')->toArray();
                     $disabled_seller_id = array_merge($hasAppointment_seller_id, $holiday_seller_id);
@@ -180,14 +178,11 @@ class AppointmentController extends Controller
     public function show(Appointment $appointment, Request $request)
     {
         $seller_appointment = $appointment;
-
-        $appointer = $appointment->user;
-        $seller = User::find($appointment->seller_id);
         $contents = $appointment->contents->sortByDesc('created_at');
 
         $status_list = Appointment::STATUS_LIST;
 
-        return view('appointments.show', compact('appointment', 'seller_appointment', 'contents', 'appointer', 'seller'));
+        return view('appointments.show', compact('appointment', 'seller_appointment', 'contents'));
     }
 
     public function date_update(Appointment $appointment, Request $request)
@@ -228,11 +223,7 @@ class AppointmentController extends Controller
 
     public function destroy(Appointment $appointment)
     {
-        $customer = $appointment->customer;
-
-        $appointment->delete();
-
-        return redirect()->route('customers.show', compact('customer'));
+        //
     }
 
     public function byday(Request $request)

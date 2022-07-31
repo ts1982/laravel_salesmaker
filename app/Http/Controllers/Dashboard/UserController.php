@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\User;
 use App\Customer;
 use App\Appointment;
+use App\Holiday;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -85,11 +86,36 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        if ($user->hasHolidaysOutOfRange($request->start, $request->end)) {
+            return redirect()->back()->with('warning', '営業日以外で休日が設定されています。');
+        }
+        if ($user->sellerHasAppointmentsOutOfRange($request->start, $request->end)) {
+            return redirect()->back()->with('warning', '営業日以外でアポイントが登録されています。');
+        }
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->start = $request->start;
+        $user->end = $request->end;
         $user->save();
 
-        return redirect()->route('dashboard.users.show', compact('user'));
+        if ($user->role === 'seller') {
+            return redirect()->route('dashboard.users.sellers_index');
+        }
+        if ($user->role === 'appointer') {
+            return redirect()->route('dashboard.users.appointers_index');
+        }
+    }
+
+    public function join(User $user)
+    {
+        if ($user->join_flag === 1) {
+            $user->join_flag = 0;
+        } else {
+            $user->join_flag = 1;
+        }
+        $user->update();
+
+        return redirect()->route('dashboard.users.appointers_index');
     }
 
     /**

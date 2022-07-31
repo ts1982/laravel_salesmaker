@@ -28,6 +28,24 @@
                     <span>{{ $user->role }}</span>
                 </div>
             </div>
+            @if ($user->role == 'seller')
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <strong>開始日</strong>
+                    </div>
+                    <div class="col-md-8">
+                        <span>{{ $user->start }}</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <strong>終了日</strong>
+                    </div>
+                    <div class="col-md-8">
+                        <span>{{ $user->end }}</span>
+                    </div>
+                </div>
+            @endif
             <div class="d-flex justify-content-end">
                 <a href="{{ route('dashboard.users.edit', compact('user')) }}" class="btn btn-warning">編集</a>
             </div>
