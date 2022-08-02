@@ -45,7 +45,9 @@ class CustomerController extends Controller
             $search = '';
         }
 
-        return view('dashboard.customers.index', compact('customers', 'search', 'sort_query', 'sort'));
+        $sellers = User::where('role', 'seller')->get();
+
+        return view('dashboard.customers.index', compact('customers', 'search', 'sort_query', 'sort', 'sellers'));
     }
 
     /**
@@ -90,7 +92,9 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        return view('dashboard.customers.edit', compact('customer'));
+        $sellers = User::where('role', 'seller')->get();
+
+        return view('dashboard.customers.edit', compact('customer', 'sellers'));
     }
 
     /**
@@ -105,6 +109,7 @@ class CustomerController extends Controller
         $customer->name = $request->name;
         $customer->address = $request->address;
         $customer->tel = $request->tel;
+        $customer->user_id = $request->user_id;
         $customer->update();
 
         return redirect()->route('dashboard.customers.show', compact('customer'));
@@ -119,5 +124,46 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function replace(Request $request)
+    {
+        if ($request->sort) { // ソート
+            if ($request->sort === 'all') {
+                $customers = Customer::orderBy('id')->paginate(50)->onEachSide(1);
+            } else {
+                $customers = Customer::where('user_id', $request->sort)->orderBy('id')->paginate(50)->onEachSide(1);
+            }
+        } else {
+            $customers = Customer::where('user_id', null)->orderBy('id')->paginate(50)->onEachSide(1);
+        }
+
+        $sellers = User::where('role', 'seller')->get();
+
+        return view('dashboard.customers.replace', compact('customers', 'sellers'));
+    }
+
+    public function replace_store(Request $request)
+    {
+        if ($request->customers && $request->sellers) {
+            $customers_id = $request->customers;
+            $seller_count = count($request->sellers);
+            $i = rand(0, $seller_count - 1);
+            foreach ($customers_id as $customer) {
+                $i = $i % $seller_count;
+                $customer = Customer::find($customer);
+                $customer->user_id = $request->sellers[$i];
+                $customer->save();
+                $i++;
+            }
+
+            $customers = Customer::whereIn('id', $customers_id)->paginate(50)->onEachSide(1);
+        } else {
+            return redirect()->back()->with('warning', '顧客と営業担当者を選択してください。');
+        }
+
+        $sellers = User::where('role', 'seller')->get();
+
+        return view('dashboard.customers.replace_view', compact('customers', 'sellers'));
     }
 }

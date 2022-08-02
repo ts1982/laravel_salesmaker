@@ -51,12 +51,15 @@ Route::get('/dashboard', 'AdminController@dashboard')->middleware('auth:admins')
 Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
     Route::get('login', 'Dashboard\Auth\LoginController@showLoginForm')->name('login');
     Route::post('login', 'Dashboard\Auth\LoginController@login')->name('login');
+    Route::get('users/reset_customers', 'Dashboard\UserController@reset_customers')->name('users.reset_customers')->middleware('auth:admins');
     Route::resource('users', 'Dashboard\UserController')->middleware('auth:admins');
     Route::put('users/{user}/join', 'Dashboard\UserController@join')->name('users.join')->middleware('auth:admins');
     Route::get('sellers/record', 'Dashboard\UserController@sellers_record')->name('users.sellers_record')->middleware('auth:admins');
     Route::get('appointers/record', 'Dashboard\UserController@appointers_record')->name('users.appointers_record')->middleware('auth:admins');
     Route::get('sellers', 'Dashboard\UserController@sellers_index')->name('users.sellers_index')->middleware('auth:admins');
     Route::get('appointers', 'Dashboard\UserController@appointers_index')->name('users.appointers_index')->middleware('auth:admins');
+    Route::get('customers/replace', 'Dashboard\CustomerController@replace')->name('customers.replace')->middleware('auth:admins');
+    Route::put('customers/replace/store', 'Dashboard\CustomerController@replace_store')->name('customers.replace_store')->middleware('auth:admins');
     Route::resource('customers', 'Dashboard\CustomerController')->middleware('auth:admins');
     Route::get('appointments/byday', 'Dashboard\AppointmentController@byday')->name('appointments.byday')->middleware('auth:admins');
     Route::get('appointments/holiday', 'Dashboard\HolidayController@holiday')->name('appointments.holiday')->middleware('auth:admins');

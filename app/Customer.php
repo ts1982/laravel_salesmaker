@@ -12,6 +12,11 @@ class Customer extends Model
         return $this->hasMany('App\Appointment');
     }
 
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
+
     public function existsNotVisitedAppointment()
     {
         $status = $this->appointments->pluck('status');
@@ -20,6 +25,15 @@ class Customer extends Model
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function getSellerNameInCharge()
+    {
+        if ($this->user_id) {
+            return $this->user->name;
+        } else {
+            return '-';
         }
     }
 }

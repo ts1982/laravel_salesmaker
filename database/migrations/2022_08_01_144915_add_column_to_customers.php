@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddJoinFlagToUsers extends Migration
+class AddColumnToCustomers extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddJoinFlagToUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->integer('join_flag')->default(0);
+        Schema::table('customers', function (Blueprint $table) {
+            $table->integer('user_id')->unsigned()->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddJoinFlagToUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('join_flag');
+        Schema::table('customers', function (Blueprint $table) {
+            $table->dropColumn('user_id');
         });
     }
 }

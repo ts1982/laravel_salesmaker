@@ -26,7 +26,7 @@
             <input type="hidden" name="start_day" value="{{ $start_day }}">
             <input type="hidden" name="end_day" value="{{ $end_day }}">
             <div class="row justify-content-center">
-                <table class="table col-md-5 text-center">
+                <table class="table col-md-12 text-center">
                     <thead>
                         <tr>
                             <th></th>

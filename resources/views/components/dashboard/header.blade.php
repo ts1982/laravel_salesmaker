@@ -49,6 +49,9 @@
                     <li>
                         <a href="{{ route('dashboard.appointments.holiday') }}">休日設定</a>
                     </li>
+                    <li>
+                        <a href="{{ route('dashboard.customers.replace') }}">顧客振替</a>
+                    </li>
                 </ul>
             @endauth
             @guest

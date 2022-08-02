@@ -121,9 +121,13 @@ class AppointmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Appointment $appointment)
     {
-        //
+        $sellers = User::where('role', 'seller')->get();
+        $appointers = User::where('role', 'appointer')->get();
+        $status_list = Appointment::STATUS_LIST;
+
+        return view('dashboard.appointments.edit', compact('appointment', 'sellers', 'appointers', 'status_list'));
     }
 
     /**
@@ -133,9 +137,14 @@ class AppointmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Appointment $appointment, Request $request)
     {
-        //
+        $appointment->user_id = $request->appointer;
+        $appointment->seller_id = $request->seller;
+        $appointment->status = $request->status;
+        $appointment->save();
+
+        return redirect()->route('dashboard.appointments.show', compact('appointment'));
     }
 
     /**

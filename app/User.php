@@ -50,6 +50,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Appointment');
     }
 
+    public function customers()
+    {
+        return $this->hasMany('App\Customer');
+    }
+
     public function content()
     {
         return $this->belongsTo('App\Content');
@@ -161,12 +166,14 @@ class User extends Authenticatable
             } else {
                 return false;
             }
-        } else {
+        } else if ($this->start !== null) {
             if ($this->start <= date('Y-m-d', strtotime($day))) {
                 return true;
             } else {
                 return false;
             }
+        } else {
+            return false;
         }
     }
 }

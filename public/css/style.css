@@ -116,6 +116,10 @@ td {
 }
 
 .event-none {
+    display: none;
+}
+
+.event-opacity {
     pointer-events: none;
     color: #999;
 }

@@ -112,9 +112,12 @@ class AppointmentController extends Controller
                 if ($user->role === 'seller') {
                     $appointment->seller_id = $user->id;
                 } else {
-                    $target_appointment = Appointment::where('customer_id', $customer)->latest()->first();
-                    $latest_seller = User::find($target_appointment->seller_id);
-                    $appointment->seller_id = $latest_seller->id;
+                    $customer = Customer::find($customer);
+                    if ($customer->user_id == null) {
+                        return redirect()->back()->with('warning', '営業担当者が設定されていません。管理者に問い合わせてください。');
+                    } else {
+                        $appointment->seller_id = $customer->user_id;
+                    }
                 }
             } else { // 新規
                 $request->validate(
@@ -150,11 +153,14 @@ class AppointmentController extends Controller
                     $selected_id = array_diff($all_seller_id, $disabled_seller_id);
                     $selected_id = $selected_id[array_rand($selected_id, 1)];
                     $appointment->seller_id = $selected_id;
+                    $customer->user_id = $selected_id;
                 } else if ($user->role === 'seller') {
                     $appointment->seller_id = $user->id;
+                    $customer->user_id = $user->id;
                 } else {
                     // nothing to do
                 }
+                $customer->update();
             }
 
             $appointment->day = $request->day;
@@ -205,7 +211,7 @@ class AppointmentController extends Controller
     public function edit(Appointment $appointment, Request $request)
     {
 
-        return view('appointments.edit', compact('appointment', 'seller_appointment', 'appointer', 'seller'));
+        return view('appointments.edit', compact('appointment'));
     }
 
     public function update(Appointment $appointment, Request $request)

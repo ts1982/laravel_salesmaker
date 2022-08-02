@@ -60,12 +60,37 @@
                 </div>
             </div>
             <div class="d-flex justify-content-end">
+                <a href="{{ route('dashboard.appointments.edit', compact('appointment')) }}"
+                    class="btn btn-warning mr-2">編集</a>
                 <form action="{{ route('dashboard.appointments.destroy', compact('appointment')) }}" method="post">
                     @csrf
                     @method('delete')
-                    <button type="submit" class="btn btn-danger" @if ($appointment->status != 0) disabled @endif>削除
-                    </button>
+                    <!-- Button trigger modal -->
+                    <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#exampleModal"
+                        @if ($appointment->status != 0) disabled @endif>削除</button>
                 </form>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">削除</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                このアポイントを削除します。この操作は元に戻せませんが、よろしいですか？
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">戻る</button>
+                                <button type="submit" class="btn btn-danger">実行
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

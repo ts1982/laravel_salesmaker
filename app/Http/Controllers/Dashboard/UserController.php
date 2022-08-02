@@ -129,6 +129,17 @@ class UserController extends Controller
         //
     }
 
+    public function reset_customers(Request $request)
+    {
+        $user = User::find($request->user);
+        foreach ($user->customers as $customer) {
+            $customer->user_id = null;
+            $customer->save();
+        }
+
+        return redirect()->route('dashboard.users.sellers_index');
+    }
+
     public function sellers_record(Request $request)
     {
         // 期間取得

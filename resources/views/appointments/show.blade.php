@@ -10,10 +10,12 @@
                     <span><a
                             href="{{ route('appointments.byday', ['day' => $appointment->day]) }}">{{ date('Y/m/d', strtotime($appointment->day)) }}</a>&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時</span>
                 </div>
-                <div class="col-md-4">
-                    <a href="{{ route('users.seller_calendar', ['seller_appointment' => $seller_appointment, 'seller' => $appointment->thisSellerHas(), 'day' => $appointment->day, 'hour' => $appointment->hour]) }}"
-                        class="btn btn-outline-danger btn-sm @if ($appointment->status != 0) event-none @endif">日時変更</a>
-                </div>
+                @if (App\User::roleIs('appointer'))
+                    <div class="col-md-4">
+                        <a href="{{ route('users.seller_calendar', ['seller_appointment' => $seller_appointment, 'seller' => $appointment->thisSellerHas(), 'day' => $appointment->day, 'hour' => $appointment->hour]) }}"
+                            class="btn btn-outline-danger btn-sm @if ($appointment->status != 0) event-none @endif">日時変更</a>
+                    </div>
+                @endif
             </div>
             <div class="row mb-3">
                 <strong class="col-md-3">顧客名</strong>

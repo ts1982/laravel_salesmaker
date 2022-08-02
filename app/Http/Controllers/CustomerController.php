@@ -28,6 +28,8 @@ class CustomerController extends Controller
                 $customers_id = Appointment::whereIn('id', $latest_id)->where('user_id', $user->id)->where('status', $key)->pluck('customer_id');
             } elseif (User::roleIs('seller')) {
                 $customers_id = Appointment::whereIn('id', $latest_id)->where('seller_id', $user->id)->where('status', $key)->pluck('customer_id');
+                $my_customers = Customer::where('user_id', $user->id)->pluck('id');
+                $customer_id = $customers_id->merge($my_customers);
             }
             $customers = Customer::whereIn('id', $customers_id)->where('name', 'like', "%{$search}%")->orderBy('id')->paginate(15)->onEachSide(1);
         } else if ($request->sort) { // ソート
@@ -35,13 +37,21 @@ class CustomerController extends Controller
                 $customers_id = Appointment::whereIn('id', $latest_id)->where('user_id', $user->id)->where('status', $key)->pluck('customer_id');
             } elseif (User::roleIs('seller')) {
                 $customers_id = Appointment::whereIn('id', $latest_id)->where('seller_id', $user->id)->where('status', $key)->pluck('customer_id');
+                $my_customers = Customer::where('user_id', $user->id)->pluck('id');
+                $customer_id = $customers_id->merge($my_customers);
             }
             $customers = Customer::whereIn('id', $customers_id)->orderBy('id')->paginate(15)->onEachSide(1);
             $sort = $request->sort;
             $search = '';
         } else if ($request->search) { // 検索
             $search = trim($request->search);
-            $customers_id = Appointment::whereIn('id', $latest_id)->pluck('customer_id');
+            if (User::roleIs('appointer')) {
+                $customers_id = Appointment::whereIn('id', $latest_id)->where('user_id', $user->id)->pluck('customer_id');
+            } elseif (User::roleIs('seller')) {
+                $customers_id = Appointment::whereIn('id', $latest_id)->where('seller_id', $user->id)->pluck('customer_id');
+                $my_customers = Customer::where('user_id', $user->id)->pluck('id');
+                $customer_id = $customers_id->merge($my_customers);
+            }
             $customers = Customer::whereIn('id', $customers_id)->where('name', 'like', "%{$search}%")->orderBy('id')->paginate(15)->onEachSide(1);
             $sort = '';
         } else {
@@ -49,6 +59,8 @@ class CustomerController extends Controller
                 $customer_id = Appointment::where('user_id', $user->id)->pluck('customer_id')->unique();
             } elseif (User::roleIs('seller')) {
                 $customer_id = Appointment::where('seller_id', $user->id)->pluck('customer_id')->unique();
+                $my_customers = Customer::where('user_id', $user->id)->pluck('id');
+                $customer_id = $customer_id->merge($my_customers);
             }
 
             $customers = Customer::whereIn('id', $customer_id)->orderBy('id')->paginate(15)->onEachSide(1);

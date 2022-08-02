@@ -6,6 +6,14 @@
         <div class="col-sm-6 p-0">
             <div class="row mb-3">
                 <div class="col-md-4">
+                    <strong>顧客ID</strong>
+                </div>
+                <div class="col-md-8">
+                    <span>{{ $customer->id }}</span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
                     <strong>顧客名</strong>
                 </div>
                 <div class="col-md-8">
@@ -26,6 +34,14 @@
                 </div>
                 <div class="col-md-8">
                     <span>{{ $customer->tel }}</span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <strong>営業担当者</strong>
+                </div>
+                <div class="col-md-8">
+                    <span>{{ $customer->getSellerNameInCharge() }}</span>
                 </div>
             </div>
             <div class="d-flex justify-content-end">
@@ -66,7 +82,7 @@
                                     @if ($appointment->status === 0)
                                         <a href="{{ route('appointments.report', compact('appointment')) }}">報告</a>
                                     @else
-                                        <a href="#" class="event-none">報告済</a>
+                                        <a href="#" class="event-opacity">報告済</a>
                                     @endif
                                 @endif
                             </td>

@@ -36,17 +36,19 @@
                 </thead>
                 <tbody>
                     @foreach ($customers as $customer)
-                        @if ($customer->appointments->isNotEmpty())
-                            <tr>
-                                <td>{{ $customer->id }}</td>
-                                <td>{{ $customer->name }}</td>
+                        <tr>
+                            <td>{{ $customer->id }}</td>
+                            <td>{{ $customer->name }}</td>
+                            @if ($customer->appointments->isNotEmpty())
                                 <td class="status-color{{ $customer->appointments->last()->statusIs()[0] }}">
                                     {{ $customer->appointments->last()->statusIs()[1] }}</td>
-                                <td>
-                                    <a href="{{ route('customers.show', compact('customer')) }}">詳細</a>
-                                </td>
-                            </tr>
-                        @endif
+                            @else
+                                <td></td>
+                            @endif
+                            <td>
+                                <a href="{{ route('customers.show', compact('customer')) }}">詳細</a>
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>

@@ -19,6 +19,11 @@
                         <th>日時</th>
                         <th>顧客名</th>
                         <th>ステータス</th>
+                        @if (App\User::roleIs('appointer'))
+                            <th>営業担当者</th>
+                        @elseif (App\User::roleIs('seller'))
+                            <th>アポインター</th>
+                        @endif
                         <th></th>
                         <th></th>
                     </tr>
@@ -33,6 +38,15 @@
                             </td>
                             <td class="status-color{{ $appointment->statusIs()[0] }}">
                                 {{ $appointment->statusIs()[1] }}</td>
+                            @if (App\User::roleIs('appointer'))
+                                <td>
+                                    {{ $appointment->thisSellerHas()->name }}
+                                </td>
+                            @elseif (App\User::roleIs('seller'))
+                                <td>
+                                    {{ $appointment->thisAppointerHas()->name }}
+                                </td>
+                            @endif
                             <td>
                                 <a href="{{ route('appointments.show', compact('appointment')) }}">詳細</a>
                             </td>
@@ -41,7 +55,7 @@
                                     @if ($appointment->status === 0)
                                         <a href="{{ route('appointments.report', compact('appointment')) }}">報告</a>
                                     @else
-                                        <a href="#" class="event-none">報告済</a>
+                                        <a href="#" class="event-opacity">報告済</a>
                                     @endif
                                 @endif
                             </td>

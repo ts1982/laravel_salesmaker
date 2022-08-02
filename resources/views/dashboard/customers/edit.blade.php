@@ -28,6 +28,27 @@
                             class="form-control">
                     </div>
                 </div>
+                <div class="row mb-3">
+                    <label for="form-user" class="col-form-label col-md-3 text-md-right">営業担当者</label>
+                    <div class="col-md-9">
+                        <select name="user_id" id="form-user" class="form-control">
+                            @if ($customer->getSellerNameInCharge() === '-')
+                                <option value="" selected>-</option>
+                            @endif
+                            @foreach ($sellers as $seller)
+                                @if ($customer->getSellerNameInCharge() === $seller->name)
+                                    <option value="{{ $seller->id }}" selected>
+                                        {{ $seller->name }}
+                                    </option>
+                                @else
+                                    <option value="{{ $seller->id }}">
+                                        {{ $seller->name }}
+                                    </option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
                 <div class="col-12 d-flex justify-content-end">
                     <input type="submit" class="btn btn-success" value="更新">
                 </div>
