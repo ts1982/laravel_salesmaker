@@ -6,12 +6,11 @@
         <div class="col-md-10 p-0">
             <h2 class="mb-3 text-center">
                 {{ $day->copy()->format('Y年n月j日') }}&nbsp;({{ mb_substr($day->copy()->dayName, 0, 1) }})</h2>
-            <div class="text-center">
+            <div class="row justify-content-between">
                 <a
-                    href="{{ url('/appointments/byday/?day=' .$day->copy()->subDay()->format('Y-m-d')) }}">&lt;&lt;&nbsp;prev</a>
-                <span>{{ $day->format('Y/n/j') }}</span>
+                    href="{{ url('/appointments/byday/?day=' .$day->copy()->subDay()->format('Y-m-d')) }}"><i class="fas fa-angle-left"></i>&nbsp;Prev</a>
                 <a
-                    href="{{ url('/appointments/byday/?day=' .$day->copy()->addDay()->format('Y-m-d')) }}">next&nbsp;&gt;&gt;</a>
+                    href="{{ url('/appointments/byday/?day=' .$day->copy()->addDay()->format('Y-m-d')) }}">Next&nbsp;<i class="fas fa-angle-right"></i></a>
             </div>
             <table class="table text-center">
                 <thead>
@@ -36,8 +35,9 @@
                                 <a
                                     href="{{ route('customers.show', ['customer' => $appointment->customer]) }}">{{ $appointment->customer->name }}</a>
                             </td>
-                            <td class="status-color{{ $appointment->statusIs()[0] }}">
-                                {{ $appointment->statusIs()[1] }}</td>
+                            <td>
+                                <span  class="{{ $appointment->statusIs()[0] }}">{{ $appointment->statusIs()[1] }}</span>
+                            </td>
                             @if (App\User::roleIs('appointer'))
                                 <td>
                                     {{ $appointment->thisSellerHas()->name }}

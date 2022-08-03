@@ -1,21 +1,33 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @section('content')
-    @if (session('warning'))
-        <div class="alert alert-danger">{{ session('warning') }}</div>
-    @endif
-    <h1 class="text-center">マイアポイント</h1>
+    <h1 class="text-center">{{ $user->name }}のアポイント</h1>
+    <form action="{{ route('dashboard.calendar.appointer_calendar') }}" method="get">
+        <input type="hidden" name="period" value="{{ $period }}">
+        <div class="row">
+            <label for="appointer-select" class="col-md-1 col-form-label text-md-right ml-md-4"><strong>選択</strong></label>
+            <select name="appointer_id" id="appointer-select" class="col-md-2 form-control" onchange="this.form.submit();">
+                @foreach ($appointers as $appointer)
+                    @if ($appointer->id === $user->id)
+                        <option value="{{ $appointer->id }}" selected>{{ $appointer->name }}</option>
+                    @else
+                        <option value="{{ $appointer->id }}">{{ $appointer->name }}</option>
+                    @endif
+                @endforeach
+            </select>
+        </div>
+    </form>
     <div class="row justify-content-center">
         <div class="col-md-11 p-0">
             <div class="row justify-content-between">
                 <a
-                    href="{{ url('/appointers/calendar/?period=' . App\Appointment::getPrevPeriod($period)) }}"><i class="fas fa-angle-left"></i>&nbsp;Prev</a>
+                    href="{{ url('dashboard/appointer/calendar/?period=' . App\Appointment::getPrevPeriod($period)) . '&appointer_id=' . $appointer_id }}"><i class="fas fa-angle-left"></i>&nbsp;Prev</a>
                 <h3>{{ date('Y年n月', strtotime($period . '-01')) }}</h4>
-                <a
-                    href="{{ url('/appointers/calendar/?period=' . App\Appointment::getNextPeriod($period)) }}">Next&nbsp;<i class="fas fa-angle-right"></i></a>
+                    <a
+                        href="{{ url('dashboard/appointer/calendar/?period=' . App\Appointment::getNextPeriod($period)) . '&appointer_id=' . $appointer_id }}">Next&nbsp;<i class="fas fa-angle-right"></i></a>
             </div>
             <div class="d-md-flex mb-2" id="calendar">
-                <table class="table table-hover text-center mr-5">
+                <table class="table text-center mr-5">
                     <thead>
                         <tr>
                             <th></th>
@@ -29,11 +41,7 @@
                     <tbody>
                         @for ($start_day; $start_day < $middle_day; $start_day->addDay())
                             <tr>
-                                <td>
-                                    <a href="{{ route('appointments.byday', ['day' => $start_day->format('Y-m-d')]) }}">
-                                        <span>{{ $start_day->format('n/j') }}</span>
-                                    </a>
-                                </td>
+                                <td>{{ $start_day->format('n/j') }}</td>
                                 <td>
                                     @if ($start_day->isSaturday())
                                         <span class="saturday">{{ mb_substr($start_day->dayName, 0, 1) }}</span>
@@ -57,7 +65,7 @@
                         @endfor
                     </tbody>
                 </table>
-                <table class="table table-hover text-center">
+                <table class="table text-center">
                     <thead>
                         <tr>
                             <th></th>
@@ -71,11 +79,7 @@
                     <tbody>
                         @for ($middle_day; $middle_day <= $end_day; $middle_day->addDay())
                             <tr>
-                                <td>
-                                    <a href="{{ route('appointments.byday', ['day' => $middle_day->format('Y-m-d')]) }}">
-                                        <span>{{ $middle_day->format('n/j') }}</span>
-                                    </a>
-                                </td>
+                                <td>{{ $middle_day->format('n/j') }}</td>
                                 <td>
                                     @if ($middle_day->isSaturday())
                                         <span class="saturday">{{ mb_substr($middle_day->dayName, 0, 1) }}</span>

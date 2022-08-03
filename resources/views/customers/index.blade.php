@@ -5,12 +5,12 @@
     <form action="{{ route('customers.index') }}" method="get" class="d-flex row justify-content-center">
         <div class="d-flex col-md-4">
             <input type="hidden" name="sort" value="{{ $sort }}">
-            <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="ID,顧客名">
+            <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="顧客名">
             <button type="submit" class="btn btn-success w-25">検索</button>
         </div>
     </form>
     <div class="row justify-content-center mt-3">
-        <div class="col-sm-7">
+        <div class="col-md-7">
             <table class="table text-center">
                 <thead>
                     <tr>
@@ -40,8 +40,10 @@
                             <td>{{ $customer->id }}</td>
                             <td>{{ $customer->name }}</td>
                             @if ($customer->appointments->isNotEmpty())
-                                <td class="status-color{{ $customer->appointments->last()->statusIs()[0] }}">
-                                    {{ $customer->appointments->last()->statusIs()[1] }}</td>
+                                <td>
+                                    <span class="{{ $customer->appointments->last()->statusIs()[0] }}">
+                                        {{ $customer->appointments->last()->statusIs()[1] }}</span>
+                                </td>
                             @else
                                 <td></td>
                             @endif

@@ -3,7 +3,7 @@
 @section('content')
     <h1 class="text-center">顧客情報編集</h1>
     <div class="row justify-content-center mt-5">
-        <div class="col-sm-7 p-0">
+        <div class="col-md-7 p-0">
             <form action="{{ route('dashboard.customers.update', compact('customer')) }}" method="post">
                 @csrf
                 @method('put')

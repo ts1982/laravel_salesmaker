@@ -170,8 +170,20 @@ class Appointment extends Model
     public function statusIs()
     {
         $key = $this->status;
+        if ($key === 0) {
+            $badge = 'badge badge-pill badge-secondary';
+        }
+        if ($key === 1) {
+            $badge = 'badge badge-pill badge-warning';
+        }
+        if ($key === 2) {
+            $badge = 'badge badge-pill badge-danger';
+        }
+        if ($key === 3) {
+            $badge = 'badge badge-pill badge-success';
+        }
         $status = self::STATUS_LIST[$key];
 
-        return [$key, $status];
+        return [$badge, $status];
     }
 }

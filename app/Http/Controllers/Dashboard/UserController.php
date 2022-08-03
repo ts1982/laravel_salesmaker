@@ -86,17 +86,9 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        if ($user->hasHolidaysOutOfRange($request->start, $request->end)) {
-            return redirect()->back()->with('warning', '営業日以外で休日が設定されています。');
-        }
-        if ($user->sellerHasAppointmentsOutOfRange($request->start, $request->end)) {
-            return redirect()->back()->with('warning', '営業日以外でアポイントが登録されています。');
-        }
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->start = $request->start;
-        $user->end = $request->end;
-        $user->save();
+        $user->update();
 
         if ($user->role === 'seller') {
             return redirect()->route('dashboard.users.sellers_index');
@@ -104,6 +96,44 @@ class UserController extends Controller
         if ($user->role === 'appointer') {
             return redirect()->route('dashboard.users.appointers_index');
         }
+    }
+
+    public function term_update(Request $request, User $user)
+    {
+        if ($user->hasHolidaysOutOfRange($request->start, $request->end)) {
+            return redirect()->back()->with('warning', '営業日以外で休日が設定されています。');
+        }
+        if ($user->sellerHasAppointmentsOutOfRange($request->start, $request->end)) {
+            return redirect()->back()->with('warning', '営業日以外でアポイントが登録されています。');
+        }
+
+        if ($request->start) {
+            $user->start = $request->start;
+        } else if ($request->start === null) {
+            $user->start = null;
+        }
+        if ($request->end) {
+            $user->end = $request->end;
+        } else if ($request->end === null) {
+            $user->end = null;
+        }
+        $user->update();
+
+        return redirect()->route('dashboard.users.sellers_config');
+    }
+
+    public function sellers_config()
+    {
+        $sellers = User::where('role', 'seller')->orderBy('id')->get();
+
+        return view('dashboard.users.sellers_config', compact('sellers'));
+    }
+
+    public function appointers_config()
+    {
+        $appointers = User::where('role', 'appointer')->orderBy('id')->get();
+
+        return view('dashboard.users.appointers_config', compact('appointers'));
     }
 
     public function join(User $user)
@@ -115,7 +145,12 @@ class UserController extends Controller
         }
         $user->update();
 
-        return redirect()->route('dashboard.users.appointers_index');
+        if ($user->role === 'seller') {
+            return redirect()->route('dashboard.users.sellers_config');
+        }
+        if ($user->role === 'appointer') {
+            return redirect()->route('dashboard.users.appointers_config');
+        }
     }
 
     /**
@@ -137,7 +172,7 @@ class UserController extends Controller
             $customer->save();
         }
 
-        return redirect()->route('dashboard.users.sellers_index');
+        return redirect()->route('dashboard.users.sellers_config');
     }
 
     public function sellers_record(Request $request)

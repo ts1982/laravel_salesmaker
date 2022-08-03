@@ -50,19 +50,20 @@ class LoginController extends Controller
         return view('dashboard.auth.login');
     }
 
-    protected function loggedOut(Request $request)
+    public function logout(Request $request)
+    {
+        Auth::guard('admins')->logout();
+
+        return $this->loggedOut($request);
+    }
+
+    public function loggedOut(Request $request)
     {
         return redirect('dashboard/login');
     }
 
-    public function logout(Request $request)
-    {
-        $this->performLogout($request);
-        return redirect('dashboard.login');
-    }
-
     public function redirectPath()
     {
-        return '/dashboard/sellers';
+        return '/dashboard/appointments';
     }
 }

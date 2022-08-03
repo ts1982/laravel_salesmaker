@@ -7,12 +7,28 @@ body,
     box-sizing: border-box;
 }
 
+@media (min-width: 768px) {
+    .sp {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .pc {
+        display: none;
+    }
+}
+
 .p-0 {
     padding: 0;
 }
 
 .m-0 {
     margin: 0;
+}
+
+.h-100 {
+    height: 100%;
 }
 
 .btn-success {
@@ -44,10 +60,6 @@ li {
     list-style: none;
 }
 
-.sidebar {
-    height: 100vh;
-}
-
 .sidebar li {
     margin-bottom: 5px;
 }
@@ -60,11 +72,19 @@ li {
     background: rgb(179, 237, 244);
 }
 
+#dashboard:not() .navbar-brand span {
+    color: #333;
+}
+
 .navbar-toggler {
     border: none;
 }
 
-td {
+.table {
+    height: fit-content;
+}
+
+#calendar td {
     padding: 2px !important;
 }
 
@@ -121,7 +141,15 @@ td {
 
 .event-opacity {
     pointer-events: none;
-    color: #999;
+    color: #aaa;
+}
+
+.display-hidden {
+    display: none;
+}
+
+.join {
+    opacity: 0.4;
 }
 
 .mark-now {
@@ -137,14 +165,32 @@ td {
         height: 50px;
     }
 
+    .sidebar.container {
+        padding-bottom: 700px;
+    }
+
+    .sidebar-offset li {
+        margin-bottom: 16px;
+    }
+
+    #dashboard .sidebar.container {
+        padding-bottom: 100px;
+    }
+
     .sidebar-list {
         display: none;
     }
 }
 
 @media (max-width: 768px) {
+    #navbarSupportedContent {
+        overflow-y: auto;
+        height: 150vw;
+        padding-bottom: 100px;
+    }
+
     .navbar-nav li {
-        margin-bottom: 8px;
+        margin-bottom: 16px;
         margin-left: 8px;
     }
 
@@ -192,4 +238,8 @@ td {
 
 #dashboard .sidebar-list a {
     color: rgb(161, 202, 255);
+}
+
+#user_config button {
+    width: 90px;
 }

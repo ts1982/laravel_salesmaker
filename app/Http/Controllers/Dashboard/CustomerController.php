@@ -18,36 +18,39 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         $sort_query = Appointment::STATUS_LIST;
-
         $key = array_search($request->sort, $sort_query);
 
-        $latest_id = Appointment::selectRaw('max(id) as latest_id')->groupBy('customer_id')->pluck('latest_id');
+        $customers_id = Customer::pluck('id');
+        $sort = $request->sort ?? '';
+        $search = trim($request->search) ?? '';
+        $seller_sort = $request->seller_sort ?? '';
 
-        if ($request->sort && $request->search) { // ソート & 検索
-            $sort = $request->sort;
-            $search = trim($request->search);
-            $customers_id = Appointment::whereIn('id', $latest_id)->where('status', $key)->pluck('customer_id');
-            $customers = Customer::whereIn('id', $customers_id)->where('name', 'like', "%{$search}%")->orderBy('id')->paginate(15)->onEachSide(1);
-        } else if ($request->sort) { // ソート
-            $customers_id = Appointment::whereIn('id', $latest_id)->where('status', $key)->pluck('customer_id');
-            $customers = Customer::whereIn('id', $customers_id)->orderBy('id')->paginate(15)->onEachSide(1);
-            $sort = $request->sort;
-            $search = '';
-        } else if ($request->search) { // 検索
-            $search = trim($request->search);
-            $customers_id = Appointment::whereIn('id', $latest_id)->pluck('customer_id');
-            $customers = Customer::whereIn('id', $customers_id)->where('name', 'like', "%{$search}%")->orderBy('id')->paginate(15)->onEachSide(1);
-            $sort = '';
-        } else {
-            $customer_id = Appointment::pluck('customer_id')->unique();
-            $customers = Customer::whereIn('id', $customer_id)->orderBy('id')->paginate(15)->onEachSide(1);
-            $sort = '';
-            $search = '';
+        // 検索
+        if ($request->search) {
+            $customers_id = Customer::whereIn('id', $customers_id)->where('name', 'like', "%{$search}%")->pluck('id');
+        }
+        // ステータスソート
+        if ($request->sort) {
+            $latest_id = Appointment::selectRaw('max(id) as latest_id')->groupBy('customer_id')->pluck('latest_id');
+            $sort_id = Appointment::whereIn('id', $latest_id)->where('status', $key)->pluck('customer_id');
+            $customers_id = $customers_id->intersect($sort_id);
+        }
+        // 営業ソート
+        if ($request->seller_sort) {
+            if ($request->seller_sort === '-') {
+                $seller_sort_id = Customer::where('user_id', null)->pluck('id');
+                $customers_id = $customers_id->intersect($seller_sort_id);
+            } else {
+                $seller_sort_id = Customer::where('user_id', $request->seller_sort)->pluck('id');
+                $customers_id = $customers_id->intersect($seller_sort_id);
+            }
         }
 
-        $sellers = User::where('role', 'seller')->get();
+        $customers = Customer::whereIn('id', $customers_id)->orderBy('id')->paginate(15)->onEachSide(1);
+        $sellers = User::where('role', 'seller')->orderBy('id')->get();
 
-        return view('dashboard.customers.index', compact('customers', 'search', 'sort_query', 'sort', 'sellers'));
+
+        return view('dashboard.customers.index', compact('customers', 'search', 'sort_query', 'sort', 'sellers', 'seller_sort'));
     }
 
     /**
@@ -92,7 +95,7 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        $sellers = User::where('role', 'seller')->get();
+        $sellers = User::where('role', 'seller')->orderBy('id')->get();
 
         return view('dashboard.customers.edit', compact('customer', 'sellers'));
     }
@@ -138,32 +141,41 @@ class CustomerController extends Controller
             $customers = Customer::where('user_id', null)->orderBy('id')->paginate(50)->onEachSide(1);
         }
 
-        $sellers = User::where('role', 'seller')->get();
+        $sellers = User::where('role', 'seller')->orderBy('id')->get();
 
         return view('dashboard.customers.replace', compact('customers', 'sellers'));
+    }
+
+    public function replace_view(Request $request)
+    {
+        $customers = Customer::whereIn('id', $request->customers_id)->orderBy('id')->paginate(50)->onEachSide(1);
+
+        return view('dashboard.customers.replace_view', compact('customers'));
     }
 
     public function replace_store(Request $request)
     {
         if ($request->customers && $request->sellers) {
             $customers_id = $request->customers;
-            $seller_count = count($request->sellers);
-            $i = rand(0, $seller_count - 1);
-            foreach ($customers_id as $customer) {
-                $i = $i % $seller_count;
-                $customer = Customer::find($customer);
-                $customer->user_id = $request->sellers[$i];
-                $customer->save();
-                $i++;
-            }
-
-            $customers = Customer::whereIn('id', $customers_id)->paginate(50)->onEachSide(1);
+            // $customers = Customer::whereIn('id', $customers_id)->orderBy('id')->paginate(50)->onEachSide(1);
+        } else if ($request->all && $request->sellers) {
+            $customers_id = Customer::where('user_id', null)->orderBy('id')->pluck('id')->toArray();
+            // $customers = Customer::where('user_id', null)->orderBy('id')->paginate(50)->onEachSide(1);
         } else {
             return redirect()->back()->with('warning', '顧客と営業担当者を選択してください。');
         }
 
-        $sellers = User::where('role', 'seller')->get();
+        $seller_count = count($request->sellers);
+        $i = rand(0, $seller_count - 1);
+        foreach ($customers_id as $customer) {
+            $i = $i % $seller_count;
+            $customer = Customer::find($customer);
+            $customer->user_id = $request->sellers[$i];
+            $customer->save();
+            $i++;
+        }
 
-        return view('dashboard.customers.replace_view', compact('customers', 'sellers'));
+        return redirect()->route('dashboard.customers.replace_view', compact('customers_id'));
+        // return view('dashboard.customers.replace_view', compact('customers'));
     }
 }

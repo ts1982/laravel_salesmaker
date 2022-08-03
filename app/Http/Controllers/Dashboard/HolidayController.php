@@ -25,7 +25,8 @@ class HolidayController extends Controller
             if ($today->day <= 15) {
                 $period = Carbon::now()->format('Y-m/') . 'later';
             } else {
-                $period = Carbon::now()->format('Y-m/') . 'former';
+                $next_month = Carbon::now()->addMonth();
+                $period = $next_month->format('Y-m/') . 'former';
             }
         }
 
@@ -38,7 +39,9 @@ class HolidayController extends Controller
         foreach ($sellers as $seller) {
             $start = $start_day->copy();
             for ($start; $start < $end_day; $start->addDay()) {
-                if (!$seller->betweenStartAndEnd($start) || Appointment::where('seller_id', $seller->id)->where('day', $start)->count()) {
+                if (!$seller->betweenStartAndEnd($start)) {
+                    $calendar[$seller->id][$start->format('Y-m-d')] = 3;
+                } else if (Appointment::where('seller_id', $seller->id)->where('day', $start)->count()) {
                     $calendar[$seller->id][$start->format('Y-m-d')] = 2;
                 } else if (isset($sellers_holidays[$start->format('Y-m-d')][$seller->id])) {
                     $calendar[$seller->id][$start->format('Y-m-d')] = 1;

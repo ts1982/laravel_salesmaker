@@ -8,4 +8,8 @@ use Illuminate\Support\Facades\Auth;
 
 class WebController extends Controller
 {
+    public function welcome(Request $request)
+    {
+        return view('welcome');
+    }
 }

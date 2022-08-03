@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -172,6 +173,16 @@ class User extends Authenticatable
             } else {
                 return false;
             }
+        } else {
+            return false;
+        }
+    }
+
+    public function appointmentIsNotVisitedExists()
+    {
+        $target_appointment = Appointment::where('seller_id', $this->id)->where('status', 0)->count();
+        if ($target_appointment) {
+            return true;
         } else {
             return false;
         }

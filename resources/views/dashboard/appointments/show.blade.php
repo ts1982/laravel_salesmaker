@@ -36,8 +36,10 @@
             </div>
             <div class="row mb-3">
                 <strong class="col-md-3">ステータス</strong>
-                <div class="col-md-9 status-color{{ $appointment->statusIs()[0] }}">
-                    {{ $appointment->statusIs()[1] }}</div>
+                <div class="col-md-9 status-color">
+                    <span class="{{ $appointment->statusIs()[0] }}">{{ $appointment->statusIs()[1] }}</span
+                        class="{{ $appointment->statusIs()[0] }}">
+                </div>
             </div>
             @if ($appointment->status != 0)
                 <div class="row mb-3">
@@ -68,29 +70,29 @@
                     <!-- Button trigger modal -->
                     <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#exampleModal"
                         @if ($appointment->status != 0) disabled @endif>削除</button>
-                </form>
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">削除</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                このアポイントを削除します。この操作は元に戻せませんが、よろしいですか？
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">戻る</button>
-                                <button type="submit" class="btn btn-danger">実行
-                                </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">削除</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    このアポイントを削除します。この操作は元に戻せませんが、よろしいですか？
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">戻る</button>
+                                    <button type="submit" class="btn btn-danger">実行
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>

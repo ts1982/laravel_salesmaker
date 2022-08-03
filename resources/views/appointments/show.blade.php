@@ -10,7 +10,7 @@
                     <span><a
                             href="{{ route('appointments.byday', ['day' => $appointment->day]) }}">{{ date('Y/m/d', strtotime($appointment->day)) }}</a>&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時</span>
                 </div>
-                @if (App\User::roleIs('appointer'))
+                @if ($appointment->user_id === Auth::user()->id)
                     <div class="col-md-4">
                         <a href="{{ route('users.seller_calendar', ['seller_appointment' => $seller_appointment, 'seller' => $appointment->thisSellerHas(), 'day' => $appointment->day, 'hour' => $appointment->hour]) }}"
                             class="btn btn-outline-danger btn-sm @if ($appointment->status != 0) event-none @endif">日時変更</a>
@@ -42,8 +42,10 @@
             </div>
             <div class="row mb-3">
                 <strong class="col-md-3">ステータス</strong>
-                <div class="col-md-9 status-color{{ $appointment->statusIs()[0] }}">
-                    {{ $appointment->statusIs()[1] }}</div>
+                <div class="col-md-9 status-color">
+                    <span class="{{ $appointment->statusIs()[0] }}">{{ $appointment->statusIs()[1] }}</span
+                        class="{{ $appointment->statusIs()[0] }}">
+                </div>
             </div>
             @if ($appointment->status != 0)
                 <div class="row mb-3">

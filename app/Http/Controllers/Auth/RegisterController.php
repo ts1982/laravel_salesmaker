@@ -8,6 +8,8 @@ use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use App\Mail\UserRegistered;
 
 class RegisterController extends Controller
 {
@@ -70,18 +72,18 @@ class RegisterController extends Controller
         $user->email = $data['email'];
         $user->role = $data['role'];
         $user->password = Hash::make($data['password']);
-        if ($data['role'] === 'appointer') {
-            $user->join_flag = 1;
-        }
+        $user->join_flag = 1;
         $user->save();
 
         return $user;
+    }
 
-        // return User::create([
-        //     'name' => $data['name'],
-        //     'email' => $data['email'],
-        //     'role' => $data['role'],
-        //     'password' => Hash::make($data['password']),
-        // ]);
+    protected function registered(Request $request, $user)
+    {
+        // $admin_email = 't.saito55555@gmail.com';
+        // \Mail::to($admin_email)->send(new UserRegistered($user));
+
+        \Auth::logout();
+        return redirect('welcome');
     }
 }

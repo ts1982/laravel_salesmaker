@@ -32,8 +32,9 @@
             </div>
             <div class="row mb-3">
                 <strong class="col-md-3">ステータス</strong>
-                <div class="col-md-9 status-color{{ $appointment->statusIs()[0] }}">
-                    {{ $appointment->statusIs()[1] }}</div>
+                <div class="col-md-9">
+                    <span class="{{ $appointment->statusIs()[0] }}">{{ $appointment->statusIs()[1] }}</span>
+                </div>
             </div>
             <div class="row mb-3">
                 <strong class="col-md-3">前回</strong>
@@ -53,11 +54,15 @@
                 @csrf
                 @method('put')
                 <div class="row mb-3">
-                    <strong for="form-content" class="form-label col-md-3">ヒアリング内容</strong>
-                    <textarea class="form-control col-md-9" name="content" id="form-content" rows="7">{{ $appointment->content }}</textarea>
-                    @error('content')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
+                    <label for="form-content" class="form-label col-md-3">
+                        <strong>ヒアリング内容</strong>
+                    </label>
+                    <div class="col-md-9">
+                        <textarea class="form-control" name="content" id="form-content" rows="7">{{ $appointment->content }}</textarea>
+                        @error('content')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
                 <div class="d-flex justify-content-end">
                     <input type="submit" value="登録" class="btn btn-success">

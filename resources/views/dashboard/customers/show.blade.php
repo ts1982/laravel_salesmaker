@@ -3,7 +3,7 @@
 @section('content')
     <h1 class="mb-5 text-center">顧客詳細情報</h1>
     <div class="row justify-content-center">
-        <div class="col-sm-6 p-0">
+        <div class="col-md-6 p-0">
             <div class="row mb-3">
                 <div class="col-md-4">
                     <strong>顧客ID</strong>
@@ -70,8 +70,7 @@
                                 <a
                                     href="{{ route('dashboard.appointments.byday', ['day' => $appointment->day]) }}">{{ date('Y/m/d', strtotime($appointment->day)) }}</a>&nbsp;({{ $appointment->getDayName() }})&emsp;{{ $appointment->hour }}時
                             </td>
-                            <td class="status-color{{ $appointment->statusIs()[0] }}">
-                                {{ $appointment->statusIs()[1] }}</td>
+                            <td><span  class="{{ $appointment->statusIs()[0] }}">{{ $appointment->statusIs()[1] }}</span></td>
                             <td>{{ $appointment->thisAppointerHas()->name }}</td>
                             <td>{{ $appointment->thisSellerHas()->name }}</td>
                             <td>

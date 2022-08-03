@@ -6,12 +6,11 @@
         <div class="col-md-10 p-0">
             <h2 class="mb-3 text-center">
                 {{ $day->copy()->format('Y年n月j日') }}&nbsp;({{ mb_substr($day->copy()->dayName, 0, 1) }})</h2>
-            <div class="text-center">
+            <div class="row justify-content-between mx-4">
                 <a
-                    href="{{ url('/dashboard/appointments/byday/?day=' .$day->copy()->subDay()->format('Y-m-d')) }}">&lt;&lt;&nbsp;prev</a>
-                <span>{{ $day->format('Y/n/j') }}</span>
+                    href="{{ url('/dashboard/appointments/byday/?day=' .$day->copy()->subDay()->format('Y-m-d')) .'&seller_sort=' .$seller_sort .'&appointer_sort=' .$appointer_sort }}"><i class="fas fa-angle-left"></i>&nbsp;Prev</a>
                 <a
-                    href="{{ url('/dashboard/appointments/byday/?day=' .$day->copy()->addDay()->format('Y-m-d')) }}">next&nbsp;&gt;&gt;</a>
+                    href="{{ url('/dashboard/appointments/byday/?day=' .$day->copy()->addDay()->format('Y-m-d')) .'&seller_sort=' .$seller_sort .'&appointer_sort=' .$appointer_sort }}">Next&nbsp;<i class="fas fa-angle-right"></i></a>
             </div>
             <table class="table text-center">
                 <thead>
@@ -19,8 +18,36 @@
                         <th>日時</th>
                         <th>顧客名</th>
                         <th>ステータス</th>
-                        <th>アポインター</th>
-                        <th>営業担当者</th>
+                        <th>
+                            <div class="dropdown">
+                                <div class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    アポインター
+                                </div>
+                                <div class="dropdown-menu">
+                                    <a href="{{ route('dashboard.appointments.byday', ['day' => $day->copy()->format('Y-m-d'), 'seller_sort' => $seller_sort]) }}"
+                                        class="dropdown-item">全て表示</a>
+                                    @foreach ($appointers as $appointer)
+                                        <a href="{{ route('dashboard.appointments.byday', ['day' => $day->copy()->format('Y-m-d'), 'appointer_sort' => $appointer->id, 'seller_sort' => $seller_sort]) }}"
+                                            class="dropdown-item">{{ $appointer->name }}</a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="dropdown">
+                                <div class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    営業担当者
+                                </div>
+                                <div class="dropdown-menu">
+                                    <a href="{{ route('dashboard.appointments.byday', ['day' => $day->copy()->format('Y-m-d'), 'appointer_sort' => $appointer_sort]) }}"
+                                        class="dropdown-item">全て表示</a>
+                                    @foreach ($sellers as $seller)
+                                        <a href="{{ route('dashboard.appointments.byday', ['day' => $day->copy()->format('Y-m-d'), 'seller_sort' => $seller->id, 'appointer_sort' => $appointer_sort]) }}"
+                                            class="dropdown-item">{{ $seller->name }}</a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </th>
                         <th></th>
                     </tr>
                 </thead>
@@ -32,8 +59,7 @@
                                 <a
                                     href="{{ route('dashboard.customers.show', ['customer' => $appointment->customer]) }}">{{ $appointment->customer->name }}</a>
                             </td>
-                            <td class="status-color{{ $appointment->statusIs()[0] }}">
-                                {{ $appointment->statusIs()[1] }}</td>
+                            <td><span  class="{{ $appointment->statusIs()[0] }}">{{ $appointment->statusIs()[1] }}</span></td>
                             <td>{{ $appointment->thisAppointerHas()->name }}</td>
                             <td>{{ $appointment->thisSellerHas()->name }}</td>
                             <td>

@@ -96,6 +96,31 @@ class AppointmentController extends Controller
 
     public function store(Request $request)
     {
+        if (empty($request->customer)) {
+            $request->validate(
+                [
+                    'name' => 'required',
+                    'address' => 'required',
+                    'tel' => 'required',
+                    'content' => 'required',
+                ],
+                [
+                    'name.required' => '氏名を入力してください。',
+                    'address.required' => '住所を入力してください。',
+                    'tel.required' => '電話番号を入力してください。',
+                    'content.required' => 'ヒアリング内容を入力してください。',
+                ]
+            );
+        } else {
+            $request->validate(
+                [
+                    'content' => 'required',
+                ],
+                [
+                    'content.required' => 'ヒアリング内容を入力してください。',
+                ]
+            );
+        }
 
         try {
             DB::beginTransaction();
@@ -120,21 +145,6 @@ class AppointmentController extends Controller
                     }
                 }
             } else { // 新規
-                $request->validate(
-                    [
-                        'name' => 'required',
-                        'address' => 'required',
-                        'tel' => 'required',
-                        'content' => 'required',
-                    ],
-                    [
-                        'name.required' => '氏名を入力してください。',
-                        'address.required' => '住所を入力してください。',
-                        'tel.required' => '電話番号を入力してください。',
-                        'content.required' => 'ヒアリング内容を入力してください。',
-                    ]
-                );
-
                 $customer = new Customer();
                 $customer->name = $request->name;
                 $customer->address = $request->address;
@@ -216,6 +226,12 @@ class AppointmentController extends Controller
 
     public function update(Appointment $appointment, Request $request)
     {
+        $request->validate([
+            'content' => 'required',
+        ], [
+            'content.required' => 'ヒアリング内容を入力してください。'
+        ]);
+
         $user = Auth::user();
 
         $content = new Content();
@@ -257,9 +273,14 @@ class AppointmentController extends Controller
 
     public function change_status(Request $request)
     {
-        if ($request->status == 0) {
-            return back()->with('warning', 'ステータスを変更してください。');
-        }
+        $request->validate([
+            'status' => 'numeric|min:1',
+            'report' => 'required',
+        ], [
+            'status.min' => 'ステータスを変更してください。',
+            'report.required' => '報告内容を入力してください。',
+        ]);
+
         $appointment = Appointment::find($request->appointment);
         $appointment->status = $request->status;
         $appointment->report = $request->report;

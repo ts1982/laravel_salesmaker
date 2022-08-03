@@ -4,15 +4,15 @@
     @if (session('warning'))
         <div class="alert alert-danger">{{ session('warning') }}</div>
     @endif
-    <h1 class="text-center">顧客振替</h1>
+    <h1 class="text-center">顧客振分</h1>
     <div class="row justify-content-center mt-3">
-        <div class="col-sm-10">
+        <div class="col-md-9 p-0">
             <form action="{{ route('dashboard.customers.replace_store') }}" method="post" name="replace">
                 @csrf
                 @method('put')
                 <div class="row justify-content-center">
                     <div class="col-md-4">
-                        <label for="sellers-select">振替先選択</label>
+                        <label for="sellers-select">振分先選択</label>
                         <select name="sellers[]" id="sellers-select" class="form-control multiple-select"
                             multiple="multiple">
                             @foreach ($sellers as $seller)
@@ -20,12 +20,20 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-8">
-                        <div class=" mt-4">
-                            <small>※選択した顧客が振替先の営業担当者に自動的に振替えられます。</small><br>
-                            <small>（振替先はCtrlキーを押しながら複数選択が可能です。）</small><br>
-                            <div class="d-flex justify-content-start mt-3">
-                                <button type="submit" class="btn btn-success">振替実行</button>
+                    <div class="col-md-8 mt-3">
+                        <small>※選択した顧客が振分先の営業担当者に均等に振分けられます。</small><br>
+                        <small>（振分先はCtrlキーを押しながら複数選択が可能です。）</small><br>
+                        <div class="row mt-4">
+                            <div class="col-md-9">
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" name="all" id="all-select" class="form-check-input">
+                                    <label for="all-select" class="form-check-label"><small>紐付けられていない顧客を一括選択</small></label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-success">振分実行</button>
+                                </div>
                             </div>
                         </div>
                     </div>

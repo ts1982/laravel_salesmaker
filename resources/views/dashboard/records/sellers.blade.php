@@ -1,15 +1,15 @@
 @extends('layouts.dashboard')
 
 @section('content')
-    <h1 class="text-center mt-4">{{ date('Y年n月', strtotime($period . '-01')) }}営業成績</h1>
-    <div class="term-changer mt-4 text-center">
-        <a
-            href="{{ url('/dashboard/records/sellers/?period=' . App\Appointment::getPrevPeriod($period)) }}">&lt;&lt;&nbsp;prev</a>
-        <span>{{ date('Y年n月', strtotime($period . '-01')) }}</span>
-        <a
-            href="{{ url('/dashboard/records/sellers/?period=' . App\Appointment::getNextPeriod($period)) }}">next&nbsp;&gt;&gt;</a>
-    </div>
-    <div class="row justify-content-center mt-3">
+    <h1 class="text-center">営業成績</h1>
+    <div class="row justify-content-center">
+        <div class="term-changer mt-4 text-center row justify-content-between col-md-8 p-0">
+            <a
+                href="{{ url('/dashboard/records/sellers/?period=' . App\Appointment::getPrevPeriod($period)) }}"><i class="fas fa-angle-left"></i>&nbsp;Prev</a>
+            <h3>{{ date('Y年n月', strtotime($period . '-01')) }}</h4>
+                <a
+                    href="{{ url('/dashboard/records/sellers/?period=' . App\Appointment::getNextPeriod($period)) }}">Next&nbsp;<i class="fas fa-angle-right"></i></a>
+        </div>
         <div class="col-md-8 p-0">
             <table class="table text-center">
                 <thead>

@@ -6,7 +6,7 @@
     @endif
     <h1 class="text-center">顧客振替</h1>
     <div class="row justify-content-center mt-3">
-        <div class="col-md-7">
+        <div class="col-md-8 p-0">
             <a href="{{ route('dashboard.customers.replace') }}">&laquo;&nbsp;戻る</a>
             <table class="table text-center mt-3">
                 <thead>
@@ -28,4 +28,5 @@
             </table>
         </div>
     </div>
+    <div class="d-flex justify-content-center">{{ $customers->appends(request()->query())->links() }}</div>
 @endsection

@@ -3,7 +3,7 @@
 @section('content')
     <h1 class="mb-5 text-center">ユーザー詳細情報</h1>
     <div class="row justify-content-center">
-        <div class="col-sm-6 p-0">
+        <div class="col-md-6 p-0">
             <div class="row mb-3">
                 <div class="col-md-4">
                     <strong>氏名</strong>

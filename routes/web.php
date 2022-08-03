@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/web', 'WebController@index')->name('web.index');
+Route::get('/welcome', 'WebController@welcome')->name('welcome');
 
 Auth::routes();
 
@@ -51,7 +51,13 @@ Route::get('/dashboard', 'AdminController@dashboard')->middleware('auth:admins')
 Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
     Route::get('login', 'Dashboard\Auth\LoginController@showLoginForm')->name('login');
     Route::post('login', 'Dashboard\Auth\LoginController@login')->name('login');
+    Route::post('logout', 'Dashboard\Auth\LoginController@logout')->name('logout');
+    Route::get('seller/calendar', 'Dashboard\CalendarController@seller_calendar')->name('calendar.seller_calendar')->middleware('auth:admins');
+    Route::get('appointer/calendar', 'Dashboard\CalendarController@appointer_calendar')->name('calendar.appointer_calendar')->middleware('auth:admins');
+    Route::put('users/{user}/term_update', 'Dashboard\UserController@term_update')->name('users.term_update')->middleware('auth:admins');
     Route::get('users/reset_customers', 'Dashboard\UserController@reset_customers')->name('users.reset_customers')->middleware('auth:admins');
+    Route::get('users/sellers/config', 'Dashboard\UserController@sellers_config')->name('users.sellers_config')->middleware('auth:admins');
+    Route::get('users/appointers/config', 'Dashboard\UserController@appointers_config')->name('users.appointers_config')->middleware('auth:admins');
     Route::resource('users', 'Dashboard\UserController')->middleware('auth:admins');
     Route::put('users/{user}/join', 'Dashboard\UserController@join')->name('users.join')->middleware('auth:admins');
     Route::get('sellers/record', 'Dashboard\UserController@sellers_record')->name('users.sellers_record')->middleware('auth:admins');
@@ -59,6 +65,7 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
     Route::get('sellers', 'Dashboard\UserController@sellers_index')->name('users.sellers_index')->middleware('auth:admins');
     Route::get('appointers', 'Dashboard\UserController@appointers_index')->name('users.appointers_index')->middleware('auth:admins');
     Route::get('customers/replace', 'Dashboard\CustomerController@replace')->name('customers.replace')->middleware('auth:admins');
+    Route::get('customers/replace/view', 'Dashboard\CustomerController@replace_view')->name('customers.replace_view')->middleware('auth:admins');
     Route::put('customers/replace/store', 'Dashboard\CustomerController@replace_store')->name('customers.replace_store')->middleware('auth:admins');
     Route::resource('customers', 'Dashboard\CustomerController')->middleware('auth:admins');
     Route::get('appointments/byday', 'Dashboard\AppointmentController@byday')->name('appointments.byday')->middleware('auth:admins');

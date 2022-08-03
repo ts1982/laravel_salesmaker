@@ -21,6 +21,11 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}" type="image/vnd.microsoft.icon">
+    <link rel="icon" href="{{ asset('img/favicon.ico') }}" type="image/vnd.microsoft.icon">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Sawarabi+Gothic&display=swap');
+    </style>
 </head>
 
 <body>
@@ -29,21 +34,27 @@
             @component('components.dashboard.header')
             @endcomponent
 
-            <main class="row">
-                <div class="sidebar col-md-2">
-                    @if (Auth::guard('admins')->check())
-                        <div class="mt-5 py-5">
+            @if (Auth::guard('admins')->check())
+                <main class="row">
+                    <div class="sidebar col-md-2 p-0">
+                        <div class="mt-5 py-5 shadow-sm h-100">
                             @component('components.dashboard.sidebar')
                             @endcomponent
                         </div>
-                    @endif
-                </div>
-                <div class="col-md-9">
-                    <div class="mt-5 py-5">
-                        @yield('content')
                     </div>
+                    <div class="col-md-9">
+                        <div class="mt-5 py-5">
+                            @yield('content')
+                        </div>
+                    </div>
+                </main>
+            @endif
+
+            @guest
+                <div class="mt-5 py-5">
+                    @yield('guest.content')
                 </div>
-            </main>
+            @endguest
 
         </div>
     </div>

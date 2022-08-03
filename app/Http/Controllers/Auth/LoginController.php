@@ -55,7 +55,7 @@ class LoginController extends Controller
     {
         if ($user->join_flag == 1) {
             Auth::logout();
-            return redirect()->route('login')->with('warning', '管理者の許可がありません。');
+            return redirect()->route('login')->with('warning', '管理者の承認がありません。');
         }
     }
 }

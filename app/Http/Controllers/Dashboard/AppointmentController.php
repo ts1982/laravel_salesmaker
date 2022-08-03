@@ -123,8 +123,8 @@ class AppointmentController extends Controller
      */
     public function edit(Appointment $appointment)
     {
-        $sellers = User::where('role', 'seller')->get();
-        $appointers = User::where('role', 'appointer')->get();
+        $sellers = User::where('role', 'seller')->orderBy('id')->get();
+        $appointers = User::where('role', 'appointer')->orderBy('id')->get();
         $status_list = Appointment::STATUS_LIST;
 
         return view('dashboard.appointments.edit', compact('appointment', 'sellers', 'appointers', 'status_list'));
@@ -164,16 +164,27 @@ class AppointmentController extends Controller
 
     public function byday(Request $request)
     {
-        // $user = Auth::user();
-        $day = new Carbon($request->day);
-        // if ($user->role === 'seller') {
+        if ($request->day) {
+            $day = Carbon::parse($request->day);
+        } else {
+            $day = new Carbon($request->day);
+        }
+
+        $seller_sort = $request->seller_sort;
+        $appointer_sort  = $request->appointer_sort;
         $appointments = Appointment::where('day', $day->format('Y-m-d'))->orderBy('hour', 'asc')->get();
-        // } else if ($user->role === 'appointer') {
-        //     $appointments = Appointment::where('day', $day->format('Y-m-d'))->where('user_id', $user->id)->get();
-        // }
+
+        if ($request->seller_sort) {
+            $appointments = $appointments->where('seller_id', $request->seller_sort);
+        }
+        if ($request->appointer_sort) {
+            $appointments = $appointments->where('user_id', $request->appointer_sort);
+        }
 
         $status_list = Appointment::STATUS_LIST;
+        $sellers = User::where('role', 'seller')->orderBy('id')->get();
+        $appointers = User::where('role', 'appointer')->orderBy('id')->get();
 
-        return view('dashboard.appointments.byday', compact('appointments', 'day', 'status_list'));
+        return view('dashboard.appointments.byday', compact('appointments', 'day', 'status_list', 'sellers', 'appointers', 'seller_sort', 'appointer_sort'));
     }
 }

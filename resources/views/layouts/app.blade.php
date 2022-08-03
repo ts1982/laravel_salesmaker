@@ -21,6 +21,8 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}" type="image/vnd.microsoft.icon">
+    <link rel="icon" href="{{ asset('img/favicon.ico') }}" type="image/vnd.microsoft.icon">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Sawarabi+Gothic&display=swap');
     </style>
@@ -34,7 +36,7 @@
         @auth
             <main class="row">
                 <div class="sidebar col-md-2 shadow-sm">
-                    <div class="mt-5 py-5">
+                    <div class="mt-5 pt-5">
                         @component('components.sidebar')
                         @endcomponent
                     </div>
@@ -49,7 +51,7 @@
 
         @guest
             <div class="mt-5 py-5">
-                @yield('auth.content')
+                @yield('guest.content')
             </div>
         @endguest
 
