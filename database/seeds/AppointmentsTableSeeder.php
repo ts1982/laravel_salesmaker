@@ -22,7 +22,7 @@ class AppointmentsTableSeeder extends Seeder
         $appointer_id = User::where('role', 'appointer')->pluck('id');
         $time_zone = [10, 13, 16, 19];
         $start = Carbon::parse('2022-06-01');
-        $end = Carbon::parse('2022-08-20');
+        $end = Carbon::parse('2022-09-20');
         $position = [];
         $remain_position = [];
 
