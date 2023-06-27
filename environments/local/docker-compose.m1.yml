@@ -1,0 +1,82 @@
+version: '3.8'
+networks:
+  backend:
+    name: ${COMPOSE_PROJECT_NAME}.${APP_ENV}.backend
+services:
+  nginx:
+    container_name: ${COMPOSE_PROJECT_NAME}.${APP_ENV}.nginx
+    build:
+      context: ../../docker/nginx
+      target: local
+    image: laravel/nginx
+    ports:
+      - ${WEB_PORT}:80
+    volumes:
+      - ../../src:/var/www:cached
+    depends_on:
+      - php-fpm
+    networks:
+      - backend
+  php-fpm:
+    container_name: ${COMPOSE_PROJECT_NAME}.${APP_ENV}.php-fpm
+    build:
+      context: ../../docker/php-fpm
+    image: laravel/php-fpm
+    volumes:
+      - ../../src:/var/www:cached
+    environment:
+      TZ: "Asia/Tokyo"
+    networks:
+      - backend
+  mysql:
+    container_name: ${COMPOSE_PROJECT_NAME}.${APP_ENV}.mysql
+    image: mysql:8.0.23
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_USER: default
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: laravel_db
+      TZ: "Asia/Tokyo"
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3307:3306"
+    networks:
+      - backend
+  minio:
+    container_name: ${COMPOSE_PROJECT_NAME}.${APP_ENV}.minio
+    image: minio/minio:RELEASE.2022-06-25T15-50-16Z.fips
+    environment:
+      MINIO_ROOT_USER: asdfghASDFGH
+      MINIO_ROOT_PASSWORD: asdfgh123456
+    entrypoint: bash
+    command: -c "/opt/bin/minio server /data --address :9000 --console-address :9001"
+    volumes:
+      - ./s3/data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - backend
+  redis:
+    image: redis:6.2.6-alpine3.15
+    container_name: ${COMPOSE_PROJECT_NAME}.${APP_ENV}.redis
+    ports:
+        - '${FORWARD_REDIS_PORT:-6379}:6379'
+    volumes:
+        - redis_volume:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+    networks:
+      - backend
+  mailpit:
+    container_name: ${COMPOSE_PROJECT_NAME}.${APP_ENV}.mailpit
+    image: 'axllent/mailpit:latest'
+    ports:
+      - '${FORWARD_MAILPIT_PORT:-1025}:1025'
+      - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+    networks:
+      - backend
+volumes:
+  redis_volume:
+    driver: local

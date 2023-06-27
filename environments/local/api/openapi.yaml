@@ -1,0 +1,524 @@
+openapi: 3.0.0
+info:
+  title: casmin color api
+  version: 0.0.1
+  description: 'This document is a reference for the casmin color API server. For more information, please see [https://www.commude.co.jp/](https://www.commude.co.jp/). In this sample You can use the api key `Secret-Key` to test the authentication filter.'
+  contact:
+    name: COMMUDE
+    url: 'https://www.commude.co.jp/'
+    email: info@commude.co.jp
+servers:
+  - url: 'http://localhost:8081/api'
+    description: dev
+  - url: 'https://stg.beautyport.jp/api'
+    description: stg
+paths:
+  /order/index:
+    post:
+      summary: 注文情報一覧
+      operationId: 'api/order/index:POST'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        search_word:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+                            nullable: true
+                        status:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+                            nullable: true
+                        page:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+                            nullable: true
+                        per_page:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+                            nullable: true
+      description: 注文情報一覧を返します
+      parameters:
+        - $ref: '#/components/parameters/order_status'
+        - $ref: '#/components/parameters/per_page'
+        - $ref: '#/components/parameters/page'
+    parameters: []
+  /order/item:
+    post:
+      summary: 注文商品一覧
+      operationId: '/api/order/item:POST'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OrderItem'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        format: uri
+                        nullable: true
+                      last:
+                        type: string
+                        format: uri
+                        nullable: true
+                      prev:
+                        type: string
+                        format: uri
+                        nullable: true
+                      next:
+                        type: string
+                        format: uri
+                        nullable: true
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: string
+                      from:
+                        type: string
+                      last_page:
+                        type: string
+                      links:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              format: uri
+                              nullable: true
+                            label:
+                              type: string
+                              nullable: true
+                            active:
+                              type: boolean
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        search_word:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+                            nullable: true
+                        status:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+                            nullable: true
+                        page:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+                            nullable: true
+                        per_page:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+      description: 注文情報一覧を返します
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: search_word
+          description: 検索文字列
+        - $ref: '#/components/parameters/order_status'
+        - $ref: '#/components/parameters/per_page'
+        - $ref: '#/components/parameters/page'
+    parameters: []
+  /item/index:
+    post:
+      summary: 商品一覧
+      operationId: 'api/item/index:POST'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Item'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                      last:
+                        type: string
+                      prev:
+                        nullable: true
+                      next:
+                        nullable: true
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      from:
+                        type: integer
+                      last_page:
+                        type: integer
+                      links:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              nullable: true
+                            label:
+                              type: string
+                            active:
+                              type: boolean
+                      path:
+                        type: string
+                      per_page:
+                        type: integer
+                      to:
+                        type: integer
+                      total:
+                        type: integer
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        search_word:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+                            nullable: true
+                        status:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+                            nullable: true
+                        page:
+                          type: string
+                          nullable: true
+                        per_page:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+                            nullable: true
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: search_word
+          description: 検索文字列
+        - $ref: '#/components/parameters/order_status'
+        - $ref: '#/components/parameters/per_page'
+        - $ref: '#/components/parameters/page'
+      description: 商品一覧を返します
+    parameters: []
+  /order/bulk-update:
+    post:
+      summary: 注文情報の編集
+      operationId: '/order/bulk-update:POST'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  messages:
+                    type: array
+                    items:
+                      type: string
+        '400':
+          description: Bad Request
+      description: 注文情報をUPDATEします
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      tracking_number:
+                        type: string
+                    required:
+                      - id
+                      - tracking_number
+              required:
+                - data
+            examples:
+              Example 1:
+                value:
+                  data:
+                    - id: 1
+                      tracking_number: '1234567'
+                    - id: 2
+                      tracking_number: '1234566'
+                    - id: 3
+                      tracking_number: '1234565'
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+        description: ''
+components:
+  schemas:
+    Order:
+      title: Order
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 123456789
+        ordered_at:
+          type: string
+          example: '2023-04-26 11:51:06'
+        salon_name:
+          type: string
+          example: XXXサロン
+        salon_code:
+          type: string
+          example: '123456'
+        status:
+          type: string
+          example: determination
+        shipping_fee:
+          type: string
+          example: '500.00'
+        total_amount_inc:
+          type: string
+          example: '29800.00'
+        note:
+          type: string
+          example: 備考備考備考/n備考備考/r/n備考
+          nullable: true
+        order_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+      required:
+        - id
+        - ordered_at
+        - salon_name
+        - salon_code
+        - status
+        - shipping_fee
+        - total_amount_inc
+        - note
+        - order_items
+    OrderItem:
+      title: OrderItem
+      type: object
+      description: ''
+      properties:
+        id:
+          type: integer
+          example: 123
+        order_id:
+          type: integer
+          example: 123456789
+        tracking_number:
+          type: string
+          example: '0123456789123'
+          nullable: true
+        item_code:
+          type: string
+          example: '0123456789'
+        jan_code:
+          type: string
+          example: '0123456789012'
+        name:
+          type: string
+          example: 商品名
+        quantity:
+          type: integer
+          example: 18
+        salon_name:
+          type: string
+          example: XXサロン
+          description: 納入先名
+        salon_code:
+          type: string
+          description: 納入先コード
+          example: '123456'
+        ordered_at:
+          type: string
+          description: 発注日時
+          example: '2023-04-05 04:15:05'
+      required:
+        - id
+        - order_id
+        - tracking_number
+        - item_code
+        - jan_code
+        - name
+        - quantity
+    Item:
+      title: Item
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 123456
+        category_id1:
+          type: integer
+          example: 123456
+        category_id2:
+          type: integer
+          example: 123456
+        category_id3:
+          type: integer
+          example: 123456
+        item_type:
+          type: string
+        name:
+          type: string
+        item_code:
+          type: string
+        jan_code:
+          type: string
+        agency_price:
+          type: string
+        salon_price:
+          type: string
+        original_price:
+          type: string
+        display:
+          type: string
+        sort:
+          type: integer
+      required:
+        - id
+        - category_id1
+        - category_id2
+        - category_id3
+        - item_type
+        - name
+        - item_code
+        - jan_code
+        - agency_price
+        - salon_price
+        - original_price
+        - display
+        - sort
+  responses:
+    bulk_update_OK:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                enum:
+                  - OK
+                  - NG
+                example: OK
+              messages:
+                type: array
+                items:
+                  type: string
+                  default: 正常に更新された
+        application/xml:
+          schema:
+            type: object
+            properties: {}
+  parameters:
+    page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+      description: 表示ページ
+    per_page:
+      name: per_page
+      in: query
+      required: false
+      schema:
+        type: integer
+      description: 1ページに表示する件数
+    order_status:
+      name: status
+      in: query
+      required: false
+      schema:
+        type: string
+        example: determination
+        enum:
+          - ordered
+          - determination
+          - shipped
+          - stockout
+          - cancel
+      description: 注文ステータス
+  examples: {}
