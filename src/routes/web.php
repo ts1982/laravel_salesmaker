@@ -76,3 +76,12 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
     Route::get('records/appointers', 'Dashboard\RecordController@appointers')->name('records.appointers')->middleware('auth:admins');
     Route::get('records/incentive', 'Dashboard\RecordController@incentive')->name('records.incentive')->middleware('auth:admins');
 });
+
+Route::get('encrypt', 'EncryptController@index')->name('encrypt.index');
+Route::post('encrypt', 'EncryptController@encrypt')->name('encrypt');
+Route::post('decrypt', 'EncryptController@decrypt')->name('decrypt');
+
+if (App::environment('production')) {
+    URL::forceScheme('https');
+}
+
