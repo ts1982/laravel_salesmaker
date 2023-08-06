@@ -30,7 +30,7 @@ services:
       - backend
   mysql:
     container_name: ${COMPOSE_PROJECT_NAME}.${APP_ENV}.mysql
-    image: mysql:8.0.23
+    image: mysql:5.7
     platform: linux/amd64
     environment:
       MYSQL_ROOT_PASSWORD: mysql
