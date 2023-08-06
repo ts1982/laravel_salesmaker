@@ -84,3 +84,4 @@ Route::post('decrypt', 'EncryptController@decrypt')->name('decrypt');
 if (App::environment('production')) {
     URL::forceScheme('https');
 }
+
